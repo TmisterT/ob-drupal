@@ -1,0 +1,29 @@
+uuid: a3c05752-89f2-4883-a6e2-a83fc94b12d0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_documents
+    - media.type.document
+    - node.type.service
+id: node.service.field_documents
+field_name: field_documents
+entity_type: node
+bundle: service
+label: 'Forms and documents'
+description: 'Attach forms or guidance documents from the Media Library.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      document: document
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: null
+field_type: entity_reference

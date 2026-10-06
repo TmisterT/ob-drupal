@@ -1,0 +1,18 @@
+uuid: b36a2a61-8c8c-4035-ae6f-24aaa57f4582
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Service
+type: service
+description: 'A public service with access information and related forms.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

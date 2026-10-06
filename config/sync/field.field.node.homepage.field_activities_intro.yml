@@ -1,0 +1,21 @@
+uuid: 7f96af36-46c8-4145-a8d3-769062e1e4e7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_activities_intro
+    - node.type.homepage
+id: node.homepage.field_activities_intro
+field_name: field_activities_intro
+entity_type: node
+bundle: homepage
+label: 'Activities section introduction'
+description: 'Briefly explain what visitors can find in official activities.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 'Follow presidential activities, speeches, statements and state functions.'
+default_value_callback: ''
+settings: {  }
+field_type: string_long

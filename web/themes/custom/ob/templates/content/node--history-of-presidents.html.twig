@@ -1,0 +1,58 @@
+{#
+/**
+ * @file
+ * History of Presidents directory, populated by the Presidents history View.
+ */
+#}
+{% set has_image = not node.field_featured_image.isEmpty %}
+<article{{ attributes.addClass('presidents-page') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="menu-section-page__intro{% if has_image %} menu-section-page__intro--with-media{% endif %}">
+    <div class="menu-section-page__intro-copy">
+      <p class="menu-section-page__eyebrow">{{ section_navigation.title }}</p>
+      <div class="menu-section-page__lead">{{ content.field_summary }}</div>
+    </div>
+    {% if has_image %}
+      <div class="menu-section-page__media">{{ content.field_featured_image }}</div>
+    {% endif %}
+  </header>
+
+  <div class="menu-section-page__layout">
+    {% include '@ob/templates/navigation/section-navigation.html.twig' with {
+      heading_id: 'presidents-section-navigation-heading'
+    } %}
+
+    <div class="menu-section-page__content">
+      <div class="presidents-page__introduction">{{ content.body }}</div>
+
+      <section class="presidents-directory" aria-labelledby="presidents-directory-heading">
+        <div class="presidents-directory__heading">
+          <p>{{ 'National leadership'|t }}</p>
+          <h2 id="presidents-directory-heading">{{ 'Presidents of Kiribati'|t }}</h2>
+        </div>
+        {{ presidents_history }}
+      </section>
+
+      {% if section_navigation.previous or section_navigation.next %}
+        <nav class="section-page-pager" aria-label="{{ 'Government section pages'|t }}">
+          {% if section_navigation.previous %}
+            <div class="section-page-pager__item section-page-pager__item--previous">
+              <span>{{ 'Previous'|t }}</span>
+              {{ section_navigation.previous.link }}
+            </div>
+          {% endif %}
+          {% if section_navigation.next %}
+            <div class="section-page-pager__item section-page-pager__item--next">
+              <span>{{ 'Next'|t }}</span>
+              {{ section_navigation.next.link }}
+            </div>
+          {% endif %}
+        </nav>
+      {% endif %}
+    </div>
+  </div>
+
+  {{ content|without('field_summary', 'field_featured_image', 'body', 'field_documents', 'field_related_links', 'field_topics', 'field_audience', 'field_content_owner', 'field_last_reviewed') }}
+</article>

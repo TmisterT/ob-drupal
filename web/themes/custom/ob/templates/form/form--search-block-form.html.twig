@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Theme override for a 'form' element.
+ *
+ * Available variables:
+ * - attributes: A list of HTML attributes for the wrapper element.
+ * - children: The child elements of the form.
+ *
+ * @see template_preprocess_form()
+ */
+#}
+<form class="ob-header-search d-flex" action="{{ path('search.view_node_search') }}" method="get" role="search" data-ob-header-search data-homepage-url="{{ path('<front>') }}">
+  <label class="visually-hidden" for="{{ attributes.id }}-keys">{{ 'Search government information'|t }}</label>
+  <input class="form-control" id="{{ attributes.id }}-keys" name="keys" type="search" required placeholder="{{ 'Search'|t }}">
+  <button class="btn btn-primary" type="submit">{{ 'Search'|t }}</button>
+</form>

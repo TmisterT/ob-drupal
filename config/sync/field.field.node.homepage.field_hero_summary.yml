@@ -1,0 +1,22 @@
+uuid: 0bfd0a43-fea0-4942-845a-dafb777bca62
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_hero_summary
+    - node.type.homepage
+  module:
+    - text
+id: node.homepage.field_hero_summary
+field_name: field_hero_summary
+entity_type: node
+bundle: homepage
+label: 'Hero summary'
+description: 'A concise explanation supporting the hero title.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

@@ -1,0 +1,44 @@
+{#
+/**
+ * @file
+ * A single administrator-managed homepage carousel slide.
+ */
+#}
+{% set slide_link = node.field_slide_link.0 %}
+
+<section{{ attributes.addClass('homepage-hero', 'homepage-slide') }} aria-labelledby="homepage-slide-title-{{ node.id }}">
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <div class="homepage-hero__visual{% if node.field_slide_image.isEmpty %} homepage-hero__visual--graphic{% endif %}"{% if node.field_slide_image.isEmpty %} aria-hidden="true"{% endif %}>
+    {% if not node.field_slide_image.isEmpty %}
+      {{ content.field_slide_image }}
+    {% else %}
+      <div class="homepage-hero__sun"></div>
+      <div class="homepage-hero__bird"></div>
+      <div class="homepage-hero__waves"></div>
+    {% endif %}
+  </div>
+
+  <div class="container homepage-hero__inner">
+    <div class="homepage-hero__content">
+      <div class="homepage-hero__heading">
+        {% if node.field_slide_label.value %}
+          <div class="homepage-hero__eyebrow">{{ node.field_slide_label.value }}</div>
+        {% endif %}
+        <h2 id="homepage-slide-title-{{ node.id }}" class="homepage-hero__title">{{ node.field_slide_heading.value }}</h2>
+      </div>
+      {% if not node.field_slide_summary.isEmpty %}
+        <div class="homepage-hero__summary">{{ content.field_slide_summary }}</div>
+      {% endif %}
+      {% if slide_link %}
+        <a class="homepage-hero__action" href="{{ slide_link.url }}">
+          <span>{{ slide_link.title }}</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </a>
+      {% endif %}
+    </div>
+  </div>
+
+  {{ content|without('field_slide_label', 'field_slide_heading', 'field_slide_summary', 'field_slide_image', 'field_slide_link', 'field_slide_weight') }}
+</section>

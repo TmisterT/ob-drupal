@@ -1,0 +1,22 @@
+uuid: 5dd38223-2fa8-4e2c-b086-9d0b3a3c7528
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_slide_summary
+    - node.type.homepage_slide
+  module:
+    - text
+id: node.homepage_slide.field_slide_summary
+field_name: field_slide_summary
+entity_type: node
+bundle: homepage_slide
+label: Summary
+description: 'Keep the supporting message concise so it remains readable on small screens.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

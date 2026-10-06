@@ -1,0 +1,18 @@
+{# Public notice row used in the archive. #}
+{% set notice_link = node.field_notice_link.0 %}
+{% set destination = notice_link and not notice_has_detail_page ? notice_link.url : url %}
+<article{{ attributes.addClass('public-notice-row', 'public-notice-row--archive', node.field_notice_urgent.value ? 'public-notice-row--urgent') }}>
+  {{ title_prefix }}{{ title_suffix }}
+  <a class="public-notice-row__link" href="{{ destination }}">
+    <div class="public-notice-row__meta">
+      {% if node.field_notice_urgent.value %}<span class="public-notice-row__urgent">{{ 'Urgent'|t }}</span>{% endif %}
+      <span class="public-notice-row__category">{{ content.field_notice_category }}</span>
+      <time datetime="{{ node.field_notice_date.value }}">{{ node.field_notice_date.value|date('j F Y') }}</time>
+    </div>
+    <div class="public-notice-row__copy">
+      <h2>{{ label }}</h2>
+      <div class="public-notice-row__summary">{{ content.field_notice_summary }}</div>
+    </div>
+    <svg class="public-notice-row__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </a>
+</article>

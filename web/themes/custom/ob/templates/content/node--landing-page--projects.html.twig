@@ -1,0 +1,22 @@
+<article{{ attributes.addClass('projects-archive', 'menu-section-page') }}>
+  {{ title_prefix }}{{ title_suffix }}
+  <header class="menu-section-page__intro">
+    <p class="projects-archive__eyebrow">{{ 'Projects & initiatives'|t }}</p>
+    {{ content.field_summary }}
+  </header>
+  <div class="menu-section-page__layout{{ not section_navigation.links ? ' projects-archive__layout--without-navigation' }}">
+    {% include '@ob/templates/navigation/section-navigation.html.twig' with {heading_id: 'projects-section-navigation-heading'} %}
+    <div class="projects-archive__main">
+      <div class="projects-archive__intro">{{ content.body }}</div>
+      <h2>{{ 'Explore projects and initiatives'|t }}</h2>
+      {% if project_cards %}
+        <div class="projects-archive__grid">{{ project_cards }}</div>
+        {{ project_pager }}
+      {% else %}
+        <p class="projects-archive__empty">{{ 'No projects or initiatives have been published yet. Please check back for updates.'|t }}</p>
+        {{ project_pager }}
+      {% endif %}
+    </div>
+  </div>
+  {{ content|without('field_summary', 'body', 'links') }}
+</article>

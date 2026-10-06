@@ -1,0 +1,23 @@
+uuid: 5858a6ac-360a-4f6d-b64c-4a0fdd6dac44
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.sitewide_alert
+    - field.storage.block_content.field_alert_enabled
+id: block_content.sitewide_alert.field_alert_enabled
+field_name: field_alert_enabled
+entity_type: block_content
+bundle: sitewide_alert
+label: 'Display alert'
+description: 'Show this alert directly below the site header. Leave unchecked when there is no active public alert.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: 'On'
+  off_label: 'Off'
+field_type: boolean

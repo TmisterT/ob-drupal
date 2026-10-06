@@ -1,0 +1,27 @@
+uuid: 26bcd4f0-349d-41b0-8862-845e57ed4eca
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.main
+  module:
+    - system
+  theme:
+    - ob
+_core:
+  default_config_hash: sMbEcUYJ0F1i26XXuB7HEzvOeczIvIuLd-Yjb5wWp9Y
+id: ob_main_menu
+theme: ob
+region: primary_menu
+weight: -5
+provider: null
+plugin: 'system_menu_block:main'
+settings:
+  id: 'system_menu_block:main'
+  label: 'Main navigation'
+  label_display: '0'
+  provider: system
+  level: 1
+  depth: 2
+  expand_all_items: false
+visibility: {  }

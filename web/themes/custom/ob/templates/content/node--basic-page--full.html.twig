@@ -1,0 +1,58 @@
+{#
+/**
+ * @file
+ * Full display for an administrator-managed Basic Page.
+ */
+#}
+<article{{ attributes.addClass('content-page', 'basic-page') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="content-page__intro{% if not node.field_featured_image.isEmpty %} content-page__intro--with-media{% endif %}">
+    <div class="content-page__lead">{{ content.field_summary }}</div>
+    {% if not node.field_featured_image.isEmpty %}
+      <div class="content-page__media">{{ content.field_featured_image }}</div>
+    {% endif %}
+  </header>
+
+  <div class="content-page__body">{{ content.body }}</div>
+
+  {% if not node.field_documents.isEmpty %}
+    <section class="content-page__section" aria-labelledby="page-documents-heading">
+      <h2 id="page-documents-heading">{{ 'Documents'|t }}</h2>
+      {{ content.field_documents }}
+    </section>
+  {% endif %}
+
+  {% if not node.field_related_links.isEmpty %}
+    <section class="content-page__section content-page__section--links" aria-labelledby="related-links-heading">
+      <h2 id="related-links-heading">{{ 'Related links'|t }}</h2>
+      {{ content.field_related_links }}
+    </section>
+  {% endif %}
+
+  <aside class="content-page__metadata" aria-label="{{ 'Page information'|t }}">
+    {% if not node.field_topics.isEmpty %}
+      <div>
+        <h2>{{ 'Topics'|t }}</h2>
+        {{ content.field_topics }}
+      </div>
+    {% endif %}
+    {% if not node.field_audience.isEmpty %}
+      <div>
+        <h2>{{ 'Audience'|t }}</h2>
+        {{ content.field_audience }}
+      </div>
+    {% endif %}
+    <div>
+      <h2>{{ 'Content owner'|t }}</h2>
+      {{ content.field_content_owner }}
+    </div>
+    <div>
+      <h2>{{ 'Last reviewed'|t }}</h2>
+      {{ content.field_last_reviewed }}
+    </div>
+  </aside>
+
+  {{ content|without('field_summary', 'field_featured_image', 'body', 'field_documents', 'field_related_links', 'field_topics', 'field_audience', 'field_content_owner', 'field_last_reviewed') }}
+</article>

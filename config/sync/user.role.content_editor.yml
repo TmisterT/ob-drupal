@@ -1,0 +1,57 @@
+uuid: 2c0d119d-39c9-494e-8b30-9f329873a4d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - media.type.document
+    - node.type.service
+    - node.type.update
+    - workflows.workflow.editorial
+    - workflows.workflow.updates_editorial
+  module:
+    - content_moderation
+    - content_translation
+    - contextual
+    - file
+    - media
+    - navigation
+    - node
+    - path
+    - system
+_core:
+  default_config_hash: og55Zu0F-q-X8zG0Ohrls49zws6IrmmosZS-30Es8vw
+id: content_editor
+label: 'Content editor'
+weight: 2
+is_admin: false
+permissions:
+  - 'access administration pages'
+  - 'access content overview'
+  - 'access contextual links'
+  - 'access files overview'
+  - 'access media overview'
+  - 'access navigation'
+  - 'administer url aliases'
+  - 'create content translations'
+  - 'create document media'
+  - 'create service content'
+  - 'create update content'
+  - 'create url aliases'
+  - 'delete own files'
+  - 'edit any update content'
+  - 'edit own service content'
+  - 'revert all revisions'
+  - 'translate update node'
+  - 'update content translations'
+  - 'use editorial transition create_new_draft'
+  - 'use editorial transition submit_for_review'
+  - 'use updates_editorial transition archive'
+  - 'use updates_editorial transition create_new_draft'
+  - 'use updates_editorial transition publish'
+  - 'use updates_editorial transition submit_for_review'
+  - 'view all revisions'
+  - 'view any unpublished content'
+  - 'view latest version'
+  - 'view media'
+  - 'view own unpublished content'
+  - 'view the administration theme'

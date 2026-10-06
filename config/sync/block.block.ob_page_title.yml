@@ -1,0 +1,20 @@
+uuid: 2b50ff64-519d-4630-a03c-2a3ce95f81bb
+langcode: en
+status: true
+dependencies:
+  theme:
+    - ob
+_core:
+  default_config_hash: 4OpMWjhsFN4awKraYKq6YnO14GlCKEQcvbvhslRiYEQ
+id: ob_page_title
+theme: ob
+region: highlighted
+weight: -2
+provider: null
+plugin: page_title_block
+settings:
+  id: page_title_block
+  label: 'Page title'
+  label_display: '0'
+  provider: core
+visibility: {  }

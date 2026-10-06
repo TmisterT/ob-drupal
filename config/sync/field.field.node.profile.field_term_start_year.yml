@@ -1,0 +1,23 @@
+uuid: 9a821a8b-b6c0-433d-8ad7-b9e8909825dc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_term_start_year
+    - node.type.profile
+id: node.profile.field_term_start_year
+field_name: field_term_start_year
+entity_type: node
+bundle: profile
+label: 'Term start year'
+description: 'Four-digit year when service as President began.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1979
+  max: 2200
+  prefix: ''
+  suffix: ''
+field_type: integer

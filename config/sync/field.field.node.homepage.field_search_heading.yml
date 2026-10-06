@@ -1,0 +1,21 @@
+uuid: f8cb2d54-a679-41a1-8576-6b06f7d96f95
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_search_heading
+    - node.type.homepage
+id: node.homepage.field_search_heading
+field_name: field_search_heading
+entity_type: node
+bundle: homepage
+label: 'Search heading'
+description: ''
+required: true
+translatable: true
+default_value:
+  -
+    value: 'What are you looking for?'
+default_value_callback: ''
+settings: {  }
+field_type: string

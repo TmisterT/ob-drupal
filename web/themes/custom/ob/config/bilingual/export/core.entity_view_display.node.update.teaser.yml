@@ -1,0 +1,67 @@
+uuid: 6b9f59ca-23e1-47d9-a1b3-bb7f34c7f1d8
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - field.field.node.update.body
+    - field.field.node.update.field_content_owner
+    - field.field.node.update.field_featured
+    - field.field.node.update.field_featured_image
+    - field.field.node.update.field_last_reviewed
+    - field.field.node.update.field_release_documents
+    - field.field.node.update.field_summary
+    - field.field.node.update.field_topics
+    - field.field.node.update.field_update_date
+    - field.field.node.update.field_update_type
+    - node.type.update
+  module:
+    - datetime
+    - user
+id: node.update.teaser
+targetEntityType: node
+bundle: update
+mode: teaser
+content:
+  field_featured_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_summary:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_update_date:
+    type: datetime_custom
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'j F Y'
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_update_type:
+    type: entity_reference_label
+    label: hidden
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden:
+  body: true
+  field_content_owner: true
+  field_featured: true
+  field_last_reviewed: true
+  field_release_documents: true
+  field_topics: true
+  langcode: true
+  links: true

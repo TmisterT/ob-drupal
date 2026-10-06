@@ -1,0 +1,27 @@
+{# Public Holiday detail within the shared Public Notice section. #}
+{% set notice_link = node.field_notice_link.0 %}
+<article{{ attributes.addClass('content-page', 'public-notice-page', 'public-holiday') }}>
+  {{ title_prefix }}{{ title_suffix }}
+  <header class="public-notice-page__header public-holiday__header">
+    {% if not node.field_notice_summary.isEmpty %}
+      <div class="content-page__lead public-holiday__summary">{{ content.field_notice_summary }}</div>
+    {% endif %}
+  </header>
+
+  <section class="public-holiday__schedule" aria-label="{{ 'Public holidays'|t }}">
+    <div class="content-page__body public-holiday__table-wrap">{{ content.body }}</div>
+  </section>
+
+  {{ content|without('field_notice_category', 'field_notice_date', 'field_notice_summary', 'field_notice_urgent', 'field_notice_link', 'body', 'links') }}
+
+  {% if notice_link %}
+    <div class="public-holiday__related">
+      <h2>{{ 'Related information'|t }}</h2>
+      <a href="{{ notice_link.url }}">{{ notice_link.title ?: 'View related information'|t }}</a>
+    </div>
+  {% endif %}
+
+  <footer class="public-holiday__footer">
+    <a href="{{ path('view.public_notices.page_1') }}">{{ 'All public notices'|t }}</a>
+  </footer>
+</article>

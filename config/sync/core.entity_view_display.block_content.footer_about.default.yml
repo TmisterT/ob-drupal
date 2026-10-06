@@ -1,0 +1,32 @@
+uuid: ad929ed2-4afe-434a-8b08-e7c3532ebbdf
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.footer_about
+    - field.field.block_content.footer_about.body
+    - field.field.block_content.footer_about.field_image
+  module:
+    - text
+id: block_content.footer_about.default
+targetEntityType: block_content
+bundle: footer_about
+mode: default
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+hidden: {  }

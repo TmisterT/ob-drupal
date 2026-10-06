@@ -1,0 +1,8 @@
+uuid: 60b38572-76fe-4a2d-931c-09cc307f61ad
+langcode: en
+status: true
+dependencies: {  }
+id: government_identity
+label: 'Government identity'
+revision: true
+description: 'Government website identification displayed in the utility bar.'

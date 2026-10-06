@@ -1,0 +1,70 @@
+{# Full display for reusable Standard Service content. #}
+{% set has_section_nav = section_navigation.links is not empty %}
+<article{{ attributes.addClass('menu-section-page', 'service-page', 'service-page--standard') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  {% include '@ob/templates/content/service-page--header.html.twig' %}
+
+  <div class="menu-section-page__layout{% if not has_section_nav %} menu-section-page__layout--without-nav{% endif %}">
+    {% if has_section_nav %}
+      {% include '@ob/templates/navigation/section-navigation.html.twig' with {
+        heading_id: 'service-section-navigation-heading'
+      } %}
+    {% endif %}
+
+    <div class="menu-section-page__content service-page__content">
+      {% if service_details.body %}
+        <details class="service-disclosure service-page__overview">
+          <summary>
+            <span>{{ 'About this service'|t }}</span>
+            <span class="service-disclosure__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="service-disclosure__content menu-section-page__body">{{ service_details.body }}</div>
+        </details>
+      {% endif %}
+
+      {% if service_details.eligibility %}
+        <details class="service-disclosure service-page__section">
+          <summary><span>{{ 'Who can apply'|t }}</span><span class="service-disclosure__icon" aria-hidden="true"></span></summary>
+          <div class="service-disclosure__content">{{ service_details.eligibility }}</div>
+        </details>
+      {% endif %}
+
+      {% if service_details.requirements %}
+        <details class="service-disclosure service-page__section">
+          <summary><span>{{ 'What you need'|t }}</span><span class="service-disclosure__icon" aria-hidden="true"></span></summary>
+          <div class="service-disclosure__content">{{ service_details.requirements }}</div>
+        </details>
+      {% endif %}
+
+      {% if service_details.steps %}
+        <details class="service-disclosure service-page__section service-process">
+          <summary>
+            <span>{{ 'How to apply'|t }}</span>
+            <span class="service-disclosure__count">{{ service_details.steps|length }} {{ 'steps'|t }}</span>
+            <span class="service-disclosure__icon" aria-hidden="true"></span>
+          </summary>
+          <div class="service-disclosure__content">
+            <ol>
+              {% for step in service_details.steps %}
+                <li><span aria-hidden="true">{{ step.number }}</span><div>{{ step.content }}</div></li>
+              {% endfor %}
+            </ol>
+          </div>
+        </details>
+      {% endif %}
+
+      {% if service_details.processing %}
+        <details class="service-disclosure service-page__section">
+          <summary><span>{{ 'What happens next'|t }}</span><span class="service-disclosure__icon" aria-hidden="true"></span></summary>
+          <div class="service-disclosure__content">{{ service_details.processing }}</div>
+        </details>
+      {% endif %}
+
+      {% include '@ob/templates/content/service-page--footer.html.twig' %}
+    </div>
+  </div>
+
+  {{ content|without('field_summary', 'field_service_category', 'field_audience', 'field_application_status', 'field_opening_date', 'field_closing_date', 'body', 'field_eligibility', 'field_requirements', 'field_application_steps', 'field_processing_info', 'field_documents', 'field_service_link', 'field_contact_email', 'field_featured_image', 'field_featured', 'field_content_owner', 'field_last_reviewed') }}
+</article>

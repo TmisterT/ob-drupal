@@ -1,0 +1,59 @@
+uuid: 72000000-0000-4000-8000-000000000005
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.taxonomy_term.award_category.field_award_code
+    - taxonomy.vocabulary.award_category
+  module:
+    - path
+    - text
+id: taxonomy_term.award_category.default
+targetEntityType: taxonomy_term
+bundle: award_category
+mode: default
+content:
+  description:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 8
+      placeholder: 'Enter the public award criteria or, for a parent group, an introduction.'
+    third_party_settings: {  }
+  field_award_code:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings:
+      size: 40
+      placeholder: ''
+    third_party_settings: {  }
+  name:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  parent:
+    type: options_select
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 5
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+hidden: {  }

@@ -1,0 +1,53 @@
+{#
+/**
+ * @file
+ * Reusable sitewide alert.
+ */
+#}
+{# Determine whether the alert is enabled. Different render arrays can expose the
+   boolean value in different shapes, so check a rendered fallback too. #}
+{% set alert_enabled = false %}
+{% if content.field_alert_enabled['#items'] is defined %}
+  {% set alert_enabled = content.field_alert_enabled['#items'].0.value %}
+{% else %}
+  {% set _enabled_render = content.field_alert_enabled|render|trim %}
+  {% set alert_enabled = _enabled_render in ['1', 'true', 'True'] %}
+{% endif %}
+
+{% set alert_level = (content.field_alert_level['#items'] is defined ? content.field_alert_level['#items'].0.value : (content.field_alert_level|render|trim))|default('information') %}
+{% set alert_heading = content.field_heading['#items'] is defined ? content.field_heading['#items'].0.value : (content.field_heading|render|striptags|trim) %}
+{% set alert_id = (alert_level ~ '-' ~ alert_heading)|clean_class %}
+
+{% if alert_enabled %}
+  <aside{{ attributes.addClass('site-alert', 'site-alert--' ~ alert_level).setAttribute('data-site-alert-id', alert_id) }} role="{{ alert_level == 'emergency' ? 'alert' : 'status' }}" aria-live="{{ alert_level == 'emergency' ? 'assertive' : 'polite' }}">
+    {{ title_prefix }}
+    {{ title_suffix }}
+    <div class="container site-alert__inner">
+      <div class="site-alert__content">
+        <span class="site-alert__icon" aria-hidden="true"></span>
+        <div class="site-alert__copy">
+          <div class="site-alert__title">
+            <div class="site-alert__level">{{ content.field_alert_level }}</div>
+            <strong class="site-alert__heading">{{ alert_heading }}</strong>
+          </div>
+          <details class="site-alert__details"{% if alert_level == 'emergency' %} open{% endif %}>
+            <summary>
+              <span class="site-alert__details-label site-alert__details-label--closed">{{ 'View full notice'|t }}</span>
+              <span class="site-alert__details-label site-alert__details-label--open">{{ 'Hide full notice'|t }}</span>
+              <span class="site-alert__details-icon" aria-hidden="true"></span>
+            </summary>
+            <div class="site-alert__message">{{ content.body }}</div>
+          </details>
+        </div>
+      </div>
+      {% if content.field_link["#items"] is defined and not content.field_link["#items"].isEmpty %}
+        <div class="site-alert__link">{{ content.field_link }}</div>
+      {% endif %}
+      {% if alert_level != 'emergency' %}
+        <button type="button" class="site-alert__close" data-site-alert-dismiss aria-label="{{ 'Dismiss alert'|t }}">
+          <span aria-hidden="true"></span>
+        </button>
+      {% endif %}
+    </div>
+  </aside>
+{% endif %}

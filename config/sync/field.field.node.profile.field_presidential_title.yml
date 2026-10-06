@@ -1,0 +1,19 @@
+uuid: 4dcd73f3-7957-413f-ae5c-f778004e46e7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_presidential_title
+    - node.type.profile
+id: node.profile.field_presidential_title
+field_name: field_presidential_title
+entity_type: node
+bundle: profile
+label: 'Presidential title'
+description: 'Public historical wording, for example First President.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

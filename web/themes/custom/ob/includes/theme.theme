@@ -1,0 +1,17 @@
+<?php
+
+/**
+ * @file
+ * Custom theme hooks.
+ */
+
+/**
+ * Implements hook_preprocess_page().
+ */
+function ob_preprocess_page(array &$variables): void {
+  $site_config = \Drupal::config('system.site');
+
+  $variables['site_name'] = $site_config->get('name');
+  $variables['site_slogan'] = $site_config->get('slogan');
+  $variables['front_page'] = $variables['front_page'] ?? '/';
+}

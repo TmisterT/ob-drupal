@@ -1,0 +1,19 @@
+uuid: 244b81ea-7712-450b-ae63-f7272c1c1e30
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - text
+id: node.field_contact_details
+field_name: field_contact_details
+entity_type: node
+type: text_long
+settings: {  }
+module: text
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,22 @@
+uuid: 115aa89a-3476-48da-a79c-2371aed1ef23
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.footer_about
+    - field.storage.block_content.body
+  module:
+    - text
+id: block_content.footer_about.body
+field_name: body
+entity_type: block_content
+bundle: footer_about
+label: 'About text'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

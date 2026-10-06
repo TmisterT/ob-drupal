@@ -1,0 +1,18 @@
+{#
+/**
+ * @file
+ * Reusable call-to-action block.
+ */
+#}
+<div{{ attributes.addClass('call-to-action') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  {% if content.field_image %}
+    <div class="call-to-action__image">{{ content.field_image }}</div>
+  {% endif %}
+  <div class="call-to-action__content">
+    <h2>{{ content.field_heading }}</h2>
+    {{ content.body }}
+    {{ content.field_link }}
+  </div>
+</div>

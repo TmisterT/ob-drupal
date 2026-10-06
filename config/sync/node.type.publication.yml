@@ -1,0 +1,18 @@
+uuid: b0d14db5-4d21-469e-9674-bc2aaa383df7
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: Publication
+type: publication
+description: 'Gazettes, notices, instruments, policies, strategies, and reports.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

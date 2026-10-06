@@ -1,0 +1,21 @@
+uuid: dce03a10-4056-4a67-aab9-0a1ced46d6ab
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_notices_heading
+    - node.type.homepage
+id: node.homepage.field_notices_heading
+field_name: field_notices_heading
+entity_type: node
+bundle: homepage
+label: 'Public notices section heading'
+description: 'Heading displayed above public notices on the homepage.'
+required: true
+translatable: true
+default_value:
+  -
+    value: 'Important Public Notices'
+default_value_callback: ''
+settings: {  }
+field_type: string

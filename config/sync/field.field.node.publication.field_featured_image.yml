@@ -1,0 +1,29 @@
+uuid: 8da09ef3-9330-47c5-a589-df5eef3e14fc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_featured_image
+    - media.type.image
+    - node.type.publication
+id: node.publication.field_featured_image
+field_name: field_featured_image
+entity_type: node
+bundle: publication
+label: 'Cover image'
+description: 'Optional publication cover from the Media Library.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: null
+field_type: entity_reference

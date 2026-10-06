@@ -1,0 +1,1016 @@
+<?php
+
+/**
+ * @file
+ * Theme and preprocess functions for nodes and menu-driven sections.
+ */
+
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Menu\MenuTreeParameters;
+use Drupal\Core\StringTranslation\ByteSizeMarkup;
+
+/**
+ * Adds the shared section template to managed section pages.
+ */
+function ob_theme_suggestions_node_alter(array &$suggestions, array $variables): void {
+  $node = $variables['elements']['#node'] ?? NULL;
+  $view_mode = $variables['elements']['#view_mode'] ?? NULL;
+
+  if ($node && $node->bundle() === 'public_notice' && $view_mode === 'full') {
+    if (_ob_notice_has_category($node, ['announcement', 'announcements'])) {
+      $suggestions[] = 'node__public_notice__full__announcement';
+    }
+    elseif (_ob_notice_has_category($node, ['public holiday', 'public holidays'])) {
+      $suggestions[] = 'node__public_notice__full__public_holiday';
+    }
+  }
+
+  if ($node && $view_mode === 'full' && in_array($node->bundle(), ['basic_page', 'landing_page'], TRUE)) {
+    if (_ob_menu_section_navigation()['is_section']) {
+      $suggestions[] = 'node__menu_section_page';
+    }
+    if ($node->label() === 'History of Presidents') {
+      $suggestions[] = 'node__history_of_presidents';
+    }
+    if ($node->bundle() === 'landing_page' && $node->label() === 'Contact Us') {
+      $suggestions[] = 'node__landing_page__contact_us';
+    }
+    if (_ob_is_projects_landing_page($node)) {
+      $suggestions[] = 'node__landing_page__projects';
+    }
+    if ($node->bundle() === 'landing_page' && $node->hasField('field_vision_period') && !$node->get('field_vision_period')->isEmpty()) {
+      $suggestions[] = 'node__kv20';
+    }
+  }
+}
+
+/**
+ * Checks a notice against category labels in the existing vocabulary.
+ */
+function _ob_notice_has_category(\Drupal\node\NodeInterface $node, array $labels): bool {
+  if (!$node->hasField('field_notice_category')) {
+    return FALSE;
+  }
+  $labels = array_map(static fn(string $label): string => strtolower(trim($label)), $labels);
+  foreach ($node->get('field_notice_category')->referencedEntities() as $category) {
+    if (in_array(strtolower(trim($category->label())), $labels, TRUE)) {
+      return TRUE;
+    }
+  }
+  return FALSE;
+}
+/**
+ * Supplies section and previous/next navigation to full node pages.
+ */
+function ob_preprocess_node(array &$variables): void {
+  $node = $variables['node'] ?? NULL;
+  if (!$node) {
+    return;
+  }
+
+  _ob_preprocess_projects($variables);
+
+  if ($node->bundle() === 'public_notice') {
+    $variables['notice_has_detail_page'] = _ob_notice_has_category($node, [
+      'announcement',
+      'announcements',
+      'public holiday',
+      'public holidays',
+    ]);
+    if ($node->hasField('field_notice_category')) {
+      $cache = CacheableMetadata::createFromRenderArray($variables['elements']);
+      foreach ($node->get('field_notice_category')->referencedEntities() as $category) {
+        $cache->addCacheableDependency($category);
+      }
+      $cache->applyTo($variables['elements']);
+    }
+  }
+
+  if (
+    ($variables['view_mode'] ?? NULL) === 'full'
+    && $node->bundle() === 'landing_page'
+    && $node->label() === 'Contact Us'
+  ) {
+    $webform = \Drupal::entityTypeManager()->getStorage('webform')->load('contact');
+    if ($webform && $webform->status()) {
+      $variables['contact_webform'] = $webform->getSubmissionForm();
+    }
+  }
+
+  if (($variables['view_mode'] ?? NULL) === 'full' && $node->bundle() === '100_days_priority') {
+    $variables['hundred_days_dashboard'] = _ob_hundred_days_dashboard();
+    $variables['hundred_days_dashboard']['cache_metadata']->applyTo($variables['elements']);
+  }
+
+  if ($node->bundle() === 'update') {
+    $translation_cache = CacheableMetadata::createFromRenderArray($variables['elements']);
+    $variables['update_languages'] = _ob_update_language_links($node, $translation_cache);
+    $translation_cache->applyTo($variables['elements']);
+    $reference_labels = static function ($field): array {
+      $labels = [];
+      foreach ($field->referencedEntities() as $entity) {
+        $labels[] = $entity->label();
+      }
+      return $labels;
+    };
+    $public_date = $node->get('field_update_date')->value;
+
+    $variables['update_details'] = [
+      'summary' => $node->get('field_summary')->value,
+      'types' => $reference_labels($node->get('field_update_type')),
+      'topics' => $reference_labels($node->get('field_topics')),
+      'date' => $public_date
+        ? \Drupal::service('date.formatter')->format(strtotime($public_date), 'custom', 'j F Y')
+        : NULL,
+      'datetime' => $public_date,
+      'content_owner' => $node->get('field_content_owner')->value,
+      'last_reviewed' => $node->get('field_last_reviewed')->value
+        ? \Drupal::service('date.formatter')->format(strtotime($node->get('field_last_reviewed')->value), 'custom', 'j F Y')
+        : NULL,
+    ];
+  }
+
+  if (($variables['view_mode'] ?? NULL) !== 'full') {
+    return;
+  }
+
+  $navigation = _ob_menu_section_navigation();
+  if (!$navigation['is_section']) {
+    return;
+  }
+
+  $variables['section_navigation'] = $navigation;
+
+  if ($node->bundle() === 'publication') {
+    $reference_labels = static function ($field): array {
+      $labels = [];
+      foreach ($field->referencedEntities() as $entity) {
+        $labels[] = $entity->label();
+      }
+      return $labels;
+    };
+    $option_label = static function ($field): string {
+      $value = $field->value;
+      $allowed_values = $field->getFieldDefinition()->getFieldStorageDefinition()->getSetting('allowed_values') ?? [];
+      return $allowed_values[$value] ?? $value;
+    };
+    $format_date = static function ($field): ?string {
+      if ($field->isEmpty()) {
+        return NULL;
+      }
+      return \Drupal::service('date.formatter')->format(strtotime($field->value), 'custom', 'j F Y');
+    };
+
+    $variables['publication_details'] = [
+      'summary' => $node->get('field_summary')->value,
+      'types' => $reference_labels($node->get('field_publication_type')),
+      'year' => $node->get('field_publication_year')->value,
+      'status' => $option_label($node->get('field_document_status')),
+      'organisations' => $reference_labels($node->get('field_organisation')),
+      'reference' => $node->get('field_reference_number')->value,
+      'publication_date' => $format_date($node->get('field_publication_date')),
+      'language' => $option_label($node->get('field_language')),
+      'topics' => $reference_labels($node->get('field_topics')),
+      'content_owner' => $node->get('field_content_owner')->value,
+      'last_reviewed' => $format_date($node->get('field_last_reviewed')),
+    ];
+    $variables['publication_body'] = NULL;
+    if (!$node->get('body')->isEmpty()) {
+      $variables['publication_body'] = [
+        '#type' => 'processed_text',
+        '#text' => $node->get('body')->value,
+        '#format' => $node->get('body')->format,
+      ];
+    }
+
+    $variables['publication_documents'] = [];
+    foreach ($node->get('field_documents')->referencedEntities() as $media) {
+      $source_field = $media->getSource()->getConfiguration()['source_field'] ?? NULL;
+      if (!$source_field || $media->get($source_field)->isEmpty()) {
+        continue;
+      }
+      $file = $media->get($source_field)->entity;
+      if (!$file) {
+        continue;
+      }
+      $variables['publication_documents'][] = [
+        'title' => $media->label(),
+        'url' => \Drupal::service('file_url_generator')->generateString($file->getFileUri()),
+        'type' => strtoupper(pathinfo($file->getFilename(), PATHINFO_EXTENSION)),
+        'size' => ByteSizeMarkup::create($file->getSize()),
+      ];
+    }
+  }
+
+  if (in_array($node->bundle(), ['service', 'honours_awards'], TRUE)) {
+    $field = static fn(string $name) => $node->hasField($name) ? $node->get($name) : NULL;
+    $processed_text = static function ($value): ?array {
+      if (!$value || $value->isEmpty()) {
+        return NULL;
+      }
+      return [
+        '#type' => 'processed_text',
+        '#text' => $value->value,
+        '#format' => $value->format ?: 'basic_html',
+      ];
+    };
+    $format_date = static function ($value): ?string {
+      if (!$value || $value->isEmpty()) {
+        return NULL;
+      }
+      return \Drupal::service('date.formatter')->format(strtotime($value->value), 'custom', 'j F Y');
+    };
+    $plain_value = static function ($value): string {
+      return (!$value || $value->isEmpty()) ? '' : (string) $value->value;
+    };
+    $option_label = static function ($value): string {
+      if (!$value || $value->isEmpty()) {
+        return '';
+      }
+      $key = $value->value;
+      $allowed_values = $value->getFieldDefinition()->getFieldStorageDefinition()->getSetting('allowed_values') ?? [];
+      return $allowed_values[$key] ?? $key;
+    };
+
+    $groups = [];
+    $award_categories = $field('field_award_categories');
+    if ($node->bundle() === 'honours_awards' && $award_categories && !$award_categories->isEmpty()) {
+      $award_number = 0;
+      foreach ($award_categories->referencedEntities() as $term) {
+        $parent = $term->get('parent')->entity;
+        $group_id = $parent ? $parent->id() : 0;
+        if (!isset($groups[$group_id])) {
+          $groups[$group_id] = [
+            'title' => $parent ? $parent->label() : t('Awards'),
+            'description' => $parent ? $processed_text($parent->get('description')) : NULL,
+            'awards' => [],
+          ];
+        }
+        $award_number++;
+        $groups[$group_id]['awards'][] = [
+          'number' => $award_number,
+          'name' => $term->label(),
+          'code' => $term->hasField('field_award_code') ? $plain_value($term->get('field_award_code')) : '',
+          'criteria' => $processed_text($term->get('description')),
+        ];
+      }
+    }
+
+    $steps = [];
+    $application_steps = $field('field_application_steps');
+    if ($application_steps) {
+      foreach ($application_steps as $delta => $item) {
+        $steps[] = [
+          'number' => $delta + 1,
+          'content' => $processed_text($item),
+        ];
+      }
+    }
+
+    $documents = [];
+    $document_field = $field('field_documents');
+    if ($document_field) {
+      foreach ($document_field->referencedEntities() as $media) {
+        $source_field = $media->getSource()->getConfiguration()['source_field'] ?? NULL;
+        if (!$source_field || $media->get($source_field)->isEmpty()) {
+          continue;
+        }
+        $file = $media->get($source_field)->entity;
+        if (!$file) {
+          continue;
+        }
+        $documents[] = [
+          'title' => $media->label(),
+          'url' => \Drupal::service('file_url_generator')->generateString($file->getFileUri()),
+          'type' => strtoupper(pathinfo($file->getFilename(), PATHINFO_EXTENSION)),
+          'size' => ByteSizeMarkup::create($file->getSize()),
+        ];
+      }
+    }
+
+    $action = NULL;
+    $service_link = $field('field_service_link');
+    if ($service_link && !$service_link->isEmpty()) {
+      try {
+        $link_item = $service_link->first();
+        $action = [
+          'title' => $link_item->title ?: t('Access service'),
+          'url' => $link_item->getUrl(),
+        ];
+      }
+      catch (\Exception) {
+        $action = NULL;
+      }
+    }
+
+    $variables['service_details'] = [
+      'summary' => $plain_value($field('field_summary')),
+      'status_key' => $plain_value($field('field_application_status')),
+      'status' => $option_label($field('field_application_status')),
+      'opening_date' => $format_date($field('field_opening_date')),
+      'closing_date' => $format_date($field('field_closing_date')),
+      'body' => $processed_text($field('body')),
+      'eligibility' => $processed_text($field('field_eligibility')),
+      'requirements' => $processed_text($field('field_requirements')),
+      'processing' => $processed_text($field('field_processing_info')),
+      'groups' => array_values($groups),
+      'steps' => $steps,
+      'documents' => $documents,
+      'action' => $action,
+      'contact_email' => $plain_value($field('field_contact_email')),
+      'content_owner' => $plain_value($field('field_content_owner')),
+      'last_reviewed' => $format_date($field('field_last_reviewed')),
+    ];
+  }
+  if ($node->bundle() === 'landing_page' && $node->hasField('field_vision_period') && !$node->get('field_vision_period')->isEmpty()) {
+    $variables['kv20_documents'] = [];
+    foreach ($node->get('field_documents')->referencedEntities() as $media) {
+      $source = $media->getSource();
+      $source_field = $source->getConfiguration()['source_field'] ?? NULL;
+      if (!$source_field || $media->get($source_field)->isEmpty()) {
+        continue;
+      }
+      $file = $media->get($source_field)->entity;
+      $variables['kv20_documents'][] = [
+        'title' => $media->label(),
+        'url' => \Drupal::service('file_url_generator')->generateString($file->getFileUri()),
+        'type' => strtoupper(pathinfo($file->getFilename(), PATHINFO_EXTENSION)),
+        'size' => ByteSizeMarkup::create($file->getSize()),
+      ];
+    }
+  }
+
+  if ($node->bundle() === 'basic_page' && $node->label() === 'History of Presidents') {
+    $view = \Drupal\views\Views::getView('presidents_history');
+    if ($view) {
+      $view->setDisplay('block_1');
+      $variables['presidents_history'] = $view->render();
+    }
+  }
+
+  $metadata = (new CacheableMetadata())
+    ->addCacheContexts(['route', 'url.path'])
+    ->addCacheTags(['config:system.menu.main', 'menu_link_content_list']);
+  $metadata->applyTo($variables['elements']);
+}
+
+/**
+ * Builds the 100 Days dashboard rows from published priority content.
+ */
+function _ob_hundred_days_dashboard(): array {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $query = $storage->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('type', '100_days_priority')
+    ->condition('status', 1)
+    ->sort('field_priority_number', 'ASC')
+    ->sort('nid', 'ASC');
+  $ids = $query->execute();
+
+  $rows = [];
+  $completed = 0;
+  $progress_total = 0;
+  $metadata = (new CacheableMetadata())
+    ->addCacheContexts(['route', 'url.path'])
+    ->addCacheTags(['node_list:100_days_priority']);
+
+  foreach ($storage->loadMultiple($ids) as $index => $priority) {
+    $metadata->addCacheableDependency($priority);
+    $progress = $priority->hasField('field_progress') && !$priority->get('field_progress')->isEmpty()
+      ? (int) $priority->get('field_progress')->value
+      : 0;
+    $progress = max(0, min(100, $progress));
+    $progress_total += $progress;
+    if ($progress >= 100) {
+      $completed++;
+    }
+
+    $status_key = $priority->hasField('field_status') && !$priority->get('field_status')->isEmpty()
+      ? (string) $priority->get('field_status')->value
+      : '';
+    $status_values = $priority->hasField('field_status')
+      ? ($priority->get('field_status')->getFieldDefinition()->getFieldStorageDefinition()->getSetting('allowed_values') ?? [])
+      : [];
+    $status_label = $status_values[$status_key] ?? ($status_key ? str_replace('_', ' ', $status_key) : t('Not set'));
+
+    $division = '';
+    if ($priority->hasField('field_division') && !$priority->get('field_division')->isEmpty()) {
+      $division_entity = $priority->get('field_division')->entity;
+      $division = $division_entity ? $division_entity->label() : '';
+      if ($division_entity) {
+        $metadata->addCacheableDependency($division_entity);
+      }
+    }
+
+    $description = '';
+    if ($priority->hasField('field_description') && !$priority->get('field_description')->isEmpty()) {
+      $description = (string) $priority->get('field_description')->value;
+    }
+
+    $rows[] = [
+      'number' => $priority->hasField('field_priority_number') && !$priority->get('field_priority_number')->isEmpty()
+        ? (int) $priority->get('field_priority_number')->value
+        : $index + 1,
+      'description' => $description ?: $priority->label(),
+      'division' => $division,
+      'status_key' => $status_key ?: 'not_set',
+      'status' => $status_label,
+      'progress' => $progress,
+    ];
+  }
+
+  $total = count($rows);
+
+  return [
+    'rows' => $rows,
+    'total' => $total,
+    'completed' => $completed,
+    'not_completed' => max(0, $total - $completed),
+    'completion_percentage' => $total ? (int) round($progress_total / $total) : 0,
+    'cache_metadata' => $metadata,
+  ];
+}
+
+/**
+ * Builds navigation from supported branches of the active Main menu trail.
+ */
+function _ob_menu_section_navigation(): array {
+  static $navigation;
+  if (isset($navigation)) {
+    return $navigation;
+  }
+
+  $navigation = [
+    'is_section' => FALSE,
+    'section_key' => '',
+    'title' => '',
+    'root_url' => NULL,
+    'links' => [],
+    'previous' => NULL,
+    'next' => NULL,
+  ];
+
+  $section_titles = [
+    'about' => [
+      'about us',
+      'about the office',
+    ],
+    'government' => [
+      'government of kiribati',
+      'kiribati government',
+      'kiribati governments',
+      'our government',
+    ],
+    'news' => [
+      'news & media',
+      'news and media',
+      'news',
+    ],
+    'resources' => [
+      'resources',
+    ],
+    'services' => [
+      'services',
+    ],
+  ];
+
+  $active_trail = \Drupal::service('menu.active_trail');
+  $active_link = $active_trail->getActiveLink('main');
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $section_root = NULL;
+
+  if ($active_link) {
+    foreach (array_keys($active_trail->getActiveTrailIds('main')) as $plugin_id) {
+      if (!$plugin_id) {
+        continue;
+      }
+
+      try {
+        $link = $menu_link_manager->createInstance($plugin_id);
+      }
+      catch (\Exception) {
+        continue;
+      }
+
+      $section_key = _ob_menu_section_key((string) $link->getTitle(), $section_titles);
+      if ($section_key) {
+        $section_root = $plugin_id;
+        $navigation['section_key'] = $section_key;
+        $navigation['title'] = (string) $link->getTitle();
+        $navigation['root_url'] = $link->getUrlObject();
+        break;
+      }
+    }
+  }
+
+  // URL fallback keeps the section working when duplicate aliases prevent
+  // Drupal from identifying the active menu link.
+  if (!$section_root) {
+    $internal_path = \Drupal::service('path.current')->getPath();
+    $alias = \Drupal::service('path_alias.manager')->getAliasByPath($internal_path);
+    $prefixes = [
+      'about' => ['/about-us'],
+      'government' => ['/te-beretitenti', '/government', '/kiribati-government'],
+      'news' => ['/news-media', '/news'],
+      'resources' => ['/resources'],
+      'services' => ['/services'],
+    ];
+    $expected_section = NULL;
+    foreach ($prefixes as $section_key => $paths) {
+      foreach ($paths as $prefix) {
+        if ($alias === $prefix || str_starts_with($alias, $prefix . '/')) {
+          $expected_section = $section_key;
+          break 2;
+        }
+      }
+    }
+
+    if ($expected_section) {
+      $menu_tree = \Drupal::service('menu.link_tree');
+      $root_parameters = (new MenuTreeParameters())
+        ->setMinDepth(1)
+        ->setMaxDepth(1)
+        ->onlyEnabledLinks();
+      $root_tree = $menu_tree->load('main', $root_parameters);
+      $root_tree = $menu_tree->transform($root_tree, [
+        ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+        ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+      ]);
+
+      foreach ($root_tree as $element) {
+        $link = $element->link;
+        if (_ob_menu_section_key((string) $link->getTitle(), $section_titles) === $expected_section) {
+          $section_root = $link->getPluginId();
+          $navigation['section_key'] = $expected_section;
+          $navigation['title'] = (string) $link->getTitle();
+          $navigation['root_url'] = $link->getUrlObject();
+          break;
+        }
+      }
+    }
+  }
+
+  if (!$section_root) {
+    return $navigation;
+  }
+
+  $navigation['is_section'] = TRUE;
+  $parameters = (new MenuTreeParameters())
+    ->setRoot($section_root)
+    ->setMinDepth(1)
+    ->setMaxDepth(2)
+    ->onlyEnabledLinks();
+  $menu_tree = \Drupal::service('menu.link_tree');
+  $tree = $menu_tree->load('main', $parameters);
+  $tree = $menu_tree->transform($tree, [
+    ['callable' => 'menu.default_tree_manipulators:checkAccess'],
+    ['callable' => 'menu.default_tree_manipulators:generateIndexAndSort'],
+  ]);
+
+  $current_id = $active_link ? $active_link->getPluginId() : NULL;
+  $active_ids = array_keys($active_trail->getActiveTrailIds('main'));
+  $current_index = NULL;
+  foreach ($tree as $element) {
+    if (!$element->access->isAllowed()) {
+      continue;
+    }
+
+    $link = $element->link;
+    $plugin_id = $link->getPluginId();
+    $is_current = $plugin_id === $current_id;
+    $is_in_active_trail = in_array($plugin_id, $active_ids, TRUE);
+    $attributes = ['class' => ['section-nav__link']];
+    if ($is_current || $is_in_active_trail) {
+      $attributes['class'][] = 'is-active';
+    }
+    if ($is_current) {
+      $attributes['aria-current'] = 'page';
+      $current_index = count($navigation['links']);
+    }
+
+    $children = [];
+    foreach ($element->subtree as $child_element) {
+      if (!$child_element->access->isAllowed()) {
+        continue;
+      }
+
+      $child_link = $child_element->link;
+      $child_is_current = $child_link->getPluginId() === $current_id;
+      $child_attributes = ['class' => ['section-nav__sublink']];
+      if ($child_is_current) {
+        $child_attributes['class'][] = 'is-active';
+        $child_attributes['aria-current'] = 'page';
+      }
+      $children[] = [
+        'title' => (string) $child_link->getTitle(),
+        'link' => [
+          '#type' => 'link',
+          '#title' => $child_link->getTitle(),
+          '#url' => $child_link->getUrlObject(),
+          '#attributes' => $child_attributes,
+        ],
+      ];
+    }
+
+    $navigation['links'][] = [
+      'title' => (string) $link->getTitle(),
+      'link' => [
+        '#type' => 'link',
+        '#title' => $link->getTitle(),
+        '#url' => $link->getUrlObject(),
+        '#attributes' => $attributes,
+      ],
+      'children' => $children,
+      'expanded' => $is_current || $is_in_active_trail,
+    ];
+  }
+
+  $tree = array_values($tree);
+  if ($current_index !== NULL && $current_index > 0) {
+    $item = $navigation['links'][$current_index - 1];
+    $navigation['previous'] = [
+      'title' => $item['title'],
+      'link' => _ob_menu_section_pager_link($tree, $current_index - 1, 'previous'),
+    ];
+  }
+  if ($current_index !== NULL && $current_index < count($navigation['links']) - 1) {
+    $item = $navigation['links'][$current_index + 1];
+    $navigation['next'] = [
+      'title' => $item['title'],
+      'link' => _ob_menu_section_pager_link($tree, $current_index + 1, 'next'),
+    ];
+  }
+
+  return $navigation;
+}
+
+/**
+ * Matches a menu title to a supported section.
+ */
+function _ob_menu_section_key(string $title, array $section_titles): ?string {
+  $title = mb_strtolower(trim($title));
+  foreach ($section_titles as $section_key => $titles) {
+    if (in_array($title, $titles, TRUE)) {
+      return $section_key;
+    }
+  }
+
+  return NULL;
+}
+
+/**
+ * Creates one accessible previous/next section link.
+ */
+function _ob_menu_section_pager_link(array $tree, int $index, string $direction): array {
+  $link = $tree[$index]->link;
+
+  return [
+    '#type' => 'link',
+    '#title' => $link->getTitle(),
+    '#url' => $link->getUrlObject(),
+    '#attributes' => [
+      'class' => ['section-page-pager__link', 'section-page-pager__link--' . $direction],
+      'rel' => $direction === 'previous' ? 'prev' : 'next',
+    ],
+  ];
+}
+
+/**
+ * Uses the Main menu hierarchy for supported section breadcrumbs.
+ */
+function ob_preprocess_breadcrumb(array &$variables): void {
+  $variables['breadcrumb'] = [[
+    'text' => t('Home'),
+    'url' => \Drupal\Core\Url::fromRoute('<front>'),
+  ]];
+
+  $active_trail = \Drupal::service('menu.active_trail');
+  $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
+  $plugin_ids = array_reverse(array_keys($active_trail->getActiveTrailIds('main')));
+
+  foreach ($plugin_ids as $plugin_id) {
+    if (!$plugin_id) {
+      continue;
+    }
+
+    try {
+      $link = $menu_link_manager->createInstance($plugin_id);
+    }
+    catch (\Exception) {
+      continue;
+    }
+
+    $url = $link->getUrlObject();
+    if ($url->isRouted() && $url->getRouteName() === '<front>') {
+      continue;
+    }
+
+    $variables['breadcrumb'][] = [
+      'text' => $link->getTitle(),
+      'url' => $url,
+    ];
+  }
+
+  if (count($variables['breadcrumb']) > 1) {
+    return;
+  }
+
+  $navigation = _ob_menu_section_navigation();
+  if ($navigation['is_section']) {
+    $variables['breadcrumb'][] = [
+      'text' => $navigation['title'],
+      'url' => $navigation['root_url'],
+    ];
+    return;
+  }
+
+  $route_match = \Drupal::routeMatch();
+  $node = $route_match->getParameter('node');
+  if ($node instanceof \Drupal\node\NodeInterface) {
+    $variables['breadcrumb'][] = [
+      'text' => $node->label(),
+      'url' => $node->toUrl(),
+    ];
+  }
+}
+
+/**
+ * Prepares publication records for the shared Resources table template.
+ */
+function ob_preprocess_views_view(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view) {
+    return;
+  }
+
+  if (in_array($view->id(), ['updates', 'public_notices'], TRUE)) {
+    $variables['section_navigation'] = _ob_menu_section_navigation();
+
+    if ($view->id() === 'updates' && $view->current_display === 'press_releases') {
+      $variables['press_release_rows'] = [];
+      $date_formatter = \Drupal::service('date.formatter');
+      $metadata = (new CacheableMetadata())
+        ->addCacheContexts(['route', 'url.path', 'url.query_args', 'languages:language_content'])
+        ->addCacheTags(['node_list:update']);
+
+      $labels = static function ($field): array {
+        $result = [];
+        foreach ($field->referencedEntities() as $entity) {
+          $result[] = $entity->label();
+        }
+        return $result;
+      };
+
+      foreach ($view->result as $result) {
+        $node = $result->_entity ?? NULL;
+        if (!$node) {
+          continue;
+        }
+        $node = _ob_update_published_translation($node);
+        $metadata->addCacheableDependency($node);
+        $date_value = $node->get('field_update_date')->value;
+        $image = NULL;
+        if (!$node->get('field_featured_image')->isEmpty()) {
+          $image = $node->get('field_featured_image')->view([
+            'label' => 'hidden',
+            'type' => 'entity_reference_entity_view',
+            'settings' => [
+              'view_mode' => 'default',
+              'link' => FALSE,
+            ],
+          ]);
+        }
+
+        $variables['press_release_rows'][] = [
+          'title' => $node->label(),
+          'url' => $node->toUrl(),
+          'image' => $image,
+          'summary' => $node->get('field_summary')->value,
+          'date' => $date_value ? $date_formatter->format(strtotime($date_value), 'custom', 'j F Y') : NULL,
+          'datetime' => $date_value,
+          'categories' => $labels($node->get('field_update_type')),
+          'topics' => $labels($node->get('field_topics')),
+          'languages' => _ob_update_language_links($node, $metadata),
+        ];
+      }
+
+      $variables['press_release_total'] = $view->pager ? $view->pager->getTotalItems() : count($variables['press_release_rows']);
+      $variables['table_result_range'] = _ob_table_result_range($view, count($variables['press_release_rows']));
+      // These custom rows bypass Views' normal row render arrays. Bubble their
+      // dependencies through a rendered child so translation changes expire
+      // both the archive and page caches immediately.
+      $variables['press_release_cache'] = ['#markup' => ''];
+      $metadata->applyTo($variables['press_release_cache']);
+    }
+
+    return;
+  }
+
+  if ($view->id() !== 'resource_library') {
+    return;
+  }
+
+  $display_content = [
+    'page_gazettes' => [
+      'key' => 'gazettes',
+      'eyebrow' => t('Official records'),
+      'heading' => t('Official gazettes and legal instruments'),
+      'summary' => t('Browse government gazettes, official notices, regulations, and legal instruments.'),
+      'detail' => t('Search by title or reference and use the available filters to narrow your results. Open a record for publication details, or view and download its attached documents.'),
+      'results_heading' => t('Published records'),
+      'title_label' => t('Gazette or instrument'),
+      'document_label' => t('Official file'),
+    ],
+    'page_library' => [
+      'key' => 'library',
+      'eyebrow' => t('Government publications'),
+      'heading' => t('Official publications and reference material'),
+      'summary' => t('Explore government policies, strategies, reports, guidelines, and public information documents.'),
+      'detail' => t('Use the search and filters to find a publication by title, type, year, or organisation. Open its record for more information, or view and download the available files.'),
+      'results_heading' => t('Library documents'),
+      'title_label' => t('Publication'),
+      'document_label' => t('File'),
+    ],
+    'page_forms' => [
+      'key' => 'forms',
+      'eyebrow' => t('Public services'),
+      'heading' => t('Government forms and permit applications'),
+      'summary' => t('Find current application forms, permit documents, agreements, and supporting guidance for government services.'),
+      'detail' => t('Open the publication record for requirements and supporting information, then view or download the official form.'),
+      'results_heading' => t('Available forms'),
+      'title_label' => t('Form or application'),
+      'document_label' => t('Form file'),
+    ],
+  ];
+  $variables['resource_page'] = $display_content[$view->current_display] ?? $display_content['page_library'];
+  $variables['section_navigation'] = _ob_menu_section_navigation();
+  $variables['resource_rows'] = [];
+
+  $labels = static function ($field): array {
+    $result = [];
+    foreach ($field->referencedEntities() as $entity) {
+      $result[] = $entity->label();
+    }
+    return $result;
+  };
+
+  $date_formatter = \Drupal::service('date.formatter');
+  $file_url_generator = \Drupal::service('file_url_generator');
+  $metadata = (new CacheableMetadata())
+    ->addCacheContexts(['route', 'url.path', 'url.query_args'])
+    ->addCacheTags(['config:system.menu.main', 'menu_link_content_list']);
+
+  foreach ($view->result as $result) {
+    $node = $result->_entity ?? NULL;
+    if (!$node) {
+      continue;
+    }
+    $metadata->addCacheableDependency($node);
+
+    $documents = [];
+    foreach ($node->get('field_documents')->referencedEntities() as $media) {
+      $metadata->addCacheableDependency($media);
+      $source_field = $media->getSource()->getConfiguration()['source_field'] ?? NULL;
+      if (!$source_field || $media->get($source_field)->isEmpty()) {
+        continue;
+      }
+      $file = $media->get($source_field)->entity;
+      if (!$file) {
+        continue;
+      }
+      $metadata->addCacheableDependency($file);
+      $extension = strtoupper(pathinfo($file->getFilename(), PATHINFO_EXTENSION));
+      $documents[] = [
+        'title' => $media->label(),
+        'url' => $file_url_generator->generateString($file->getFileUri()),
+        'type' => $extension ?: t('File'),
+        'size' => ByteSizeMarkup::create($file->getSize()),
+      ];
+    }
+
+    $published = NULL;
+    if (!$node->get('field_publication_date')->isEmpty()) {
+      $published = $date_formatter->format(strtotime($node->get('field_publication_date')->value), 'custom', 'j F Y');
+    }
+
+    $variables['resource_rows'][] = [
+      'title' => $node->label(),
+      'url' => $node->toUrl(),
+      'summary' => $node->get('field_summary')->value,
+      'year' => $node->get('field_publication_year')->value,
+      'published' => $published,
+      'reference' => $node->get('field_reference_number')->value,
+      'types' => $labels($node->get('field_publication_type')),
+      'organisations' => $labels($node->get('field_organisation')),
+      'documents' => $documents,
+    ];
+  }
+
+  $variables['resource_result_count'] = $view->pager ? $view->pager->getTotalItems() : count($variables['resource_rows']);
+  $variables['table_result_range'] = _ob_table_result_range($view, count($variables['resource_rows']));
+  $metadata->applyTo($variables);
+}
+
+/**
+ * Selects a published translation for archive rows, with original fallback.
+ */
+function _ob_update_published_translation(\Drupal\node\NodeInterface $node): \Drupal\node\NodeInterface {
+  $langcode = \Drupal::languageManager()->getCurrentLanguage(\Drupal\Core\Language\LanguageInterface::TYPE_CONTENT)->getId();
+  if ($node->hasTranslation($langcode)) {
+    $translation = $node->getTranslation($langcode);
+    if ($translation->isPublished() && $translation->access('view')) {
+      return $translation;
+    }
+  }
+  $original = $node->getUntranslated();
+  if ($original->isPublished() && $original->access('view')) {
+    return $original;
+  }
+  foreach ($node->getTranslationLanguages() as $language) {
+    $translation = $node->getTranslation($language->getId());
+    if ($translation->isPublished() && $translation->access('view')) {
+      return $translation;
+    }
+  }
+  return $original;
+}
+
+/**
+ * Supplies accessible links to published versions only, with access caching.
+ */
+function _ob_update_language_links(\Drupal\node\NodeInterface $node, CacheableMetadata $cache): array {
+  $cache->addCacheableDependency($node)
+    ->addCacheContexts(['languages:language_content'])
+    ->addCacheTags(['config:language.entity.en', 'config:language.entity.gil']);
+  $links = [];
+  foreach (['en' => 'English', 'gil' => 'Kiribati'] as $langcode => $label) {
+    if (!$node->hasTranslation($langcode)) {
+      continue;
+    }
+    $translation = $node->getTranslation($langcode);
+    $access = $translation->access('view', NULL, TRUE);
+    $cache->addCacheableDependency($access);
+    if (!$translation->isPublished() || !$access->isAllowed()) {
+      continue;
+    }
+    $links[] = [
+      'label' => $label,
+      'langcode' => $langcode,
+      'current' => $node->language()->getId() === $langcode,
+      'url' => $translation->toUrl('canonical', ['language' => $translation->language()]),
+    ];
+  }
+  return $links;
+}
+
+/**
+ * Describes the visible rows using the active Views pager and its offset.
+ */
+function _ob_table_result_range(\Drupal\views\ViewExecutable $view, int $row_count): array {
+  $pager = $view->pager;
+  $start = $pager ? $pager->getCurrentPage() * $pager->getItemsPerPage() + $pager->getOffset() : 0;
+  return [
+    'first' => $row_count ? $start + 1 : 0,
+    'last' => $row_count ? $start + $row_count : 0,
+  ];
+}
+/**
+ * Keeps each Resources search form focused on relevant document types.
+ */
+function ob_form_views_exposed_form_alter(array &$form, FormStateInterface $form_state, string $form_id): void {
+  $view = $form_state->get('view');
+  if (!$view || $view->id() !== 'resource_library') {
+    return;
+  }
+
+  $settings = [
+    'page_gazettes' => [
+      'label' => t('Search gazettes'),
+      'types' => [5, 6, 7],
+    ],
+    'page_library' => [
+      'label' => t('Search the library'),
+      'types' => [8, 9, 10, 11, 45],
+    ],
+    'page_forms' => [
+      'label' => t('Search forms'),
+      'types' => [43, 44, 45, 52],
+    ],
+  ];
+  $display = $settings[$view->current_display] ?? NULL;
+  if (!$display) {
+    return;
+  }
+
+  if (isset($form['search'])) {
+    $form['search']['#title'] = $display['label'];
+  }
+  if (isset($form['type']['#options'])) {
+    $form['type']['#options'] = array_filter(
+      $form['type']['#options'],
+      static fn($key): bool => $key === 'All' || in_array((int) $key, $display['types'], TRUE),
+      ARRAY_FILTER_USE_KEY,
+    );
+  }
+}

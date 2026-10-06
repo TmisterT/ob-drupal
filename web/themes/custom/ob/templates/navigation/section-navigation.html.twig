@@ -1,0 +1,28 @@
+{# Shared navigation for menu-driven public sections. #}
+{% if section_navigation.links %}
+  <nav class="section-nav" aria-labelledby="{{ heading_id }}">
+    <h2 id="{{ heading_id }}">{{ section_navigation.title }}</h2>
+    <ul class="section-nav__list">
+      {% for item in section_navigation.links %}
+        {% set children_id = heading_id ~ '-children-' ~ loop.index %}
+        <li class="section-nav__item{% if item.children %} section-nav__item--has-children{% endif %}{% if item.expanded %} is-open{% endif %}">
+          {% if item.children %}
+            <div class="section-nav__row">
+              {{ item.link }}
+              <button class="section-nav__toggle" type="button" aria-expanded="{{ item.expanded ? 'true' : 'false' }}" aria-controls="{{ children_id }}" data-section-nav-toggle>
+                <span class="visually-hidden">{{ 'Toggle @section links'|t({'@section': item.title}) }}</span>
+              </button>
+            </div>
+            <ul class="section-nav__sublist" id="{{ children_id }}">
+              {% for child in item.children %}
+                <li class="section-nav__subitem">{{ child.link }}</li>
+              {% endfor %}
+            </ul>
+          {% else %}
+            {{ item.link }}
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+{% endif %}

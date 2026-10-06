@@ -1,0 +1,15 @@
+uuid: ab8dc7e3-e329-4072-8da0-2c4c9ff6058f
+langcode: en
+status: true
+dependencies: {  }
+name: ob_hero_medium
+label: 'OB hero medium'
+effects:
+  3145f97b-e9dc-4731-a1f6-1643eb628d1e:
+    uuid: 3145f97b-e9dc-4731-a1f6-1643eb628d1e
+    id: image_scale
+    weight: 0
+    data:
+      width: 960
+      height: null
+      upscale: false

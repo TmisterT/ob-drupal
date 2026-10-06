@@ -1,0 +1,23 @@
+uuid: 2fb673df-93a1-480c-b380-71c3fc095b5a
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:footer_about:dc27d427-44bc-422b-95f5-707c52d00397'
+  module:
+    - block_content
+  theme:
+    - ob
+id: ob_footer_about
+theme: ob
+region: footer_about
+weight: 0
+provider: null
+plugin: 'block_content:dc27d427-44bc-422b-95f5-707c52d00397'
+settings:
+  id: 'block_content:dc27d427-44bc-422b-95f5-707c52d00397'
+  label: 'About the Office'
+  label_display: ''
+  provider: block_content
+  view_mode: full
+visibility: {  }

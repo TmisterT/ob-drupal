@@ -1,0 +1,23 @@
+uuid: 818c8bf7-9bb0-4ab2-8329-3fed8a330b92
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_is_president
+    - node.type.profile
+id: node.profile.field_is_president
+field_name: field_is_president
+entity_type: node
+bundle: profile
+label: 'President of Kiribati'
+description: 'Include this profile in the History of Presidents directory.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: President
+  off_label: 'Other profile'
+field_type: boolean

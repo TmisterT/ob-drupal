@@ -1,0 +1,199 @@
+.kv20-page__facts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.25rem 2.5rem;
+  margin: 1.5rem 0 0;
+  padding-top: 1.25rem;
+  border-top: 1px solid $government-border;
+
+  div { min-width: 9rem; }
+
+  dt {
+    margin-bottom: 0.2rem;
+    color: $government-muted;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  dd {
+    margin: 0;
+    color: $government-navy;
+    font-weight: 750;
+  }
+  .field { margin: 0; }
+}
+
+.kv20-page__cover {
+  max-width: 25rem;
+  justify-self: end;
+  border: 1px solid $government-border;
+
+  img { width: 100%; }
+}
+
+.kv20-page__body {
+  > p:first-child { font-size: 1.15rem; }
+
+  li { margin-bottom: 0.7rem; }
+}
+
+.kv20-documents {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid $government-border;
+}
+
+.kv20-documents__heading {
+  margin-bottom: 1rem;
+
+  p {
+    margin: 0 0 0.2rem;
+    color: $government-red;
+    font-size: 0.75rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin: 0;
+    color: $government-navy;
+    font-size: 1.6rem;
+  }
+}
+
+.kv20-document {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.25rem, 3vw, 1.75rem);
+  border-top: 4px solid $government-blue;
+  background: $government-surface;
+
+  @media (min-width: 700px) {
+    grid-template-columns: 3rem minmax(0, 1fr) auto;
+    align-items: center;
+  }
+}
+
+.kv20-document__icon {
+  color: $government-red;
+  font-size: 2.25rem;
+  line-height: 1;
+}
+
+.kv20-document__icon i,
+.kv20-document__actions i {
+  display: inline-block;
+  flex: 0 0 auto;
+  width: 1em;
+  height: 1em;
+  background: currentcolor;
+  mask-position: center;
+  mask-repeat: no-repeat;
+  mask-size: contain;
+}
+
+.bi-file-earmark-pdf {
+  mask-image: url("/themes/custom/ob/assets/icons/bootstrap-icons/file-earmark-pdf.svg");
+}
+
+.bi-box-arrow-up-right {
+  mask-image: url("/themes/custom/ob/assets/icons/bootstrap-icons/box-arrow-up-right.svg");
+}
+
+.bi-download {
+  mask-image: url("/themes/custom/ob/assets/icons/bootstrap-icons/download.svg");
+}
+
+.kv20-document__details {
+  h3 {
+    margin: 0 0 0.5rem;
+    color: $government-navy;
+    font-size: 1.1rem;
+  }
+
+  p {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem 1rem;
+    margin: 0;
+    color: $government-muted;
+    font-size: 0.875rem;
+  }
+  .field { margin: 0; }
+}
+
+.kv20-document__date {
+  margin-top: 0.5rem;
+  color: $government-muted;
+  font-size: 0.875rem;
+}
+
+.kv20-document__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+
+  a {
+    display: inline-flex;
+    min-height: 44px;
+    padding: 0.65rem 0.9rem;
+    align-items: center;
+    gap: 0.5rem;
+    border: 1px solid $government-blue;
+    color: $government-blue;
+    font-weight: 750;
+    text-decoration: none;
+
+    &:hover,
+    &:focus {
+      color: #fff;
+      background: $government-blue;
+    }
+  }
+
+  .kv20-document__download {
+    color: #fff;
+    background: $government-blue;
+  }
+}
+
+.kv20-gallery {
+  margin-top: 3rem;
+  padding-top: 2rem;
+  border-top: 1px solid $government-border;
+
+  h2 {
+    color: $government-navy;
+    font-size: 1.5rem;
+  }
+
+  .field__items {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(12rem, 1fr));
+    gap: 1rem;
+  }
+
+  img {
+    width: 100%;
+    height: auto;
+  }
+}
+
+.kv20-page__metadata {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1rem 2.5rem;
+  margin-top: 3rem;
+  padding-top: 1rem;
+  border-top: 1px solid $government-border;
+  color: $government-muted;
+  font-size: 0.875rem;
+
+  > div {
+    display: flex;
+    gap: 0.45rem;
+  }
+  span { font-weight: 750; }
+  .field { margin: 0; }
+}

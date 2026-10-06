@@ -1,0 +1,18 @@
+uuid: cf202583-f2b5-435c-a181-c44f5e77ffbe
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_is_current
+field_name: field_is_current
+entity_type: node
+type: boolean
+settings: {  }
+module: core
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

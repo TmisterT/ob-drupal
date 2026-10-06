@@ -1,0 +1,256 @@
+$presidents-navy: #062b49;
+$presidents-blue: #075f94;
+$presidents-red: #b52f36;
+$presidents-gold: #f6bd16;
+$presidents-ink: #142b3b;
+$presidents-muted: #526977;
+$presidents-border: #d6e0e5;
+$presidents-surface: #f3f7f8;
+
+.presidents-page {
+  max-width: 76rem;
+}
+
+.presidents-page__introduction {
+  margin-bottom: 2.75rem;
+  color: $presidents-ink;
+  font-size: 1.0625rem;
+  line-height: 1.75;
+
+  > :last-child { margin-bottom: 0; }
+}
+
+.presidents-directory {
+  margin-top: 2.5rem;
+}
+
+.presidents-directory__heading {
+  padding-bottom: 1.25rem;
+  border-bottom: 4px solid $presidents-navy;
+
+  p {
+    margin: 0 0 0.35rem;
+    color: $presidents-red;
+    font-size: 0.76rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin: 0;
+    color: $presidents-navy;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.6rem);
+    line-height: 1.15;
+  }
+}
+
+.view-presidents-history {
+  .views-row {
+    position: relative;
+    border-bottom: 1px solid $presidents-border;
+
+    &:last-child { border-bottom: 0; }
+  }
+}
+
+.president-record {
+  display: grid;
+  padding: clamp(1.5rem, 4vw, 2.5rem) 0;
+  align-items: start;
+  gap: clamp(1.25rem, 3vw, 2rem);
+  grid-template-columns: minmax(7rem, 11rem) minmax(0, 1fr);
+}
+
+.president-record--current {
+  margin-top: 1rem;
+  padding-right: clamp(1rem, 3vw, 1.5rem);
+  padding-left: clamp(1rem, 3vw, 1.5rem);
+  border-left: 4px solid $presidents-gold;
+  background: $presidents-surface;
+}
+
+.president-record__portrait {
+  overflow: hidden;
+  aspect-ratio: 4 / 5;
+  border-radius: 4px;
+  background: #e3ecef;
+
+  a {
+    display: block;
+    height: 100%;
+  }
+
+  .field,
+  .media,
+  .field__item {
+    height: 100%;
+    margin: 0;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+}
+
+.president-record__portrait-placeholder {
+  width: 100%;
+  height: 100%;
+  border: 1px solid $presidents-border;
+  background: $presidents-surface;
+}
+
+.president-record__portrait a[href="/te-beretitenti/history-of-presidents/ieremia-tabai"] img {
+  object-position: center top;
+}
+
+.president-record__context {
+  display: flex;
+  min-height: 1.5rem;
+  margin-bottom: 0.55rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.4rem 0.8rem;
+  color: $presidents-muted;
+  font-size: 0.75rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.president-record__current {
+  display: inline-flex;
+  min-height: 24px;
+  padding: 0.2rem 0.55rem;
+  align-items: center;
+  border-radius: 3px;
+  color: #fff;
+  background: $presidents-red;
+}
+
+.president-record__content {
+  min-width: 0;
+
+  h3 {
+    margin: 0 0 0.7rem;
+    color: $presidents-navy;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1.45rem, 3vw, 2rem);
+    line-height: 1.2;
+
+    a {
+      color: inherit;
+      text-decoration: none;
+
+      &:hover,
+      &:focus { color: $presidents-blue; }
+    }
+  }
+}
+
+.president-record__term {
+  display: flex;
+  margin: 0 0 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.35rem 0.75rem;
+  color: $presidents-ink;
+
+  span {
+    color: $presidents-muted;
+    font-size: 0.82rem;
+    font-weight: 700;
+  }
+
+  strong { font-weight: 800; }
+}
+
+.president-record__position {
+  margin-bottom: 0.75rem;
+  color: $presidents-blue;
+  font-weight: 700;
+
+  .field { margin: 0; }
+}
+
+.president-record__summary {
+  color: $presidents-muted;
+  line-height: 1.65;
+
+  .field { margin: 0; }
+}
+
+.president-record__profile-link {
+  display: inline-flex;
+  min-height: 44px;
+  margin-top: 1rem;
+  align-items: center;
+  gap: 0.5rem;
+  color: $presidents-blue;
+  font-weight: 750;
+  text-decoration-thickness: 1px;
+  text-underline-offset: 0.2em;
+
+  span {
+    color: $presidents-red;
+    font-size: 1.15rem;
+  }
+}
+
+.profile-page__presidential-record {
+  display: flex;
+  margin-bottom: 0.75rem;
+  flex-wrap: wrap;
+  gap: 0.45rem;
+
+  span {
+    display: inline-flex;
+    min-height: 28px;
+    padding: 0.25rem 0.6rem;
+    align-items: center;
+    border-left: 3px solid $presidents-gold;
+    color: $presidents-navy;
+    background: $presidents-surface;
+    font-size: 0.78rem;
+    font-weight: 800;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .president-record {
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: 1rem;
+  }
+
+  .president-record--current {
+    padding-right: 0.75rem;
+    padding-left: 0.75rem;
+  }
+
+  .president-record__context {
+    display: grid;
+    justify-items: start;
+  }
+
+  .president-record__content h3 {
+    font-size: 1.3rem;
+  }
+
+  .president-record__position,
+  .president-record__summary {
+    font-size: 0.92rem;
+  }
+}
+
+@media (max-width: 389.98px) {
+  .president-record {
+    grid-template-columns: 1fr;
+  }
+
+  .president-record__portrait {
+    width: min(10rem, 55vw);
+  }
+}

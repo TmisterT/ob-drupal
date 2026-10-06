@@ -1,0 +1,58 @@
+uuid: 4d2225ad-ae0d-40b3-946c-10c369bac7fc
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.contact_details
+    - field.field.block_content.contact_details.field_address
+    - field.field.block_content.contact_details.field_email
+    - field.field.block_content.contact_details.field_opening_hours
+    - field.field.block_content.contact_details.field_phone
+  module:
+    - text
+id: block_content.contact_details.default
+targetEntityType: block_content
+bundle: contact_details
+mode: default
+content:
+  field_address:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_email:
+    type: email_default
+    weight: 1
+    region: content
+    settings:
+      placeholder: ''
+      size: 60
+    third_party_settings: {  }
+  field_opening_hours:
+    type: string_textarea
+    weight: 3
+    region: content
+    settings:
+      rows: 5
+      placeholder: ''
+    third_party_settings: {  }
+  field_phone:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

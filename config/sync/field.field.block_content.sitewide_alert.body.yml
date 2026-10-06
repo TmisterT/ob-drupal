@@ -1,0 +1,22 @@
+uuid: 32aa3e58-7836-44bb-95aa-8d8d8535c172
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.sitewide_alert
+    - field.storage.block_content.body
+  module:
+    - text
+id: block_content.sitewide_alert.body
+field_name: body
+entity_type: block_content
+bundle: sitewide_alert
+label: Message
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

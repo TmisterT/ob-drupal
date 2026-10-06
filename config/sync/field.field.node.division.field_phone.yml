@@ -1,0 +1,19 @@
+uuid: ea005f54-1a8e-414c-83d3-7f38eda1fce4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_phone
+    - node.type.division
+id: node.division.field_phone
+field_name: field_phone
+entity_type: node
+bundle: division
+label: Telephone
+description: 'Public telephone number.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

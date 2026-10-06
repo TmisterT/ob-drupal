@@ -1,0 +1,25 @@
+uuid: 03c87f0e-2ab9-40fe-b52b-373d7e9ba921
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_slide_weight
+    - node.type.homepage_slide
+id: node.homepage_slide.field_slide_weight
+field_name: field_slide_weight
+entity_type: node
+bundle: homepage_slide
+label: 'Display order'
+description: 'Lower numbers appear first.'
+required: true
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  min: -50
+  max: 50
+  prefix: ''
+  suffix: ''
+field_type: integer

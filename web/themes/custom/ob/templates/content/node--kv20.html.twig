@@ -1,0 +1,96 @@
+{# Full display for the Kiribati 20-Year Vision resource page. #}
+{% set has_hero = not node.field_hero_image.isEmpty %}
+{% set has_gallery = node.hasField('field_gallery_images') and not node.field_gallery_images.isEmpty %}
+{% set has_owner = node.hasField('field_content_owner') and not node.field_content_owner.isEmpty %}
+{% set has_review_date = node.hasField('field_last_reviewed') and not node.field_last_reviewed.isEmpty %}
+
+<article{{ attributes.addClass('menu-section-page', 'kv20-page') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="menu-section-page__intro{% if has_hero %} menu-section-page__intro--with-media{% endif %}">
+    <div class="menu-section-page__intro-copy">
+      <p class="menu-section-page__eyebrow">{{ section_navigation.title }}</p>
+      <div class="menu-section-page__lead">{{ content.field_summary }}</div>
+      <dl class="kv20-page__facts">
+        <div><dt>{{ 'Vision period'|t }}</dt><dd>{{ content.field_vision_period }}</dd></div>
+        {% if not node.field_document_version.isEmpty %}
+          <div><dt>{{ 'Edition'|t }}</dt><dd>{{ content.field_document_version }}</dd></div>
+        {% endif %}
+      </dl>
+    </div>
+    {% if has_hero %}
+      <div class="menu-section-page__media kv20-page__cover">{{ content.field_hero_image }}</div>
+    {% endif %}
+  </header>
+
+  <div class="menu-section-page__layout">
+    {% include '@ob/templates/navigation/section-navigation.html.twig' with {
+      heading_id: 'kv20-section-navigation-heading'
+    } %}
+
+    <div class="menu-section-page__content">
+      <div class="menu-section-page__body kv20-page__body">{{ content.body }}</div>
+
+      {% if kv20_documents %}
+        <section class="kv20-documents" aria-labelledby="kv20-documents-heading">
+          <div class="kv20-documents__heading">
+            <p>{{ 'Official publication'|t }}</p>
+            <h2 id="kv20-documents-heading">{{ 'Read the KV20'|t }}</h2>
+          </div>
+          {% for document in kv20_documents %}
+            <article class="kv20-document">
+              <div class="kv20-document__icon" aria-hidden="true"><i class="bi bi-file-earmark-pdf"></i></div>
+              <div class="kv20-document__details">
+                <h3>{{ document.title }}</h3>
+                <p>
+                  <span>{{ document.type }}</span>
+                  <span>{{ document.size }}</span>
+                  {% if not node.field_language.isEmpty %}<span>{{ content.field_language }}</span>{% endif %}
+                </p>
+                {% if not node.field_publication_date.isEmpty %}
+                  <div class="kv20-document__date"><strong>{{ 'Published'|t }}:</strong> {{ content.field_publication_date }}</div>
+                {% endif %}
+              </div>
+              <div class="kv20-document__actions">
+                <a class="kv20-document__view" href="{{ document.url }}" target="_blank" rel="noopener">
+                  <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>{{ 'View PDF'|t }}
+                </a>
+                <a class="kv20-document__download" href="{{ document.url }}" download>
+                  <i class="bi bi-download" aria-hidden="true"></i>{{ 'Download PDF'|t }}
+                </a>
+              </div>
+            </article>
+          {% endfor %}
+        </section>
+      {% endif %}
+
+      {% if has_gallery %}
+        <section class="kv20-gallery" aria-labelledby="kv20-gallery-heading">
+          <h2 id="kv20-gallery-heading">{{ 'KV20 in focus'|t }}</h2>
+          {{ content.field_gallery_images }}
+        </section>
+      {% endif %}
+
+      {% if has_owner or has_review_date %}
+        <aside class="kv20-page__metadata" aria-label="{{ 'Page information'|t }}">
+          {% if has_owner %}<div><span>{{ 'Content owner'|t }}</span>{{ content.field_content_owner }}</div>{% endif %}
+          {% if has_review_date %}<div><span>{{ 'Last reviewed'|t }}</span>{{ content.field_last_reviewed }}</div>{% endif %}
+        </aside>
+      {% endif %}
+
+      {% if section_navigation.previous or section_navigation.next %}
+        <nav class="section-page-pager" aria-label="{{ 'Resources section pages'|t }}">
+          {% if section_navigation.previous %}
+            <div class="section-page-pager__item section-page-pager__item--previous"><span>{{ 'Previous'|t }}</span>{{ section_navigation.previous.link }}</div>
+          {% endif %}
+          {% if section_navigation.next %}
+            <div class="section-page-pager__item section-page-pager__item--next"><span>{{ 'Next'|t }}</span>{{ section_navigation.next.link }}</div>
+          {% endif %}
+        </nav>
+      {% endif %}
+    </div>
+  </div>
+
+  {{ content|without('field_summary', 'field_hero_image', 'body', 'field_documents', 'field_gallery_images', 'field_vision_period', 'field_publication_date', 'field_document_version', 'field_language', 'field_content_owner', 'field_last_reviewed', 'field_featured_links', 'field_call_to_action', 'field_topics', 'field_audience') }}
+</article>

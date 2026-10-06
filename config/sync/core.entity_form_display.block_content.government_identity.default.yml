@@ -1,0 +1,76 @@
+uuid: 6381453d-3ac7-4061-854b-0b812d5190bd
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.government_identity
+    - field.field.block_content.government_identity.field_government_name
+    - field.field.block_content.government_identity.field_home_link
+    - field.field.block_content.government_identity.field_label
+    - field.field.block_content.government_identity.field_link
+    - field.field.block_content.government_identity.field_logo
+    - field.field.block_content.government_identity.field_office_name
+  module:
+    - link
+    - media_library
+id: block_content.government_identity.default
+targetEntityType: block_content
+bundle: government_identity
+mode: default
+content:
+  field_government_name:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_home_link:
+    type: link_default
+    weight: 5
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_label:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_link:
+    type: link_default
+    weight: 1
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_logo:
+    type: media_library_widget
+    weight: 2
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_office_name:
+    type: string_textfield
+    weight: 3
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  info:
+    type: string_textfield
+    weight: -10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden: {  }

@@ -1,0 +1,13 @@
+name: OB Site
+type: module
+description: 'Provides the Office of Te Beretitenti site structure and editorial configuration.'
+package: Custom
+core_version_requirement: ^11
+dependencies:
+  - drupal:link
+  - drupal:media
+  - drupal:media_library
+  - drupal:node
+  - drupal:search_node
+  - drupal:text
+

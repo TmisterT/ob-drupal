@@ -1,0 +1,28 @@
+uuid: 0af3c2da-1ff3-4e4e-830c-d989557d36d4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_audience
+    - node.type.service
+    - taxonomy.vocabulary.audience
+id: node.service.field_audience
+field_name: field_audience
+entity_type: node
+bundle: service
+label: Audience
+description: 'Identify who this service is for.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      audience: audience
+    sort:
+      field: name
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

@@ -1,0 +1,22 @@
+uuid: 71000000-0000-4000-8000-000000000015
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_opening_date
+    - node.type.service
+  module:
+    - datetime
+id: node.service.field_opening_date
+field_name: field_opening_date
+entity_type: node
+bundle: service
+label: 'Opening date'
+description: 'Optional opening date.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  {  }
+field_type: datetime

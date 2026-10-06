@@ -1,0 +1,17 @@
+{#
+/**
+ * @file
+ * Government utility-bar identity block.
+ */
+#}
+<div{{ attributes.addClass('government-identity') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  <span class="government-bar__identity">
+    <span class="government-bar__mark" aria-hidden="true"></span>
+    {{ content.field_label }}
+  </span>
+  {% if content.field_link %}
+    <span class="government-identity__link">{{ content.field_link }}</span>
+  {% endif %}
+</div>

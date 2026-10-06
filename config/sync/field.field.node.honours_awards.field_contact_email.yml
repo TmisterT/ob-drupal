@@ -1,0 +1,20 @@
+uuid: 71000000-0000-4000-8000-000000000031
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_contact_email
+    - node.type.honours_awards
+id: node.honours_awards.field_contact_email
+field_name: field_contact_email
+entity_type: node
+bundle: honours_awards
+label: 'Contact email'
+description: 'Public email address for questions.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  {  }
+field_type: string

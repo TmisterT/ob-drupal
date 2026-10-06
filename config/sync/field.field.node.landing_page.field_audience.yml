@@ -1,0 +1,28 @@
+uuid: cdb9859e-fdb5-408a-b6be-342f63602cb5
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_audience
+    - node.type.landing_page
+    - taxonomy.vocabulary.audience
+id: node.landing_page.field_audience
+field_name: field_audience
+entity_type: node
+bundle: landing_page
+label: Audience
+description: 'Select the main audiences for this section.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      audience: audience
+    sort:
+      field: name
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

@@ -1,0 +1,15 @@
+uuid: a583aba0-ed26-41bd-a03f-7c51969f40e9
+langcode: en
+status: true
+dependencies: {  }
+name: ob_hero_large
+label: 'OB hero large'
+effects:
+  4abc479f-5ced-409b-a15e-e6a86ab49afd:
+    uuid: 4abc479f-5ced-409b-a15e-e6a86ab49afd
+    id: image_scale
+    weight: 0
+    data:
+      width: 1600
+      height: null
+      upscale: false

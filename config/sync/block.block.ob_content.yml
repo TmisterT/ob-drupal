@@ -1,0 +1,22 @@
+uuid: 548a2f8c-c78e-4ca2-a9bf-deeb7250bdb8
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - ob
+_core:
+  default_config_hash: sivjsbEoR0MnTVqKn0gaoX6tfKq0ZbJuKB2yKm0elgA
+id: ob_content
+theme: ob
+region: content
+weight: -5
+provider: null
+plugin: system_main_block
+settings:
+  id: system_main_block
+  label: 'Main page content'
+  label_display: '0'
+  provider: system
+visibility: {  }

@@ -1,0 +1,21 @@
+uuid: dc4f3b2d-c7ab-4dd8-bbe3-f68175103ff2
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_last_reviewed
+    - node.type.profile
+  module:
+    - datetime
+id: node.profile.field_last_reviewed
+field_name: field_last_reviewed
+entity_type: node
+bundle: profile
+label: 'Last reviewed'
+description: 'Date this profile was last verified.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

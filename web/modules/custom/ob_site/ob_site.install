@@ -1,0 +1,3410 @@
+<?php
+
+declare(strict_types=1);
+
+use Drupal\block\Entity\Block;
+use Drupal\block_content\Entity\BlockContent;
+use Drupal\block_content\Entity\BlockContentType;
+use Drupal\Core\Entity\Entity\EntityFormDisplay;
+use Drupal\Core\Entity\Entity\EntityViewDisplay;
+use Drupal\Core\Entity\Entity\EntityViewMode;
+use Drupal\Core\File\FileExists;
+use Drupal\Core\File\FileSystemInterface;
+use Drupal\field\Entity\FieldConfig;
+use Drupal\field\Entity\FieldStorageConfig;
+use Drupal\image\Entity\ImageStyle;
+use Drupal\media\Entity\Media;
+use Drupal\menu_link_content\Entity\MenuLinkContent;
+use Drupal\node\Entity\Node;
+use Drupal\node\Entity\NodeType;
+use Drupal\responsive_image\Entity\ResponsiveImageStyle;
+use Drupal\system\Entity\Menu;
+use Drupal\taxonomy\Entity\Term;
+use Drupal\taxonomy\Entity\Vocabulary;
+use Drupal\user\Entity\Role;
+use Drupal\views\Entity\View;
+require_once __DIR__ . '/includes/service.install.inc';
+
+
+/**
+ * Implements hook_install().
+ */
+function ob_site_install(): void {
+  if (!NodeType::load('homepage')) {
+    NodeType::create([
+      'type' => 'homepage',
+      'name' => 'Homepage',
+      'description' => 'Controls the content displayed on the website home page.',
+      'new_revision' => TRUE,
+      'preview_mode' => 1,
+      'display_submitted' => FALSE,
+    ])->save();
+  }
+
+  $fields = [
+    'field_hero_label' => [
+      'label' => 'Hero label',
+      'description' => 'Short context shown above the hero title, for example “Government update”.',
+      'type' => 'string',
+      'storage_settings' => ['max_length' => 120],
+      'required' => FALSE,
+      'widget' => 'string_textfield',
+      'formatter' => 'string',
+    ],
+    'field_hero_title' => [
+      'label' => 'Hero title',
+      'description' => 'The main public announcement or homepage message.',
+      'type' => 'string',
+      'storage_settings' => ['max_length' => 255],
+      'required' => TRUE,
+      'widget' => 'string_textfield',
+      'formatter' => 'string',
+    ],
+    'field_hero_summary' => [
+      'label' => 'Hero summary',
+      'description' => 'A concise explanation supporting the hero title.',
+      'type' => 'text_long',
+      'required' => FALSE,
+      'widget' => 'text_textarea',
+      'widget_settings' => ['rows' => 4],
+      'formatter' => 'text_default',
+    ],
+    'field_hero_image' => [
+      'label' => 'Hero image',
+      'description' => 'Use a wide, high-quality image with a meaningful alternative text.',
+      'type' => 'entity_reference',
+      'storage_settings' => ['target_type' => 'media'],
+      'settings' => [
+        'handler' => 'default:media',
+        'handler_settings' => [
+          'target_bundles' => ['image' => 'image'],
+          'sort' => ['field' => '_none', 'direction' => 'ASC'],
+          'auto_create' => FALSE,
+          'auto_create_bundle' => NULL,
+        ],
+      ],
+      'required' => FALSE,
+      'widget' => 'media_library_widget',
+      'formatter' => 'entity_reference_entity_view',
+      'formatter_settings' => ['view_mode' => 'default', 'link' => FALSE],
+    ],
+    'field_hero_link' => [
+      'label' => 'Hero action',
+      'description' => 'Enter both the button text and its destination.',
+      'type' => 'link',
+      'settings' => ['title' => 2, 'link_type' => 17],
+      'required' => FALSE,
+      'widget' => 'link_default',
+      'formatter' => 'link',
+      'formatter_settings' => ['trim_length' => 80, 'url_only' => FALSE, 'url_plain' => FALSE, 'rel' => '', 'target' => ''],
+    ],
+    'field_search_heading' => [
+      'label' => 'Search heading',
+      'type' => 'string',
+      'storage_settings' => ['max_length' => 160],
+      'required' => TRUE,
+      'widget' => 'string_textfield',
+      'formatter' => 'string',
+      'default_value' => [['value' => 'What are you looking for?']],
+    ],
+    'field_search_placeholder' => [
+      'label' => 'Search placeholder',
+      'type' => 'string',
+      'storage_settings' => ['max_length' => 255],
+      'required' => TRUE,
+      'widget' => 'string_textfield',
+      'formatter' => 'string',
+      'default_value' => [['value' => 'Search OB information, services and publications…']],
+    ],
+    'field_quick_links' => [
+      'label' => 'Homepage quick links',
+      'description' => 'Add up to four prominent links. The link title is displayed on the card.',
+      'type' => 'link',
+      'settings' => ['title' => 2, 'link_type' => 17],
+      'cardinality' => 4,
+      'required' => FALSE,
+      'widget' => 'link_default',
+      'formatter' => 'link',
+      'formatter_settings' => ['trim_length' => 80, 'url_only' => FALSE, 'url_plain' => FALSE, 'rel' => '', 'target' => ''],
+    ],
+    'field_updates_heading' => [
+      'label' => 'Updates section heading',
+      'type' => 'string',
+      'storage_settings' => ['max_length' => 160],
+      'required' => TRUE,
+      'widget' => 'string_textfield',
+      'formatter' => 'string',
+      'default_value' => [['value' => 'Latest updates']],
+    ],
+    'field_services_heading' => [
+      'label' => 'Services section heading',
+      'type' => 'string',
+      'storage_settings' => ['max_length' => 160],
+      'required' => TRUE,
+      'widget' => 'string_textfield',
+      'formatter' => 'string',
+      'default_value' => [['value' => 'Services & information']],
+    ],
+    'field_activities_heading' => [
+      'label' => 'Activities section heading',
+      'type' => 'string',
+      'storage_settings' => ['max_length' => 160],
+      'required' => TRUE,
+      'widget' => 'string_textfield',
+      'formatter' => 'string',
+      'default_value' => [['value' => 'Te Beretitenti / Official activities']],
+    ],
+    'field_projects_heading' => [
+      'label' => 'Projects section heading',
+      'type' => 'string',
+      'storage_settings' => ['max_length' => 160],
+      'required' => TRUE,
+      'widget' => 'string_textfield',
+      'formatter' => 'string',
+      'default_value' => [['value' => 'Projects & initiatives']],
+    ],
+  ];
+
+  $form_display = EntityFormDisplay::load('node.homepage.default') ?? EntityFormDisplay::create([
+    'targetEntityType' => 'node',
+    'bundle' => 'homepage',
+    'mode' => 'default',
+    'status' => TRUE,
+  ]);
+
+  $view_display = EntityViewDisplay::load('node.homepage.default') ?? EntityViewDisplay::create([
+    'targetEntityType' => 'node',
+    'bundle' => 'homepage',
+    'mode' => 'default',
+    'status' => TRUE,
+  ]);
+
+  $form_display
+    ->setComponent('title', [
+      'type' => 'string_textfield',
+      'weight' => -10,
+      'region' => 'content',
+      'settings' => ['size' => 60, 'placeholder' => ''],
+    ])
+    ->setComponent('status', [
+      'type' => 'boolean_checkbox',
+      'weight' => 100,
+      'region' => 'content',
+      'settings' => ['display_label' => TRUE],
+    ]);
+
+  $weight = 0;
+  foreach ($fields as $field_name => $definition) {
+    if (!FieldStorageConfig::loadByName('node', $field_name)) {
+      FieldStorageConfig::create([
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'type' => $definition['type'],
+        'settings' => $definition['storage_settings'] ?? [],
+        'cardinality' => $definition['cardinality'] ?? 1,
+        'translatable' => TRUE,
+      ])->save();
+    }
+
+    if (!FieldConfig::loadByName('node', 'homepage', $field_name)) {
+      FieldConfig::create([
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'homepage',
+        'label' => $definition['label'],
+        'description' => $definition['description'] ?? '',
+        'required' => $definition['required'],
+        'settings' => $definition['settings'] ?? [],
+        'default_value' => $definition['default_value'] ?? [],
+      ])->save();
+    }
+
+    $form_display->setComponent($field_name, [
+      'type' => $definition['widget'],
+      'weight' => $weight,
+      'region' => 'content',
+      'settings' => $definition['widget_settings'] ?? [],
+    ]);
+
+    $view_display->setComponent($field_name, [
+      'type' => $definition['formatter'],
+      'weight' => $weight,
+      'region' => 'content',
+      'label' => 'hidden',
+      'settings' => $definition['formatter_settings'] ?? [],
+    ]);
+
+    $weight++;
+  }
+
+  $form_display->save();
+  $view_display->save();
+  ob_site_grant_public_search_permission();
+  ob_site_ensure_global_structure();
+  ob_site_ensure_image_styles();
+  ob_site_ensure_taxonomies();
+  ob_site_remove_unused_default_tags();
+  ob_site_ensure_page_content_types();
+  ob_site_ensure_homepage_presentation_fields();
+  ob_site_ensure_homepage_notices_heading();
+  ob_site_ensure_initial_landing_pages();
+  ob_site_ensure_quick_access_destinations();
+  ob_site_ensure_information_for_public_destinations();
+  ob_site_ensure_public_notices();
+  ob_site_ensure_homepage_slider();
+  ob_site_ensure_homepage_public_features();
+  ob_site_ensure_service_content_types();
+}
+
+/**
+ * Add administrator-managed quick links to the Homepage content type.
+ */
+function ob_site_update_11001(): void {
+  if (!FieldStorageConfig::loadByName('node', 'field_quick_links')) {
+    FieldStorageConfig::create([
+      'field_name' => 'field_quick_links',
+      'entity_type' => 'node',
+      'type' => 'link',
+      'cardinality' => 4,
+      'translatable' => TRUE,
+    ])->save();
+  }
+
+  if (!FieldConfig::loadByName('node', 'homepage', 'field_quick_links')) {
+    FieldConfig::create([
+      'field_name' => 'field_quick_links',
+      'entity_type' => 'node',
+      'bundle' => 'homepage',
+      'label' => 'Homepage quick links',
+      'description' => 'Add up to four prominent links. The link title is displayed on the card.',
+      'required' => FALSE,
+      'settings' => ['title' => 2, 'link_type' => 17],
+    ])->save();
+  }
+
+  $form_display = EntityFormDisplay::load('node.homepage.default');
+  $form_display?->setComponent('field_quick_links', [
+    'type' => 'link_default',
+    'weight' => 7,
+    'region' => 'content',
+    'settings' => ['placeholder_url' => '', 'placeholder_title' => ''],
+  ])->save();
+
+  $view_display = EntityViewDisplay::load('node.homepage.default');
+  $view_display?->setComponent('field_quick_links', [
+    'type' => 'link',
+    'weight' => 7,
+    'region' => 'content',
+    'label' => 'hidden',
+    'settings' => ['trim_length' => 80, 'url_only' => FALSE, 'url_plain' => FALSE, 'rel' => '', 'target' => ''],
+  ])->save();
+}
+
+/**
+ * Allow visitors to use the public content search.
+ */
+function ob_site_update_11002(): void {
+  ob_site_grant_public_search_permission();
+}
+
+/**
+ * Grants content-search access to public site roles.
+ */
+function ob_site_grant_public_search_permission(): void {
+  foreach (['anonymous', 'authenticated'] as $role_id) {
+    $role = Role::load($role_id);
+    if ($role && !$role->hasPermission('search content')) {
+      $role->grantPermission('search content')->save();
+    }
+  }
+}
+
+/**
+ * Add semantic regions, reusable blocks, menus, and responsive images.
+ */
+function ob_site_update_11003(): void {
+  ob_site_ensure_global_structure();
+  ob_site_ensure_image_styles();
+}
+
+/**
+ * Refresh block placement settings after introducing the shared page shell.
+ */
+function ob_site_update_11004(): void {
+  ob_site_ensure_global_structure();
+}
+
+/**
+ * Add initial safe footer links to the administrator-managed menus.
+ */
+function ob_site_update_11005(): void {
+  ob_site_ensure_global_structure();
+}
+
+/**
+ * Apply the initial footer links after the source helper update.
+ */
+function ob_site_update_11006(): void {
+  ob_site_ensure_global_structure();
+}
+
+/**
+ * Disable the redundant legacy footer menu placement.
+ */
+function ob_site_update_11007(): void {
+  ob_site_ensure_global_structure();
+}
+
+/**
+ * Add the controlled vocabularies used by OB editorial content.
+ */
+function ob_site_update_11008(): void {
+  ob_site_ensure_taxonomies();
+}
+
+/**
+ * Remove Drupal's empty default Tags vocabulary in favour of OB Topics.
+ */
+function ob_site_update_11009(): void {
+  ob_site_remove_unused_default_tags();
+}
+
+/**
+ * Add Landing Page and Basic Page editorial models.
+ */
+function ob_site_update_11010(): void {
+  ob_site_ensure_page_content_types();
+}
+
+/**
+ * Improve the administrator-managed homepage presentation fields.
+ */
+function ob_site_update_11011(): void {
+  ob_site_ensure_homepage_presentation_fields();
+}
+
+/**
+ * Add the first two top-level Landing Pages and navigation links.
+ */
+function ob_site_update_11012(): void {
+  ob_site_ensure_initial_landing_pages();
+}
+
+/**
+ * Add the administrator-managed homepage hero slider.
+ */
+function ob_site_update_11013(): void {
+  ob_site_ensure_homepage_slider();
+}
+
+/**
+ * Hide Media metadata from responsive hero images.
+ */
+function ob_site_update_11014(): void {
+  ob_site_ensure_image_styles();
+}
+
+/**
+ * Add the sitewide alert placement and Current President feature.
+ */
+function ob_site_update_11015(): void {
+  ob_site_ensure_homepage_public_features();
+}
+
+/**
+ * Creates OB vocabularies and their initial controlled terms.
+ */
+function ob_site_ensure_taxonomies(): void {
+  $vocabularies = [
+    'update_type' => [
+      'name' => 'Update type',
+      'description' => 'Classifies news and official updates for public listings.',
+      'terms' => ['News', 'Press release', 'Announcement', 'Presidential activity'],
+    ],
+    'publication_type' => [
+      'name' => 'Publication type',
+      'description' => 'Classifies official documents and publications.',
+      'terms' => ['Government gazette', 'Government notice', 'Instrument', 'Policy', 'Strategy', 'Report', 'Other publication'],
+    ],
+    'notice_category' => [
+      'name' => 'Public notice category',
+      'description' => 'Classifies time-sensitive notices published for the public.',
+      'terms' => ['General', 'Public consultation', 'Service update', 'Procurement', 'Legal notice'],
+    ],
+    'project_type' => [
+      'name' => 'Project type',
+      'description' => 'Classifies projects, initiatives, grants, and programme updates.',
+      'terms' => ['National project', 'Government initiative', 'Grant programme', 'Programme update'],
+    ],
+    'service_category' => [
+      'name' => 'Service category',
+      'description' => 'Groups public services and forms by purpose.',
+      'terms' => ['Permit', 'Grant', 'Disaster support', 'Application form', 'Public service'],
+    ],
+    'topics' => [
+      'name' => 'Topics',
+      'description' => 'Cross-site subjects used to connect related content. Add terms only when an editorial need exists.',
+      'terms' => [],
+    ],
+    'audience' => [
+      'name' => 'Audience',
+      'description' => 'Identifies the public audience for content and services.',
+      'terms' => ['Citizens', 'Businesses', 'Researchers', 'Media', 'Non-government organisations', 'Government agencies'],
+    ],
+    'location' => [
+      'name' => 'Location',
+      'description' => 'Identifies the geographic scope of content.',
+      'terms' => ['National', 'Tarawa', 'Outer Islands', 'International'],
+    ],
+    'speech_type' => [
+      'name' => 'Speech type',
+      'description' => 'Classifies formal communications by Te Beretitenti.',
+      'terms' => ['Speech', 'Statement', 'Address', 'Message'],
+    ],
+  ];
+
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  $weight = 0;
+
+  foreach ($vocabularies as $id => $definition) {
+    if (!Vocabulary::load($id)) {
+      Vocabulary::create([
+        'vid' => $id,
+        'name' => $definition['name'],
+        'description' => $definition['description'],
+        'weight' => $weight,
+      ])->save();
+    }
+    $weight++;
+
+    foreach ($definition['terms'] as $term_weight => $name) {
+      $existing_terms = $term_storage->loadByProperties([
+        'vid' => $id,
+        'name' => $name,
+      ]);
+      if (!$existing_terms) {
+        Term::create([
+          'vid' => $id,
+          'name' => $name,
+          'weight' => $term_weight,
+        ])->save();
+      }
+    }
+  }
+}
+
+/**
+ * Removes the unused install-profile Tags vocabulary without risking content.
+ */
+function ob_site_remove_unused_default_tags(): void {
+  $vocabulary = Vocabulary::load('tags');
+  if (!$vocabulary) {
+    return;
+  }
+
+  $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+  if ($term_storage->loadTree('tags')) {
+    return;
+  }
+
+  $field_storage = \Drupal::entityTypeManager()->getStorage('field_config');
+  foreach ($field_storage->loadMultiple() as $field) {
+    if ($field->getType() !== 'entity_reference' || $field->getSetting('target_type') !== 'taxonomy_term') {
+      continue;
+    }
+
+    $target_bundles = $field->getSetting('handler_settings')['target_bundles'] ?? [];
+    if (!$target_bundles || isset($target_bundles['tags'])) {
+      return;
+    }
+  }
+
+  $vocabulary->delete();
+}
+
+/**
+ * Adds supporting copy and optional links for homepage feature panels.
+ */
+function ob_site_ensure_homepage_presentation_fields(): void {
+  if (!NodeType::load('homepage')) {
+    return;
+  }
+
+  $definitions = [
+    'field_updates_intro' => [
+      'label' => 'Updates section introduction',
+      'description' => 'Briefly explain what visitors can find in Latest updates.',
+      'type' => 'string_long',
+      'widget' => 'string_textarea',
+      'widget_settings' => ['rows' => 3, 'placeholder' => ''],
+      'formatter' => 'basic_string',
+      'default_value' => 'Read official news, announcements and press releases from the Office of Te Beretitenti.',
+    ],
+    'field_updates_link' => [
+      'label' => 'Updates section link',
+      'description' => 'Optional link to the main news and updates listing.',
+      'type' => 'link',
+      'settings' => ['title' => 2, 'link_type' => 17],
+      'widget' => 'link_default',
+      'formatter' => 'link',
+    ],
+    'field_services_intro' => [
+      'label' => 'Services section introduction',
+      'description' => 'Briefly explain what visitors can find in Services and information.',
+      'type' => 'string_long',
+      'widget' => 'string_textarea',
+      'widget_settings' => ['rows' => 3, 'placeholder' => ''],
+      'formatter' => 'basic_string',
+      'default_value' => 'Find permits, grants, application forms and practical public information.',
+    ],
+    'field_services_link' => [
+      'label' => 'Services section link',
+      'description' => 'Optional link to the main services and forms listing.',
+      'type' => 'link',
+      'settings' => ['title' => 2, 'link_type' => 17],
+      'widget' => 'link_default',
+      'formatter' => 'link',
+    ],
+    'field_activities_intro' => [
+      'label' => 'Activities section introduction',
+      'description' => 'Briefly explain what visitors can find in official activities.',
+      'type' => 'string_long',
+      'widget' => 'string_textarea',
+      'widget_settings' => ['rows' => 3, 'placeholder' => ''],
+      'formatter' => 'basic_string',
+      'default_value' => 'Follow presidential activities, speeches, statements and state functions.',
+    ],
+    'field_activities_link' => [
+      'label' => 'Activities section link',
+      'description' => 'Optional link to the main Te Beretitenti activities listing.',
+      'type' => 'link',
+      'settings' => ['title' => 2, 'link_type' => 17],
+      'widget' => 'link_default',
+      'formatter' => 'link',
+    ],
+    'field_projects_intro' => [
+      'label' => 'Projects section introduction',
+      'description' => 'Briefly explain what visitors can find in Projects and initiatives.',
+      'type' => 'string_long',
+      'widget' => 'string_textarea',
+      'widget_settings' => ['rows' => 3, 'placeholder' => ''],
+      'formatter' => 'basic_string',
+      'default_value' => 'Learn about national projects, government initiatives and programme progress.',
+    ],
+    'field_projects_link' => [
+      'label' => 'Projects section link',
+      'description' => 'Optional link to the main projects and initiatives listing.',
+      'type' => 'link',
+      'settings' => ['title' => 2, 'link_type' => 17],
+      'widget' => 'link_default',
+      'formatter' => 'link',
+    ],
+  ];
+
+  $form_display = EntityFormDisplay::load('node.homepage.default');
+  $view_display = EntityViewDisplay::load('node.homepage.default');
+  $weight = 20;
+
+  foreach ($definitions as $field_name => $definition) {
+    if (!FieldStorageConfig::loadByName('node', $field_name)) {
+      FieldStorageConfig::create([
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'type' => $definition['type'],
+        'cardinality' => 1,
+        'translatable' => TRUE,
+      ])->save();
+    }
+
+    if (!FieldConfig::loadByName('node', 'homepage', $field_name)) {
+      $field_config = [
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'homepage',
+        'label' => $definition['label'],
+        'description' => $definition['description'],
+        'required' => FALSE,
+        'settings' => $definition['settings'] ?? [],
+      ];
+      if (isset($definition['default_value'])) {
+        $field_config['default_value'] = [['value' => $definition['default_value']]];
+      }
+      FieldConfig::create($field_config)->save();
+    }
+
+    $form_display?->setComponent($field_name, [
+      'type' => $definition['widget'],
+      'weight' => $weight,
+      'region' => 'content',
+      'settings' => $definition['widget_settings'] ?? [],
+    ]);
+    $view_display?->setComponent($field_name, [
+      'type' => $definition['formatter'],
+      'weight' => $weight,
+      'region' => 'content',
+      'label' => 'hidden',
+      'settings' => $definition['type'] === 'link'
+        ? ['trim_length' => 100, 'url_only' => FALSE, 'url_plain' => FALSE, 'rel' => '', 'target' => '']
+        : [],
+    ]);
+    $weight++;
+  }
+
+  $form_display?->save();
+  $view_display?->save();
+
+  $intro_defaults = [
+    'field_updates_intro' => $definitions['field_updates_intro']['default_value'],
+    'field_services_intro' => $definitions['field_services_intro']['default_value'],
+    'field_activities_intro' => $definitions['field_activities_intro']['default_value'],
+    'field_projects_intro' => $definitions['field_projects_intro']['default_value'],
+  ];
+  $homepage_nodes = Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'homepage']);
+  foreach ($homepage_nodes as $homepage) {
+    $changed = FALSE;
+    foreach ($intro_defaults as $field_name => $default_value) {
+      if ($homepage->get($field_name)->isEmpty()) {
+        $homepage->set($field_name, $default_value);
+        $changed = TRUE;
+      }
+    }
+    if ($changed) {
+      $homepage->setNewRevision(TRUE);
+      $homepage->setRevisionLogMessage('Add homepage section introductions for the refreshed public design.');
+      $homepage->save();
+    }
+  }
+}
+
+/**
+ * Creates the alert placement and administrator-managed Current President.
+ */
+function ob_site_ensure_homepage_public_features(): void {
+  $block_storage = Drupal::entityTypeManager()->getStorage('block_content');
+  $alert_blocks = $block_storage->loadByProperties([
+    'type' => 'sitewide_alert',
+    'info' => 'Sitewide public alert',
+  ]);
+  $alert = $alert_blocks ? reset($alert_blocks) : BlockContent::create([
+    'type' => 'sitewide_alert',
+    'info' => 'Sitewide public alert',
+    'status' => TRUE,
+    'reusable' => TRUE,
+    'field_alert_level' => 'information',
+    'field_heading' => 'Important public notice',
+    'body' => [
+      'value' => '<p>Enter the approved public alert here, then enable its theme placement.</p>',
+      'format' => 'basic_html',
+    ],
+  ]);
+  if ($alert->isNew()) {
+    $alert->save();
+  }
+
+  $placement = Block::load('ob_sitewide_alert');
+  if (!$placement) {
+    ob_site_place_block(
+      'ob_sitewide_alert',
+      'block_content:' . $alert->uuid(),
+      'alerts',
+      0,
+      'Sitewide public alert',
+    );
+    Block::load('ob_sitewide_alert')?->setStatus(FALSE)->save();
+  }
+  elseif ($placement->getRegion() !== 'alerts') {
+    $placement->setRegion('alerts')->save();
+  }
+
+  if (!NodeType::load('profile')) {
+    $type = NodeType::create([
+      'type' => 'profile',
+      'name' => 'Profile',
+      'description' => 'A President or OB leadership profile used across the website.',
+      'new_revision' => TRUE,
+      'preview_mode' => 1,
+      'display_submitted' => FALSE,
+    ]);
+    $type->setThirdPartySetting('menu_ui', 'available_menus', ['main']);
+    $type->setThirdPartySetting('menu_ui', 'parent', 'main:');
+    $type->save();
+  }
+
+  $storage_definitions = [
+    'field_position' => [
+      'type' => 'string',
+      'settings' => ['max_length' => 180],
+    ],
+    'field_profile_image' => [
+      'type' => 'entity_reference',
+      'settings' => ['target_type' => 'media'],
+    ],
+    'field_profile_summary' => [
+      'type' => 'string_long',
+    ],
+    'field_is_current' => [
+      'type' => 'boolean',
+    ],
+  ];
+  foreach ($storage_definitions as $field_name => $definition) {
+    if (!FieldStorageConfig::loadByName('node', $field_name)) {
+      FieldStorageConfig::create([
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'type' => $definition['type'],
+        'settings' => $definition['settings'] ?? [],
+        'cardinality' => 1,
+        'translatable' => $field_name !== 'field_is_current',
+      ])->save();
+    }
+  }
+
+  $media_settings = [
+    'handler' => 'default:media',
+    'handler_settings' => [
+      'target_bundles' => ['image' => 'image'],
+      'sort' => ['field' => '_none', 'direction' => 'ASC'],
+      'auto_create' => FALSE,
+      'auto_create_bundle' => NULL,
+    ],
+  ];
+  $fields = [
+    'field_position' => [
+      'label' => 'Official position',
+      'description' => 'Official role displayed with the person’s name.',
+      'required' => TRUE,
+      'settings' => [],
+      'widget' => 'string_textfield',
+      'formatter' => 'string',
+    ],
+    'field_profile_image' => [
+      'label' => 'Official portrait',
+      'description' => 'Select an approved portrait with meaningful alternative text.',
+      'required' => FALSE,
+      'settings' => $media_settings,
+      'widget' => 'media_library_widget',
+      'formatter' => 'entity_reference_entity_view',
+      'formatter_settings' => ['view_mode' => 'profile_portrait', 'link' => FALSE],
+    ],
+    'field_profile_summary' => [
+      'label' => 'Profile summary',
+      'description' => 'Short introduction used on landing pages and the homepage.',
+      'required' => TRUE,
+      'settings' => [],
+      'widget' => 'string_textarea',
+      'widget_settings' => ['rows' => 4, 'placeholder' => ''],
+      'formatter' => 'basic_string',
+    ],
+    'body' => [
+      'label' => 'Biography',
+      'description' => 'Approved public biography.',
+      'required' => TRUE,
+      'settings' => ['display_summary' => FALSE, 'required_summary' => FALSE],
+      'widget' => 'text_textarea_with_summary',
+      'widget_settings' => ['rows' => 15, 'summary_rows' => 3, 'placeholder' => ''],
+      'formatter' => 'text_default',
+    ],
+    'field_is_current' => [
+      'label' => 'Current President',
+      'description' => 'Only one published profile should be marked as the current President.',
+      'required' => FALSE,
+      'settings' => ['on_label' => 'Current', 'off_label' => 'Not current'],
+      'default_value' => [['value' => 0]],
+      'widget' => 'boolean_checkbox',
+      'widget_settings' => ['display_label' => TRUE],
+      'formatter' => 'boolean',
+      'formatter_settings' => ['format' => 'yes-no', 'format_custom_false' => '', 'format_custom_true' => ''],
+    ],
+    'field_content_owner' => [
+      'label' => 'Content owner',
+      'description' => 'Division responsible for maintaining this profile.',
+      'required' => TRUE,
+      'settings' => [],
+      'widget' => 'string_textfield',
+      'widget_settings' => ['size' => 60, 'placeholder' => ''],
+      'formatter' => 'string',
+    ],
+    'field_last_reviewed' => [
+      'label' => 'Last reviewed',
+      'description' => 'Date this profile was last verified.',
+      'required' => TRUE,
+      'settings' => [],
+      'widget' => 'datetime_default',
+      'formatter' => 'datetime_custom',
+      'formatter_settings' => ['timezone_override' => '', 'date_format' => 'j F Y'],
+    ],
+  ];
+
+  $form_display = EntityFormDisplay::load('node.profile.default') ?? EntityFormDisplay::create([
+    'targetEntityType' => 'node',
+    'bundle' => 'profile',
+    'mode' => 'default',
+    'status' => TRUE,
+  ]);
+  $view_display = EntityViewDisplay::load('node.profile.default') ?? EntityViewDisplay::create([
+    'targetEntityType' => 'node',
+    'bundle' => 'profile',
+    'mode' => 'default',
+    'status' => TRUE,
+  ]);
+  if (!EntityViewMode::load('node.homepage_feature')) {
+    EntityViewMode::create([
+      'id' => 'node.homepage_feature',
+      'label' => 'Homepage feature',
+      'targetEntityType' => 'node',
+      'status' => TRUE,
+    ])->save();
+  }
+  $feature_display = EntityViewDisplay::load('node.profile.homepage_feature') ?? EntityViewDisplay::create([
+    'targetEntityType' => 'node',
+    'bundle' => 'profile',
+    'mode' => 'homepage_feature',
+    'status' => TRUE,
+  ]);
+
+  $form_display
+    ->setComponent('title', [
+      'type' => 'string_textfield',
+      'weight' => -10,
+      'region' => 'content',
+      'settings' => ['size' => 60, 'placeholder' => 'Full official name'],
+    ])
+    ->setComponent('status', [
+      'type' => 'boolean_checkbox',
+      'weight' => 100,
+      'region' => 'content',
+      'settings' => ['display_label' => TRUE],
+    ]);
+
+  $weight = 0;
+  foreach ($fields as $field_name => $definition) {
+    if (!FieldConfig::loadByName('node', 'profile', $field_name)) {
+      FieldConfig::create([
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'profile',
+        'label' => $definition['label'],
+        'description' => $definition['description'],
+        'required' => $definition['required'],
+        'settings' => $definition['settings'],
+        'default_value' => $definition['default_value'] ?? [],
+      ])->save();
+    }
+    $form_display->setComponent($field_name, [
+      'type' => $definition['widget'],
+      'weight' => $weight,
+      'region' => 'content',
+      'settings' => $definition['widget_settings'] ?? [],
+    ]);
+    foreach ([$view_display, $feature_display] as $display) {
+      $display->setComponent($field_name, [
+        'type' => $definition['formatter'],
+        'weight' => $weight,
+        'region' => 'content',
+        'label' => 'hidden',
+        'settings' => $definition['formatter_settings'] ?? [],
+      ]);
+    }
+    $weight++;
+  }
+  $form_display->save();
+  $view_display->save();
+  $feature_display->save();
+
+  if (!EntityViewMode::load('media.profile_portrait')) {
+    EntityViewMode::create([
+      'id' => 'media.profile_portrait',
+      'label' => 'Profile portrait',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+    ])->save();
+  }
+  $image_media_type = Drupal::entityTypeManager()->getStorage('media_type')->load('image');
+  if ($image_media_type) {
+    $source_field = $image_media_type->getSource()->getConfiguration()['source_field'];
+    $portrait_display = EntityViewDisplay::load('media.image.profile_portrait') ?? EntityViewDisplay::create([
+      'targetEntityType' => 'media',
+      'bundle' => 'image',
+      'mode' => 'profile_portrait',
+      'status' => TRUE,
+    ]);
+    $portrait_display->setComponent($source_field, [
+      'type' => 'image',
+      'label' => 'hidden',
+      'region' => 'content',
+      'settings' => [
+        'image_link' => '',
+        'image_style' => 'ob_profile',
+        'image_loading' => ['attribute' => 'lazy'],
+      ],
+    ]);
+    foreach (['created', 'name', 'thumbnail', 'uid'] as $component) {
+      $portrait_display->removeComponent($component);
+    }
+    $portrait_display->save();
+  }
+
+  $media_storage = Drupal::entityTypeManager()->getStorage('media');
+  $portrait_matches = $media_storage->loadByProperties([
+    'bundle' => 'image',
+    'name' => 'Official portrait – H.E. Taneti Maamau',
+  ]);
+  $portrait = $portrait_matches ? reset($portrait_matches) : NULL;
+  $source_path = DRUPAL_ROOT . '/themes/custom/ob/src/assets/images/profiles/taneti-maamau.jpg';
+  if (!$portrait && is_file($source_path)) {
+    $directory = 'public://profiles';
+    Drupal::service('file_system')->prepareDirectory(
+      $directory,
+      FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS,
+    );
+    $file = Drupal::service('file.repository')->writeData(
+      file_get_contents($source_path),
+      $directory . '/taneti-maamau.jpg',
+      FileExists::Replace,
+    );
+    $portrait = Media::create([
+      'bundle' => 'image',
+      'name' => 'Official portrait – H.E. Taneti Maamau',
+      'status' => TRUE,
+      'uid' => 1,
+      'field_media_image' => [
+        'target_id' => $file->id(),
+        'alt' => 'Official portrait of H.E. Taneti Maamau',
+      ],
+    ]);
+    $portrait->save();
+  }
+
+  $profile_storage = Drupal::entityTypeManager()->getStorage('node');
+  $profile_matches = $profile_storage->loadByProperties([
+    'type' => 'profile',
+    'title' => 'H.E. Taneti Maamau',
+  ]);
+  $profile = $profile_matches ? reset($profile_matches) : Node::create([
+    'type' => 'profile',
+    'title' => 'H.E. Taneti Maamau',
+    'status' => TRUE,
+    'uid' => 1,
+    'field_position' => 'Te Beretitenti of the Republic of Kiribati',
+    'field_profile_summary' => 'His Excellency Taneti Maamau is Te Beretitenti of the Republic of Kiribati.',
+    'body' => [
+      'value' => '<p>His Excellency Taneti Maamau is the fifth President of Kiribati and comes from the island of Onotoa. He first became President in 2016.</p>',
+      'format' => 'basic_html',
+    ],
+    'field_is_current' => TRUE,
+    'field_content_owner' => 'Communication and Public Relations Unit',
+    'field_last_reviewed' => '2026-09-25',
+    'path' => ['alias' => '/te-beretitenti/the-president'],
+  ]);
+  if ($profile->isNew()) {
+    if ($portrait) {
+      $profile->set('field_profile_image', ['target_id' => $portrait->id()]);
+    }
+    $profile->setRevisionLogMessage('Create the initial current President profile from the official source website.');
+    $profile->save();
+  }
+
+  if (!View::load('current_president')) {
+    View::create([
+      'id' => 'current_president',
+      'label' => 'Current President',
+      'module' => 'views',
+      'description' => 'The published Profile marked as the current President.',
+      'tag' => 'OB',
+      'base_table' => 'node_field_data',
+      'base_field' => 'nid',
+      'status' => TRUE,
+      'display' => [
+        'default' => [
+          'id' => 'default',
+          'display_title' => 'Default',
+          'display_plugin' => 'default',
+          'position' => 0,
+          'display_options' => [
+            'title' => 'Current President',
+            'pager' => ['type' => 'some', 'options' => ['offset' => 0, 'items_per_page' => 1]],
+            'access' => ['type' => 'perm', 'options' => ['perm' => 'access content']],
+            'cache' => ['type' => 'tag', 'options' => []],
+            'sorts' => [
+              'changed' => [
+                'id' => 'changed',
+                'table' => 'node_field_data',
+                'field' => 'changed',
+                'entity_type' => 'node',
+                'entity_field' => 'changed',
+                'plugin_id' => 'date',
+                'order' => 'DESC',
+                'exposed' => FALSE,
+                'granularity' => 'second',
+              ],
+            ],
+            'arguments' => [],
+            'filters' => [
+              'status' => [
+                'id' => 'status',
+                'table' => 'node_field_data',
+                'field' => 'status',
+                'entity_type' => 'node',
+                'entity_field' => 'status',
+                'plugin_id' => 'boolean',
+                'operator' => '=',
+                'value' => '1',
+                'group' => 1,
+                'exposed' => FALSE,
+              ],
+              'type' => [
+                'id' => 'type',
+                'table' => 'node_field_data',
+                'field' => 'type',
+                'entity_type' => 'node',
+                'entity_field' => 'type',
+                'plugin_id' => 'bundle',
+                'operator' => 'in',
+                'value' => ['profile' => 'profile'],
+                'group' => 1,
+                'exposed' => FALSE,
+              ],
+              'field_is_current_value' => [
+                'id' => 'field_is_current_value',
+                'table' => 'node__field_is_current',
+                'field' => 'field_is_current_value',
+                'plugin_id' => 'boolean',
+                'operator' => '=',
+                'value' => '1',
+                'group' => 1,
+                'exposed' => FALSE,
+              ],
+            ],
+            'style' => [
+              'type' => 'default',
+              'options' => ['grouping' => [], 'row_class' => '', 'default_row_class' => TRUE, 'uses_fields' => FALSE],
+            ],
+            'row' => ['type' => 'entity:node', 'options' => ['view_mode' => 'homepage_feature']],
+            'query' => [
+              'type' => 'views_query',
+              'options' => [
+                'query_comment' => '',
+                'disable_sql_rewrite' => FALSE,
+                'distinct' => FALSE,
+                'replica' => FALSE,
+                'query_tags' => [],
+              ],
+            ],
+            'relationships' => [],
+            'use_more' => FALSE,
+            'use_more_always' => FALSE,
+            'use_more_text' => 'More',
+            'link_display' => '0',
+            'link_url' => '',
+            'header' => [],
+            'footer' => [],
+            'empty' => [],
+            'display_extenders' => [],
+          ],
+        ],
+        'block_1' => [
+          'id' => 'block_1',
+          'display_title' => 'Homepage feature',
+          'display_plugin' => 'block',
+          'position' => 1,
+          'display_options' => [
+            'block_description' => 'Current President homepage feature',
+            'display_extenders' => [],
+          ],
+        ],
+      ],
+    ])->save();
+  }
+}
+
+/**
+ * Connects the Information for the Public panels to managed destinations.
+ */
+function ob_site_ensure_information_for_public_destinations(): void {
+  ob_site_ensure_page_content_types();
+  ob_site_ensure_homepage_presentation_fields();
+  ob_site_ensure_initial_landing_pages();
+
+  $node_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $project_matches = $node_storage->loadByProperties([
+    'type' => 'landing_page',
+    'title' => 'Projects & Initiatives',
+  ]);
+  $projects = $project_matches ? reset($project_matches) : Node::create([
+    'type' => 'landing_page',
+    'title' => 'Projects & Initiatives',
+    'status' => TRUE,
+    'uid' => 1,
+    'field_summary' => 'Explore national projects, government initiatives and programme progress supported by the Office of Te Beretitenti.',
+    'body' => [
+      'value' => '<p>Find information about national projects, government initiatives and programme progress supported by the Office of Te Beretitenti.</p>',
+      'format' => 'basic_html',
+    ],
+    'path' => ['alias' => '/projects'],
+  ]);
+
+  $projects_changed = $projects->isNew();
+  if (!$projects->isNew() && $projects->hasField('path') && $projects->get('path')->alias !== '/projects') {
+    $projects->set('path', ['alias' => '/projects']);
+    $projects_changed = TRUE;
+  }
+  if ($projects_changed) {
+    $projects->setNewRevision(TRUE);
+    $projects->setRevisionLogMessage('Ensure the managed Projects & Initiatives destination.');
+    $projects->save();
+  }
+
+  $destinations = [
+    'updates' => ['uri' => 'internal:/news-media', 'title' => 'View news & updates'],
+    'services' => ['uri' => 'internal:/services', 'title' => 'Browse services'],
+    'activities' => ['uri' => 'internal:/te-beretitenti', 'title' => 'View official activities'],
+    'projects' => ['uri' => 'internal:/projects', 'title' => 'Explore projects'],
+  ];
+  foreach ($node_storage->loadByProperties(['type' => 'homepage']) as $homepage) {
+    $changed = FALSE;
+    foreach ($destinations as $section => $destination) {
+      $field_name = "field_{$section}_link";
+      if (!$homepage->hasField($field_name)) {
+        continue;
+      }
+      $link = $homepage->get($field_name)->first();
+      if (!$link || str_starts_with((string) $link->uri, 'internal:/search/node')) {
+        $homepage->set($field_name, $destination);
+        $changed = TRUE;
+      }
+    }
+    if ($changed) {
+      $homepage->setNewRevision(TRUE);
+      $homepage->setRevisionLogMessage('Connect Information for the Public panels to managed destinations.');
+      $homepage->save();
+    }
+  }
+}
+
+/**
+ * Creates administrator-managed public notices and their archive.
+ */
+function ob_site_ensure_public_notices(): void {
+  ob_site_ensure_taxonomies();
+
+  if (!NodeType::load('public_notice')) {
+    $type = NodeType::create([
+      'type' => 'public_notice',
+      'name' => 'Public Notice',
+      'description' => 'A dated public notice displayed on the homepage and in the public notice archive.',
+      'new_revision' => TRUE,
+      'preview_mode' => 1,
+      'display_submitted' => FALSE,
+    ]);
+    $type->setThirdPartySetting('menu_ui', 'available_menus', []);
+    $type->setThirdPartySetting('menu_ui', 'parent', '');
+    $type->save();
+  }
+
+  $storage_definitions = [
+    'body' => ['type' => 'text_with_summary', 'cardinality' => 1],
+    'field_notice_summary' => ['type' => 'string_long', 'cardinality' => 1],
+    'field_notice_category' => [
+      'type' => 'entity_reference',
+      'cardinality' => 1,
+      'settings' => ['target_type' => 'taxonomy_term'],
+    ],
+    'field_notice_date' => [
+      'type' => 'datetime',
+      'cardinality' => 1,
+      'settings' => ['datetime_type' => 'date'],
+    ],
+    'field_notice_expiry' => [
+      'type' => 'datetime',
+      'cardinality' => 1,
+      'settings' => ['datetime_type' => 'date'],
+    ],
+    'field_notice_urgent' => ['type' => 'boolean', 'cardinality' => 1],
+    'field_notice_link' => ['type' => 'link', 'cardinality' => 1],
+  ];
+
+  foreach ($storage_definitions as $field_name => $definition) {
+    if (!FieldStorageConfig::loadByName('node', $field_name)) {
+      FieldStorageConfig::create([
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'type' => $definition['type'],
+        'settings' => $definition['settings'] ?? [],
+        'cardinality' => $definition['cardinality'],
+        'translatable' => $field_name !== 'field_notice_urgent',
+      ])->save();
+    }
+  }
+
+  $category_settings = [
+    'handler' => 'default:taxonomy_term',
+    'handler_settings' => [
+      'target_bundles' => ['notice_category' => 'notice_category'],
+      'sort' => ['field' => 'name', 'direction' => 'ASC'],
+      'auto_create' => FALSE,
+    ],
+  ];
+  $fields = [
+    'field_notice_summary' => [
+      'label' => 'Summary',
+      'description' => 'A concise public summary used on the homepage and notice archive.',
+      'required' => TRUE,
+      'settings' => [],
+      'widget' => 'string_textarea',
+      'widget_settings' => ['rows' => 3, 'placeholder' => 'Summarise the notice in one or two sentences.'],
+      'formatter' => 'basic_string',
+    ],
+    'body' => [
+      'label' => 'Notice details',
+      'description' => 'Enter the complete approved public notice.',
+      'required' => TRUE,
+      'settings' => ['display_summary' => FALSE, 'required_summary' => FALSE],
+      'widget' => 'text_textarea_with_summary',
+      'widget_settings' => ['rows' => 12, 'summary_rows' => 3, 'placeholder' => ''],
+      'formatter' => 'text_default',
+    ],
+    'field_notice_category' => [
+      'label' => 'Category',
+      'description' => 'Select the category displayed with this notice.',
+      'required' => TRUE,
+      'settings' => $category_settings,
+      'widget' => 'options_select',
+      'formatter' => 'entity_reference_label',
+      'formatter_settings' => ['link' => FALSE],
+    ],
+    'field_notice_date' => [
+      'label' => 'Publication date',
+      'description' => 'Date the notice is published to the public.',
+      'required' => TRUE,
+      'settings' => [],
+      'widget' => 'datetime_default',
+      'formatter' => 'datetime_custom',
+      'formatter_settings' => ['timezone_override' => '', 'date_format' => 'j F Y'],
+    ],
+    'field_notice_expiry' => [
+      'label' => 'Homepage expiry date',
+      'description' => 'Optional. After this date the notice leaves the homepage but remains in the archive.',
+      'required' => FALSE,
+      'settings' => [],
+      'widget' => 'datetime_default',
+      'formatter' => 'datetime_custom',
+      'formatter_settings' => ['timezone_override' => '', 'date_format' => 'j F Y'],
+    ],
+    'field_notice_urgent' => [
+      'label' => 'Urgent notice',
+      'description' => 'Urgent notices are highlighted and sorted before standard notices.',
+      'required' => FALSE,
+      'settings' => ['on_label' => 'Urgent', 'off_label' => 'Standard'],
+      'default_value' => [['value' => 0]],
+      'widget' => 'boolean_checkbox',
+      'widget_settings' => ['display_label' => TRUE],
+      'formatter' => 'boolean',
+      'formatter_settings' => ['format' => 'yes-no', 'format_custom_false' => '', 'format_custom_true' => ''],
+    ],
+    'field_notice_link' => [
+      'label' => 'Destination link',
+      'description' => 'Optional. When empty, the notice links to its full Drupal page.',
+      'required' => FALSE,
+      'settings' => ['title' => 2, 'link_type' => 17],
+      'widget' => 'link_default',
+      'formatter' => 'link',
+      'formatter_settings' => ['trim_length' => 100, 'url_only' => FALSE, 'url_plain' => FALSE, 'rel' => '', 'target' => ''],
+    ],
+  ];
+
+  $form_display = EntityFormDisplay::load('node.public_notice.default') ?? EntityFormDisplay::create([
+    'targetEntityType' => 'node',
+    'bundle' => 'public_notice',
+    'mode' => 'default',
+    'status' => TRUE,
+  ]);
+  $view_display = EntityViewDisplay::load('node.public_notice.default') ?? EntityViewDisplay::create([
+    'targetEntityType' => 'node',
+    'bundle' => 'public_notice',
+    'mode' => 'default',
+    'status' => TRUE,
+  ]);
+  if (!EntityViewMode::load('node.homepage_notice')) {
+    EntityViewMode::create([
+      'id' => 'node.homepage_notice',
+      'label' => 'Homepage notice',
+      'targetEntityType' => 'node',
+      'status' => TRUE,
+    ])->save();
+  }
+  $homepage_display = EntityViewDisplay::load('node.public_notice.homepage_notice') ?? EntityViewDisplay::create([
+    'targetEntityType' => 'node',
+    'bundle' => 'public_notice',
+    'mode' => 'homepage_notice',
+    'status' => TRUE,
+  ]);
+  $teaser_display = EntityViewDisplay::load('node.public_notice.teaser') ?? EntityViewDisplay::create([
+    'targetEntityType' => 'node',
+    'bundle' => 'public_notice',
+    'mode' => 'teaser',
+    'status' => TRUE,
+  ]);
+
+  $form_display
+    ->setComponent('title', [
+      'type' => 'string_textfield',
+      'weight' => -10,
+      'region' => 'content',
+      'settings' => ['size' => 60, 'placeholder' => 'Public notice title'],
+    ])
+    ->setComponent('status', [
+      'type' => 'boolean_checkbox',
+      'weight' => 100,
+      'region' => 'content',
+      'settings' => ['display_label' => TRUE],
+    ]);
+
+  $component_weight = 0;
+  foreach ($fields as $field_name => $definition) {
+    if (!FieldConfig::loadByName('node', 'public_notice', $field_name)) {
+      FieldConfig::create([
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'public_notice',
+        'label' => $definition['label'],
+        'description' => $definition['description'],
+        'required' => $definition['required'],
+        'settings' => $definition['settings'],
+        'default_value' => $definition['default_value'] ?? [],
+      ])->save();
+    }
+
+    $form_display->setComponent($field_name, [
+      'type' => $definition['widget'],
+      'weight' => $component_weight,
+      'region' => 'content',
+      'settings' => $definition['widget_settings'] ?? [],
+    ]);
+    foreach ([$view_display, $homepage_display, $teaser_display] as $display) {
+      $display->setComponent($field_name, [
+        'type' => $definition['formatter'],
+        'weight' => $component_weight,
+        'region' => 'content',
+        'label' => 'hidden',
+        'settings' => $definition['formatter_settings'] ?? [],
+      ]);
+    }
+    $component_weight++;
+  }
+  $form_display->save();
+  $view_display->save();
+  $homepage_display->save();
+  $teaser_display->save();
+
+  if (!View::load('public_notices')) {
+    View::create([
+      'id' => 'public_notices',
+      'label' => 'Public notices',
+      'module' => 'views',
+      'description' => 'Published public notices ordered by urgency and publication date.',
+      'tag' => 'OB',
+      'base_table' => 'node_field_data',
+      'base_field' => 'nid',
+      'status' => TRUE,
+      'display' => [
+        'default' => [
+          'id' => 'default',
+          'display_title' => 'Default',
+          'display_plugin' => 'default',
+          'position' => 0,
+          'display_options' => [
+            'title' => 'Public notices',
+            'pager' => ['type' => 'full', 'options' => ['offset' => 0, 'items_per_page' => 10]],
+            'access' => ['type' => 'perm', 'options' => ['perm' => 'access content']],
+            'cache' => ['type' => 'tag', 'options' => []],
+            'sorts' => [
+              'field_notice_urgent_value' => [
+                'id' => 'field_notice_urgent_value',
+                'table' => 'node__field_notice_urgent',
+                'field' => 'field_notice_urgent_value',
+                'plugin_id' => 'standard',
+                'order' => 'DESC',
+                'exposed' => FALSE,
+              ],
+              'field_notice_date_value' => [
+                'id' => 'field_notice_date_value',
+                'table' => 'node__field_notice_date',
+                'field' => 'field_notice_date_value',
+                'plugin_id' => 'datetime',
+                'order' => 'DESC',
+                'exposed' => FALSE,
+                'granularity' => 'day',
+              ],
+            ],
+            'arguments' => [],
+            'filters' => [
+              'status' => [
+                'id' => 'status',
+                'table' => 'node_field_data',
+                'field' => 'status',
+                'entity_type' => 'node',
+                'entity_field' => 'status',
+                'plugin_id' => 'boolean',
+                'operator' => '=',
+                'value' => '1',
+                'group' => 1,
+                'exposed' => FALSE,
+              ],
+              'type' => [
+                'id' => 'type',
+                'table' => 'node_field_data',
+                'field' => 'type',
+                'entity_type' => 'node',
+                'entity_field' => 'type',
+                'plugin_id' => 'bundle',
+                'operator' => 'in',
+                'value' => ['public_notice' => 'public_notice'],
+                'group' => 1,
+                'exposed' => FALSE,
+              ],
+            ],
+            'style' => ['type' => 'default', 'options' => ['grouping' => [], 'row_class' => '', 'default_row_class' => TRUE, 'uses_fields' => FALSE]],
+            'row' => ['type' => 'entity:node', 'options' => ['view_mode' => 'teaser']],
+            'query' => ['type' => 'views_query', 'options' => ['query_comment' => '', 'disable_sql_rewrite' => FALSE, 'distinct' => FALSE, 'replica' => FALSE, 'query_tags' => []]],
+            'relationships' => [],
+            'use_more' => FALSE,
+            'header' => [],
+            'footer' => [],
+            'empty' => [],
+            'display_extenders' => [],
+          ],
+        ],
+        'page_1' => [
+          'id' => 'page_1',
+          'display_title' => 'Public notice archive',
+          'display_plugin' => 'page',
+          'position' => 1,
+          'display_options' => [
+            'path' => 'news-media/public-notices',
+            'display_extenders' => [],
+          ],
+        ],
+      ],
+    ])->save();
+  }
+
+  $notice_storage = \Drupal::entityTypeManager()->getStorage('node');
+  if (!$notice_storage->loadByProperties(['type' => 'public_notice'])) {
+    $term_storage = \Drupal::entityTypeManager()->getStorage('taxonomy_term');
+    $categories = $term_storage->loadByProperties(['vid' => 'notice_category', 'name' => 'General']);
+    $category = $categories ? reset($categories) : NULL;
+    $values = [
+      'type' => 'public_notice',
+      'title' => 'Public notice information',
+      'status' => TRUE,
+      'uid' => 1,
+      'field_notice_summary' => 'Official public notices and time-sensitive information from the Office of Te Beretitenti are published here.',
+      'body' => [
+        'value' => '<p>Check this page for official public notices and time-sensitive information from the Office of Te Beretitenti.</p>',
+        'format' => 'basic_html',
+      ],
+      'field_notice_date' => date('Y-m-d'),
+      'field_notice_urgent' => FALSE,
+      'path' => ['alias' => '/news-media/public-notices/public-notice-information'],
+    ];
+    if ($category) {
+      $values['field_notice_category'] = ['target_id' => $category->id()];
+    }
+    $notice = Node::create($values);
+    $notice->setRevisionLogMessage('Create the initial administrator-managed public notice.');
+    $notice->save();
+  }
+}
+
+/**
+ * Creates the Homepage Slide model, display mode, View, and initial slide.
+ */
+function ob_site_ensure_homepage_slider(): void {
+  if (!NodeType::load('homepage_slide')) {
+    $type = NodeType::create([
+      'type' => 'homepage_slide',
+      'name' => 'Homepage Slide',
+      'description' => 'A published image slide displayed in the homepage hero carousel.',
+      'new_revision' => TRUE,
+      'preview_mode' => 1,
+      'display_submitted' => FALSE,
+    ]);
+    $type->setThirdPartySetting('menu_ui', 'available_menus', []);
+    $type->setThirdPartySetting('menu_ui', 'parent', '');
+    $type->save();
+  }
+
+  $storage_definitions = [
+    'field_slide_label' => [
+      'type' => 'string',
+      'settings' => ['max_length' => 120],
+    ],
+    'field_slide_heading' => [
+      'type' => 'string',
+      'settings' => ['max_length' => 255],
+    ],
+    'field_slide_summary' => [
+      'type' => 'text_long',
+    ],
+    'field_slide_image' => [
+      'type' => 'entity_reference',
+      'settings' => ['target_type' => 'media'],
+    ],
+    'field_slide_link' => [
+      'type' => 'link',
+    ],
+    'field_slide_weight' => [
+      'type' => 'integer',
+    ],
+  ];
+
+  foreach ($storage_definitions as $field_name => $definition) {
+    if (!FieldStorageConfig::loadByName('node', $field_name)) {
+      FieldStorageConfig::create([
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'type' => $definition['type'],
+        'settings' => $definition['settings'] ?? [],
+        'cardinality' => 1,
+        'translatable' => $field_name !== 'field_slide_weight',
+      ])->save();
+    }
+  }
+
+  $media_settings = [
+    'handler' => 'default:media',
+    'handler_settings' => [
+      'target_bundles' => ['image' => 'image'],
+      'sort' => ['field' => '_none', 'direction' => 'ASC'],
+      'auto_create' => FALSE,
+      'auto_create_bundle' => NULL,
+    ],
+  ];
+  $fields = [
+    'field_slide_label' => [
+      'label' => 'Slide label',
+      'description' => 'Short context shown above the heading, for example “Government update”.',
+      'required' => FALSE,
+      'settings' => [],
+      'widget' => 'string_textfield',
+      'formatter' => 'string',
+    ],
+    'field_slide_heading' => [
+      'label' => 'Public heading',
+      'description' => 'Main public message displayed on the slide.',
+      'required' => TRUE,
+      'settings' => [],
+      'widget' => 'string_textfield',
+      'formatter' => 'string',
+    ],
+    'field_slide_summary' => [
+      'label' => 'Summary',
+      'description' => 'Keep the supporting message concise so it remains readable on small screens.',
+      'required' => FALSE,
+      'settings' => [],
+      'widget' => 'text_textarea',
+      'widget_settings' => ['rows' => 4, 'placeholder' => ''],
+      'formatter' => 'text_default',
+    ],
+    'field_slide_image' => [
+      'label' => 'Slide image',
+      'description' => 'Use a 1600 × 720 landscape image with meaningful alternative text.',
+      'required' => FALSE,
+      'settings' => $media_settings,
+      'widget' => 'media_library_widget',
+      'formatter' => 'entity_reference_entity_view',
+      'formatter_settings' => ['view_mode' => 'homepage_hero', 'link' => FALSE],
+    ],
+    'field_slide_link' => [
+      'label' => 'Action link',
+      'description' => 'Optional button text and destination.',
+      'required' => FALSE,
+      'settings' => ['title' => 2, 'link_type' => 17],
+      'widget' => 'link_default',
+      'formatter' => 'link',
+      'formatter_settings' => ['trim_length' => 100, 'url_only' => FALSE, 'url_plain' => FALSE, 'rel' => '', 'target' => ''],
+    ],
+    'field_slide_weight' => [
+      'label' => 'Display order',
+      'description' => 'Lower numbers appear first.',
+      'required' => TRUE,
+      'settings' => ['min' => -50, 'max' => 50, 'prefix' => '', 'suffix' => ''],
+      'default_value' => [['value' => 0]],
+      'widget' => 'number',
+      'formatter' => 'number_integer',
+      'formatter_settings' => ['thousand_separator' => '', 'prefix_suffix' => TRUE],
+    ],
+  ];
+
+  $form_display = EntityFormDisplay::load('node.homepage_slide.default') ?? EntityFormDisplay::create([
+    'targetEntityType' => 'node',
+    'bundle' => 'homepage_slide',
+    'mode' => 'default',
+    'status' => TRUE,
+  ]);
+  $view_display = EntityViewDisplay::load('node.homepage_slide.default') ?? EntityViewDisplay::create([
+    'targetEntityType' => 'node',
+    'bundle' => 'homepage_slide',
+    'mode' => 'default',
+    'status' => TRUE,
+  ]);
+
+  if (!EntityViewMode::load('node.homepage_slider')) {
+    EntityViewMode::create([
+      'id' => 'node.homepage_slider',
+      'label' => 'Homepage slider',
+      'targetEntityType' => 'node',
+      'status' => TRUE,
+    ])->save();
+  }
+  $slider_display = EntityViewDisplay::load('node.homepage_slide.homepage_slider') ?? EntityViewDisplay::create([
+    'targetEntityType' => 'node',
+    'bundle' => 'homepage_slide',
+    'mode' => 'homepage_slider',
+    'status' => TRUE,
+  ]);
+
+  $form_display
+    ->setComponent('title', [
+      'type' => 'string_textfield',
+      'weight' => -10,
+      'region' => 'content',
+      'settings' => ['size' => 60, 'placeholder' => 'Internal title used in Drupal Admin'],
+    ])
+    ->setComponent('status', [
+      'type' => 'boolean_checkbox',
+      'weight' => 100,
+      'region' => 'content',
+      'settings' => ['display_label' => TRUE],
+    ]);
+
+  $weight = 0;
+  foreach ($fields as $field_name => $definition) {
+    if (!FieldConfig::loadByName('node', 'homepage_slide', $field_name)) {
+      FieldConfig::create([
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'bundle' => 'homepage_slide',
+        'label' => $definition['label'],
+        'description' => $definition['description'],
+        'required' => $definition['required'],
+        'settings' => $definition['settings'],
+        'default_value' => $definition['default_value'] ?? [],
+      ])->save();
+    }
+
+    $form_display->setComponent($field_name, [
+      'type' => $definition['widget'],
+      'weight' => $weight,
+      'region' => 'content',
+      'settings' => $definition['widget_settings'] ?? [],
+    ]);
+    foreach ([$view_display, $slider_display] as $display) {
+      $display->setComponent($field_name, [
+        'type' => $definition['formatter'],
+        'weight' => $weight,
+        'region' => 'content',
+        'label' => 'hidden',
+        'settings' => $definition['formatter_settings'] ?? [],
+      ]);
+    }
+    $weight++;
+  }
+  $form_display->save();
+  $view_display->save();
+  $slider_display->save();
+
+  if (!View::load('homepage_hero_slider')) {
+    View::create([
+      'id' => 'homepage_hero_slider',
+      'label' => 'Homepage hero slider',
+      'module' => 'views',
+      'description' => 'Published Homepage Slides ordered for the front-page carousel.',
+      'tag' => 'OB',
+      'base_table' => 'node_field_data',
+      'base_field' => 'nid',
+      'status' => TRUE,
+      'display' => [
+        'default' => [
+          'id' => 'default',
+          'display_title' => 'Default',
+          'display_plugin' => 'default',
+          'position' => 0,
+          'display_options' => [
+            'title' => 'Homepage hero slider',
+            'pager' => [
+              'type' => 'some',
+              'options' => ['offset' => 0, 'items_per_page' => 5],
+            ],
+            'access' => [
+              'type' => 'perm',
+              'options' => ['perm' => 'access content'],
+            ],
+            'cache' => [
+              'type' => 'tag',
+              'options' => [],
+            ],
+            'sorts' => [
+              'field_slide_weight_value' => [
+                'id' => 'field_slide_weight_value',
+                'table' => 'node__field_slide_weight',
+                'field' => 'field_slide_weight_value',
+                'relationship' => 'none',
+                'group_type' => 'group',
+                'admin_label' => '',
+                'plugin_id' => 'standard',
+                'order' => 'ASC',
+                'expose' => ['label' => '', 'field_identifier' => 'field_slide_weight_value'],
+                'exposed' => FALSE,
+              ],
+              'created' => [
+                'id' => 'created',
+                'table' => 'node_field_data',
+                'field' => 'created',
+                'relationship' => 'none',
+                'group_type' => 'group',
+                'admin_label' => '',
+                'entity_type' => 'node',
+                'entity_field' => 'created',
+                'plugin_id' => 'date',
+                'order' => 'ASC',
+                'expose' => ['label' => '', 'field_identifier' => 'created'],
+                'exposed' => FALSE,
+                'granularity' => 'second',
+              ],
+            ],
+            'arguments' => [],
+            'filters' => [
+              'status' => [
+                'id' => 'status',
+                'table' => 'node_field_data',
+                'field' => 'status',
+                'entity_type' => 'node',
+                'entity_field' => 'status',
+                'plugin_id' => 'boolean',
+                'operator' => '=',
+                'value' => '1',
+                'group' => 1,
+                'exposed' => FALSE,
+              ],
+              'type' => [
+                'id' => 'type',
+                'table' => 'node_field_data',
+                'field' => 'type',
+                'entity_type' => 'node',
+                'entity_field' => 'type',
+                'plugin_id' => 'bundle',
+                'operator' => 'in',
+                'value' => ['homepage_slide' => 'homepage_slide'],
+                'group' => 1,
+                'exposed' => FALSE,
+              ],
+            ],
+            'style' => [
+              'type' => 'default',
+              'options' => [
+                'grouping' => [],
+                'row_class' => '',
+                'default_row_class' => TRUE,
+                'uses_fields' => FALSE,
+              ],
+            ],
+            'row' => [
+              'type' => 'entity:node',
+              'options' => ['view_mode' => 'homepage_slider'],
+            ],
+            'query' => [
+              'type' => 'views_query',
+              'options' => [
+                'query_comment' => '',
+                'disable_sql_rewrite' => FALSE,
+                'distinct' => FALSE,
+                'replica' => FALSE,
+                'query_tags' => [],
+              ],
+            ],
+            'relationships' => [],
+            'use_more' => FALSE,
+            'use_more_always' => FALSE,
+            'use_more_text' => 'More',
+            'link_display' => '0',
+            'link_url' => '',
+            'header' => [],
+            'footer' => [],
+            'empty' => [],
+            'display_extenders' => [],
+          ],
+        ],
+        'block_1' => [
+          'id' => 'block_1',
+          'display_title' => 'Homepage carousel',
+          'display_plugin' => 'block',
+          'position' => 1,
+          'display_options' => [
+            'block_description' => 'Homepage hero slider',
+            'display_extenders' => [],
+          ],
+        ],
+      ],
+    ])->save();
+  }
+
+  $existing_slides = Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'homepage_slide']);
+  if (!$existing_slides) {
+    $placeholder_definitions = [
+      'lagoon' => [
+        'filename' => 'lagoon.png',
+        'name' => 'Homepage slide – Kiribati lagoon illustration',
+        'alt' => 'Illustration of a Kiribati lagoon, island and sunrise',
+      ],
+      'public-service' => [
+        'filename' => 'public-service.png',
+        'name' => 'Homepage slide – public service illustration',
+        'alt' => 'Illustration of a government public service building',
+      ],
+      'presidency' => [
+        'filename' => 'presidency.png',
+        'name' => 'Homepage slide – presidential activities illustration',
+        'alt' => 'Illustration representing official presidential activities',
+      ],
+    ];
+    $media_storage = Drupal::entityTypeManager()->getStorage('media');
+    $file_repository = Drupal::service('file.repository');
+    $file_system = Drupal::service('file_system');
+    $directory = 'public://homepage-slides';
+    $file_system->prepareDirectory(
+      $directory,
+      FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS,
+    );
+    $placeholder_media = [];
+
+    foreach ($placeholder_definitions as $key => $definition) {
+      $matches = $media_storage->loadByProperties([
+        'bundle' => 'image',
+        'name' => $definition['name'],
+      ]);
+      if ($matches) {
+        $placeholder_media[$key] = reset($matches);
+        continue;
+      }
+
+      $source_path = DRUPAL_ROOT . '/themes/custom/ob/src/assets/images/homepage-slides/' . $definition['filename'];
+      if (!is_file($source_path)) {
+        continue;
+      }
+
+      $file = $file_repository->writeData(
+        file_get_contents($source_path),
+        $directory . '/' . $definition['filename'],
+        FileExists::Replace,
+      );
+      $media = Media::create([
+        'bundle' => 'image',
+        'name' => $definition['name'],
+        'status' => TRUE,
+        'uid' => 1,
+        'field_media_image' => [
+          'target_id' => $file->id(),
+          'alt' => $definition['alt'],
+        ],
+      ]);
+      $media->save();
+      $placeholder_media[$key] = $media;
+    }
+
+    $slides = [
+      [
+        'title' => 'Homepage – Official information',
+        'label' => 'Official government website',
+        'heading' => 'Office of Te Beretitenti',
+        'summary' => 'Access official information, government services, publications and updates from the Government of Kiribati.',
+        'image' => 'lagoon',
+        'link' => ['uri' => 'internal:/about-us', 'title' => 'Click more'],
+      ],
+      [
+        'title' => 'Homepage – Government updates',
+        'label' => 'News and announcements',
+        'heading' => 'Latest government updates',
+        'summary' => 'Read official news, announcements and press releases from the Office of Te Beretitenti.',
+        'image' => 'public-service',
+      ],
+      [
+        'title' => 'Homepage – Presidential activities',
+        'label' => 'From the Presidency',
+        'heading' => 'Presidential activities and statements',
+        'summary' => 'Follow official activities, speeches, statements and state functions of Te Beretitenti.',
+        'image' => 'presidency',
+        'link' => ['uri' => 'internal:/te-beretitenti', 'title' => 'Click more'],
+      ],
+    ];
+
+    foreach ($slides as $weight => $definition) {
+      $values = [
+        'type' => 'homepage_slide',
+        'title' => $definition['title'],
+        'status' => TRUE,
+        'uid' => 1,
+        'field_slide_label' => $definition['label'],
+        'field_slide_heading' => $definition['heading'],
+        'field_slide_summary' => [
+          'value' => $definition['summary'],
+          'format' => 'basic_html',
+        ],
+        'field_slide_weight' => $weight,
+      ];
+      if (isset($placeholder_media[$definition['image']])) {
+        $values['field_slide_image'] = ['target_id' => $placeholder_media[$definition['image']]->id()];
+      }
+      if (isset($definition['link'])) {
+        $values['field_slide_link'] = $definition['link'];
+      }
+
+      $slide = Node::create($values);
+      $slide->setRevisionLogMessage('Create an initial administrator-managed homepage slide.');
+      $slide->save();
+    }
+  }
+}
+
+/**
+ * Creates the first approved top-level pages and their Main menu links.
+ */
+function ob_site_ensure_initial_landing_pages(): void {
+  if (!NodeType::load('landing_page')) {
+    return;
+  }
+
+  $pages = [
+    'about-us' => [
+      'title' => 'About Us',
+      'summary' => 'Learn about the Office of Te Beretitenti, its mandate, leadership and role in supporting the Government of Kiribati.',
+      'body' => '<p>The Office of Te Beretitenti supports the work of the President and coordinates essential functions across government. Use this section to access information about the Office, its mandate, structure, portfolio and leadership.</p>',
+      'weight' => 10,
+    ],
+    'te-beretitenti' => [
+      'title' => 'Te Beretitenti',
+      'summary' => 'Official information about Te Beretitenti, presidential activities, speeches and state functions.',
+      'body' => '<p>This section brings together information from the Office of the President, including official activities, speeches, statements and state functions.</p>',
+      'weight' => 20,
+    ],
+    'services' => [
+      'title' => 'Services',
+      'summary' => 'Find public services, permits, grants, forms and application information from the Office of Te Beretitenti.',
+      'body' => '<p>Access services and practical information provided through the Office of Te Beretitenti, including permits, grants, forms and applications.</p>',
+      'weight' => 30,
+    ],
+    'news-media' => [
+      'title' => 'News & Media',
+      'summary' => 'Read official news, public notices, announcements and press releases from the Office of Te Beretitenti.',
+      'body' => '<p>Find official news, public notices, announcements, press releases and media information from the Office of Te Beretitenti.</p>',
+      'weight' => 40,
+    ],
+    'resources' => [
+      'title' => 'Resources',
+      'summary' => 'Access official Gazettes, publications, policies, reports, forms and project information.',
+      'body' => '<p>Browse official Gazettes, publications, policies, reports, forms, downloads and information about government projects and initiatives.</p>',
+      'weight' => 50,
+    ],
+    'contact-us' => [
+      'title' => 'Contact Us',
+      'summary' => 'Contact the Office of Te Beretitenti or find its location and official contact details.',
+      'body' => '<p>Find the Office of Te Beretitenti contact details, office location and information about sending an official enquiry.</p>',
+      'weight' => 60,
+    ],
+  ];
+
+  $node_storage = Drupal::entityTypeManager()->getStorage('node');
+  $menu_link_storage = Drupal::entityTypeManager()->getStorage('menu_link_content');
+
+  foreach ($pages as $slug => $definition) {
+    $matches = $node_storage->loadByProperties([
+      'type' => 'landing_page',
+      'title' => $definition['title'],
+    ]);
+    $page = $matches ? reset($matches) : Node::create([
+      'type' => 'landing_page',
+      'title' => $definition['title'],
+      'status' => TRUE,
+      'uid' => 1,
+      'field_summary' => $definition['summary'],
+      'body' => [
+        'value' => $definition['body'],
+        'format' => 'basic_html',
+      ],
+      'path' => ['alias' => '/' . $slug],
+    ]);
+
+    if ($page->isNew()) {
+      $page->setRevisionLogMessage('Create the initial top-level Landing Page.');
+      $page->save();
+    }
+    elseif ($page->hasField('path') && !$page->get('path')->alias) {
+      $page->set('path', ['alias' => '/' . $slug]);
+      $page->setNewRevision(TRUE);
+      $page->setRevisionLogMessage('Add the approved top-level page URL.');
+      $page->save();
+    }
+
+    $links = $menu_link_storage->loadByProperties([
+      'menu_name' => 'main',
+      'title' => $definition['title'],
+    ]);
+    if (!$links) {
+      MenuLinkContent::create([
+        'title' => $definition['title'],
+        'menu_name' => 'main',
+        'link' => ['uri' => 'entity:node/' . $page->id()],
+        'enabled' => TRUE,
+        'expanded' => TRUE,
+        'weight' => $definition['weight'],
+      ])->save();
+    }
+  }
+}
+
+
+/**
+ * Creates the managed Quick Access destinations and homepage links.
+ */
+function ob_site_ensure_quick_access_destinations(): void {
+  ob_site_ensure_initial_landing_pages();
+
+  if (!NodeType::load('basic_page')) {
+    return;
+  }
+
+  $node_storage = Drupal::entityTypeManager()->getStorage('node');
+  $menu_link_storage = Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $parent_links = [
+    'Resources' => ob_site_find_main_menu_link_plugin_id('Resources'),
+    'News & Media' => ob_site_find_main_menu_link_plugin_id('News & Media'),
+  ];
+
+  $destinations = [
+    'gazettes' => [
+      'type' => 'basic_page',
+      'title' => 'Gazettes',
+      'summary' => 'Access official government gazettes and related notices published for the public record.',
+      'body' => '<p>Use this page to publish and organise official government gazettes for public access.</p>',
+      'alias' => '/resources/gazettes',
+      'menu_parent' => $parent_links['Resources'],
+      'weight' => 0,
+    ],
+    'forms' => [
+      'type' => 'basic_page',
+      'title' => 'Forms & Applications',
+      'summary' => 'Find forms, application documents and guidance for services managed through the Office of Te Beretitenti.',
+      'body' => '<p>Use this page to publish forms, application documents and supporting guidance for public services.</p>',
+      'alias' => '/resources/forms',
+      'menu_parent' => $parent_links['Resources'],
+      'weight' => 10,
+    ],
+    'press_releases' => [
+      'type' => 'basic_page',
+      'title' => 'Press Releases',
+      'summary' => 'Read official press releases and media statements from the Office of Te Beretitenti.',
+      'body' => '<p>Use this page to publish official press releases and media statements.</p>',
+      'alias' => '/news-media/press-releases',
+      'menu_parent' => $parent_links['News & Media'],
+      'weight' => 0,
+    ],
+  ];
+
+  foreach ($destinations as $definition) {
+    $matches = $node_storage->loadByProperties([
+      'type' => $definition['type'],
+      'title' => $definition['title'],
+    ]);
+    $page = $matches ? reset($matches) : Node::create([
+      'type' => $definition['type'],
+      'title' => $definition['title'],
+      'status' => TRUE,
+      'uid' => 1,
+      'field_summary' => $definition['summary'],
+      'body' => [
+        'value' => $definition['body'],
+        'format' => 'basic_html',
+      ],
+      'path' => ['alias' => $definition['alias']],
+    ]);
+
+    $changed = $page->isNew();
+    if (!$page->isNew()) {
+      if ($page->hasField('field_summary') && $page->get('field_summary')->isEmpty()) {
+        $page->set('field_summary', $definition['summary']);
+        $changed = TRUE;
+      }
+      if ($page->hasField('body') && $page->get('body')->isEmpty()) {
+        $page->set('body', [
+          'value' => $definition['body'],
+          'format' => 'basic_html',
+        ]);
+        $changed = TRUE;
+      }
+      if ($page->hasField('path') && $page->get('path')->alias !== $definition['alias']) {
+        $page->set('path', ['alias' => $definition['alias']]);
+        $changed = TRUE;
+      }
+    }
+
+    if ($changed) {
+      $page->setNewRevision(TRUE);
+      $page->setRevisionLogMessage('Ensure the Quick Access destination page.');
+      $page->save();
+    }
+
+    $links = $menu_link_storage->loadByProperties([
+      'menu_name' => 'main',
+      'title' => $definition['title'],
+    ]);
+    if (!$links) {
+      $menu_values = [
+        'title' => $definition['title'],
+        'menu_name' => 'main',
+        'link' => ['uri' => 'entity:node/' . $page->id()],
+        'enabled' => TRUE,
+        'weight' => $definition['weight'],
+      ];
+      if ($definition['menu_parent']) {
+        $menu_values['parent'] = $definition['menu_parent'];
+      }
+      MenuLinkContent::create($menu_values)->save();
+    }
+  }
+
+  $services_matches = $node_storage->loadByProperties([
+    'type' => 'landing_page',
+    'title' => 'Services',
+  ]);
+  if ($services_matches) {
+    $services = reset($services_matches);
+    if ($services->hasField('path') && $services->get('path')->alias !== '/services') {
+      $services->set('path', ['alias' => '/services']);
+      $services->setNewRevision(TRUE);
+      $services->setRevisionLogMessage('Ensure the Quick Access Services destination.');
+      $services->save();
+    }
+  }
+
+  $quick_links = [
+    ['title' => 'Gazettes', 'uri' => 'internal:/resources/gazettes'],
+    ['title' => 'Forms & Applications', 'uri' => 'internal:/resources/forms'],
+    ['title' => 'Press Releases', 'uri' => 'internal:/news-media/press-releases'],
+    ['title' => 'Services', 'uri' => 'internal:/services'],
+  ];
+
+  $homepage_nodes = $node_storage->loadByProperties(['type' => 'homepage']);
+  foreach ($homepage_nodes as $homepage) {
+    if (!$homepage->hasField('field_quick_links')) {
+      continue;
+    }
+
+    $needs_update = $homepage->get('field_quick_links')->isEmpty();
+    foreach ($homepage->get('field_quick_links') as $delta => $item) {
+      if (str_starts_with((string) $item->uri, 'internal:/search/node')) {
+        $needs_update = TRUE;
+        break;
+      }
+      if (isset($quick_links[$delta]) && $item->uri !== $quick_links[$delta]['uri']) {
+        $needs_update = TRUE;
+        break;
+      }
+    }
+
+    if ($needs_update) {
+      $homepage->set('field_quick_links', $quick_links);
+      $homepage->setNewRevision(TRUE);
+      $homepage->setRevisionLogMessage('Connect Homepage Quick Access links to managed destinations.');
+      $homepage->save();
+    }
+  }
+}
+
+/**
+ * Finds a Main menu link plugin ID by title.
+ */
+function ob_site_find_main_menu_link_plugin_id(string $title): ?string {
+  $links = Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties([
+    'menu_name' => 'main',
+    'title' => $title,
+  ]);
+  if (!$links) {
+    return NULL;
+  }
+
+  $link = reset($links);
+  return $link instanceof MenuLinkContent ? $link->getPluginId() : NULL;
+}
+
+/**
+ * Creates the Landing Page and Basic Page content types and field displays.
+ */
+function ob_site_ensure_page_content_types(): void {
+  $content_types = [
+    'landing_page' => [
+      'name' => 'Landing Page',
+      'description' => 'A section overview page with introductory content, featured links, and an optional call to action.',
+    ],
+    'basic_page' => [
+      'name' => 'Basic Page',
+      'description' => 'A standard information page with documents, related links, ownership, and review details.',
+    ],
+  ];
+
+  foreach ($content_types as $id => $definition) {
+    if (!NodeType::load($id)) {
+      $type = NodeType::create([
+        'type' => $id,
+        'name' => $definition['name'],
+        'description' => $definition['description'],
+        'new_revision' => TRUE,
+        'preview_mode' => 1,
+        'display_submitted' => FALSE,
+      ]);
+      $type->setThirdPartySetting('menu_ui', 'available_menus', ['main']);
+      $type->setThirdPartySetting('menu_ui', 'parent', 'main:');
+      $type->save();
+    }
+  }
+
+  $storage_definitions = [
+    'body' => [
+      'type' => 'text_with_summary',
+      'cardinality' => 1,
+    ],
+    'field_summary' => [
+      'type' => 'string_long',
+      'cardinality' => 1,
+    ],
+    'field_featured_image' => [
+      'type' => 'entity_reference',
+      'cardinality' => 1,
+      'settings' => ['target_type' => 'media'],
+    ],
+    'field_featured_links' => [
+      'type' => 'link',
+      'cardinality' => -1,
+    ],
+    'field_call_to_action' => [
+      'type' => 'link',
+      'cardinality' => 1,
+    ],
+    'field_documents' => [
+      'type' => 'entity_reference',
+      'cardinality' => -1,
+      'settings' => ['target_type' => 'media'],
+    ],
+    'field_related_links' => [
+      'type' => 'link',
+      'cardinality' => -1,
+    ],
+    'field_topics' => [
+      'type' => 'entity_reference',
+      'cardinality' => -1,
+      'settings' => ['target_type' => 'taxonomy_term'],
+    ],
+    'field_audience' => [
+      'type' => 'entity_reference',
+      'cardinality' => -1,
+      'settings' => ['target_type' => 'taxonomy_term'],
+    ],
+    'field_content_owner' => [
+      'type' => 'string',
+      'cardinality' => 1,
+      'settings' => ['max_length' => 160],
+    ],
+    'field_last_reviewed' => [
+      'type' => 'datetime',
+      'cardinality' => 1,
+      'settings' => ['datetime_type' => 'date'],
+    ],
+  ];
+
+  foreach ($storage_definitions as $field_name => $definition) {
+    if (!FieldStorageConfig::loadByName('node', $field_name)) {
+      FieldStorageConfig::create([
+        'field_name' => $field_name,
+        'entity_type' => 'node',
+        'type' => $definition['type'],
+        'settings' => $definition['settings'] ?? [],
+        'cardinality' => $definition['cardinality'],
+        'translatable' => TRUE,
+      ])->save();
+    }
+  }
+
+  $shared_taxonomy_settings = static fn(string $vocabulary): array => [
+    'handler' => 'default:taxonomy_term',
+    'handler_settings' => [
+      'target_bundles' => [$vocabulary => $vocabulary],
+      'sort' => ['field' => 'name', 'direction' => 'ASC'],
+      'auto_create' => FALSE,
+    ],
+  ];
+
+  $media_settings = static fn(string $bundle): array => [
+    'handler' => 'default:media',
+    'handler_settings' => [
+      'target_bundles' => [$bundle => $bundle],
+      'sort' => ['field' => '_none', 'direction' => 'ASC'],
+      'auto_create' => FALSE,
+      'auto_create_bundle' => NULL,
+    ],
+  ];
+
+  $bundle_fields = [
+    'landing_page' => [
+      'field_summary' => [
+        'label' => 'Summary',
+        'description' => 'A concise introduction displayed prominently below the page title.',
+        'required' => TRUE,
+        'settings' => [],
+        'widget' => 'string_textarea',
+        'widget_settings' => ['rows' => 3, 'placeholder' => 'Summarise this section in one or two sentences.'],
+        'formatter' => 'basic_string',
+      ],
+      'field_hero_image' => [
+        'label' => 'Hero image',
+        'description' => 'Optional wide image for this section. Always provide meaningful alternative text in Media.',
+        'required' => FALSE,
+        'settings' => $media_settings('image'),
+        'widget' => 'media_library_widget',
+        'formatter' => 'entity_reference_entity_view',
+        'formatter_settings' => ['view_mode' => 'homepage_hero', 'link' => FALSE],
+      ],
+      'body' => [
+        'label' => 'Main content',
+        'description' => 'Introduce the section and explain what visitors can find here.',
+        'required' => TRUE,
+        'settings' => ['display_summary' => FALSE, 'required_summary' => FALSE],
+        'widget' => 'text_textarea_with_summary',
+        'widget_settings' => ['rows' => 12, 'summary_rows' => 3, 'placeholder' => ''],
+        'formatter' => 'text_default',
+      ],
+      'field_featured_links' => [
+        'label' => 'Featured links',
+        'description' => 'Add the most important destinations within this section. Link text is required.',
+        'required' => FALSE,
+        'settings' => ['title' => 2, 'link_type' => 17],
+        'widget' => 'link_default',
+        'formatter' => 'link',
+        'formatter_settings' => ['trim_length' => 100, 'url_only' => FALSE, 'url_plain' => FALSE, 'rel' => '', 'target' => ''],
+      ],
+      'field_call_to_action' => [
+        'label' => 'Call to action',
+        'description' => 'Optional single action displayed after the main content.',
+        'required' => FALSE,
+        'settings' => ['title' => 2, 'link_type' => 17],
+        'widget' => 'link_default',
+        'formatter' => 'link',
+        'formatter_settings' => ['trim_length' => 100, 'url_only' => FALSE, 'url_plain' => FALSE, 'rel' => '', 'target' => ''],
+      ],
+      'field_topics' => [
+        'label' => 'Topics',
+        'description' => 'Select approved subjects that help connect related content.',
+        'required' => FALSE,
+        'settings' => $shared_taxonomy_settings('topics'),
+        'widget' => 'entity_reference_autocomplete_tags',
+        'formatter' => 'entity_reference_label',
+        'formatter_settings' => ['link' => TRUE],
+      ],
+      'field_audience' => [
+        'label' => 'Audience',
+        'description' => 'Select the main audiences for this section.',
+        'required' => FALSE,
+        'settings' => $shared_taxonomy_settings('audience'),
+        'widget' => 'entity_reference_autocomplete_tags',
+        'formatter' => 'entity_reference_label',
+        'formatter_settings' => ['link' => TRUE],
+      ],
+    ],
+    'basic_page' => [
+      'field_summary' => [
+        'label' => 'Summary',
+        'description' => 'A concise introduction displayed prominently below the page title.',
+        'required' => TRUE,
+        'settings' => [],
+        'widget' => 'string_textarea',
+        'widget_settings' => ['rows' => 3, 'placeholder' => 'Summarise this page in one or two sentences.'],
+        'formatter' => 'basic_string',
+      ],
+      'field_featured_image' => [
+        'label' => 'Featured image',
+        'description' => 'Optional supporting image. Always provide meaningful alternative text in Media.',
+        'required' => FALSE,
+        'settings' => $media_settings('image'),
+        'widget' => 'media_library_widget',
+        'formatter' => 'entity_reference_entity_view',
+        'formatter_settings' => ['view_mode' => 'default', 'link' => FALSE],
+      ],
+      'body' => [
+        'label' => 'Main content',
+        'description' => 'Enter the complete public information for this page.',
+        'required' => TRUE,
+        'settings' => ['display_summary' => FALSE, 'required_summary' => FALSE],
+        'widget' => 'text_textarea_with_summary',
+        'widget_settings' => ['rows' => 15, 'summary_rows' => 3, 'placeholder' => ''],
+        'formatter' => 'text_default',
+      ],
+      'field_documents' => [
+        'label' => 'Documents',
+        'description' => 'Attach documents from the Media Library.',
+        'required' => FALSE,
+        'settings' => $media_settings('document'),
+        'widget' => 'media_library_widget',
+        'formatter' => 'entity_reference_entity_view',
+        'formatter_settings' => ['view_mode' => 'default', 'link' => FALSE],
+      ],
+      'field_related_links' => [
+        'label' => 'Related links',
+        'description' => 'Add useful internal or trusted external links. Link text is required.',
+        'required' => FALSE,
+        'settings' => ['title' => 2, 'link_type' => 17],
+        'widget' => 'link_default',
+        'formatter' => 'link',
+        'formatter_settings' => ['trim_length' => 100, 'url_only' => FALSE, 'url_plain' => FALSE, 'rel' => '', 'target' => ''],
+      ],
+      'field_topics' => [
+        'label' => 'Topics',
+        'description' => 'Select approved subjects that help connect related content.',
+        'required' => FALSE,
+        'settings' => $shared_taxonomy_settings('topics'),
+        'widget' => 'entity_reference_autocomplete_tags',
+        'formatter' => 'entity_reference_label',
+        'formatter_settings' => ['link' => TRUE],
+      ],
+      'field_audience' => [
+        'label' => 'Audience',
+        'description' => 'Select the audiences for this information.',
+        'required' => FALSE,
+        'settings' => $shared_taxonomy_settings('audience'),
+        'widget' => 'entity_reference_autocomplete_tags',
+        'formatter' => 'entity_reference_label',
+        'formatter_settings' => ['link' => TRUE],
+      ],
+      'field_content_owner' => [
+        'label' => 'Content owner',
+        'description' => 'Division or team responsible for keeping this page accurate.',
+        'required' => TRUE,
+        'settings' => [],
+        'widget' => 'string_textfield',
+        'widget_settings' => ['size' => 60, 'placeholder' => 'For example, Cabinet Secretariat'],
+        'formatter' => 'string',
+      ],
+      'field_last_reviewed' => [
+        'label' => 'Last reviewed',
+        'description' => 'Date this page was last checked for accuracy.',
+        'required' => TRUE,
+        'settings' => [],
+        'widget' => 'datetime_default',
+        'formatter' => 'datetime_custom',
+        'formatter_settings' => [
+          'timezone_override' => '',
+          'date_format' => 'j F Y',
+        ],
+      ],
+    ],
+  ];
+
+  foreach ($bundle_fields as $bundle => $fields) {
+    $form_display = EntityFormDisplay::load("node.$bundle.default") ?? EntityFormDisplay::create([
+      'targetEntityType' => 'node',
+      'bundle' => $bundle,
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+    $view_display = EntityViewDisplay::load("node.$bundle.default") ?? EntityViewDisplay::create([
+      'targetEntityType' => 'node',
+      'bundle' => $bundle,
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+    $teaser_display = EntityViewDisplay::load("node.$bundle.teaser") ?? EntityViewDisplay::create([
+      'targetEntityType' => 'node',
+      'bundle' => $bundle,
+      'mode' => 'teaser',
+      'status' => TRUE,
+    ]);
+
+    $form_display
+      ->setComponent('title', [
+        'type' => 'string_textfield',
+        'weight' => -10,
+        'region' => 'content',
+        'settings' => ['size' => 60, 'placeholder' => ''],
+      ])
+      ->setComponent('status', [
+        'type' => 'boolean_checkbox',
+        'weight' => 100,
+        'region' => 'content',
+        'settings' => ['display_label' => TRUE],
+      ]);
+
+    $weight = 0;
+    foreach ($fields as $field_name => $definition) {
+      if (!FieldConfig::loadByName('node', $bundle, $field_name)) {
+        FieldConfig::create([
+          'field_name' => $field_name,
+          'entity_type' => 'node',
+          'bundle' => $bundle,
+          'label' => $definition['label'],
+          'description' => $definition['description'],
+          'required' => $definition['required'],
+          'settings' => $definition['settings'],
+        ])->save();
+      }
+
+      $form_display->setComponent($field_name, [
+        'type' => $definition['widget'],
+        'weight' => $weight,
+        'region' => 'content',
+        'settings' => $definition['widget_settings'] ?? [],
+      ]);
+      $view_display->setComponent($field_name, [
+        'type' => $definition['formatter'],
+        'weight' => $weight,
+        'region' => 'content',
+        'label' => 'hidden',
+        'settings' => $definition['formatter_settings'] ?? [],
+      ]);
+      $weight++;
+    }
+
+    $teaser_display
+      ->setComponent('field_summary', [
+        'type' => 'basic_string',
+        'weight' => 0,
+        'region' => 'content',
+        'label' => 'hidden',
+        'settings' => [],
+      ])
+      ->setComponent($bundle === 'landing_page' ? 'field_hero_image' : 'field_featured_image', [
+        'type' => 'entity_reference_entity_view',
+        'weight' => 1,
+        'region' => 'content',
+        'label' => 'hidden',
+        'settings' => ['view_mode' => 'default', 'link' => FALSE],
+      ]);
+
+    $form_display->save();
+    $view_display->save();
+    $teaser_display->save();
+  }
+}
+
+/**
+ * Creates the reusable block types, menus, content, and theme placements.
+ */
+function ob_site_ensure_global_structure(): void {
+  $block_types = [
+    'government_identity' => [
+      'label' => 'Government identity',
+      'description' => 'Government website identification displayed in the utility bar and main header.',
+      'fields' => [
+        'field_label' => [
+          'label' => 'Government label',
+          'type' => 'string',
+          'storage_settings' => ['max_length' => 160],
+          'required' => TRUE,
+          'widget' => 'string_textfield',
+          'formatter' => 'string',
+        ],
+        'field_link' => [
+          'label' => 'Information link',
+          'type' => 'link',
+          'settings' => ['title' => 2, 'link_type' => 17],
+          'widget' => 'link_default',
+          'formatter' => 'link',
+        ],
+        'field_logo' => [
+          'label' => 'Government logo',
+          'description' => 'Select the official logo from the Media Library. Use a PNG, WebP, JPEG, or GIF with meaningful alternative text.',
+          'type' => 'entity_reference',
+          'storage_settings' => ['target_type' => 'media'],
+          'settings' => [
+            'handler' => 'default:media',
+            'handler_settings' => [
+              'target_bundles' => ['image' => 'image'],
+              'sort' => ['field' => '_none', 'direction' => 'ASC'],
+              'auto_create' => FALSE,
+              'auto_create_bundle' => NULL,
+            ],
+          ],
+          'widget' => 'media_library_widget',
+          'formatter' => 'entity_reference_entity_view',
+          'formatter_settings' => ['view_mode' => 'default', 'link' => FALSE],
+        ],
+        'field_office_name' => [
+          'label' => 'Office name',
+          'type' => 'string',
+          'storage_settings' => ['max_length' => 160],
+          'required' => TRUE,
+          'widget' => 'string_textfield',
+          'formatter' => 'string',
+        ],
+        'field_government_name' => [
+          'label' => 'Government name',
+          'type' => 'string',
+          'storage_settings' => ['max_length' => 160],
+          'required' => TRUE,
+          'widget' => 'string_textfield',
+          'formatter' => 'string',
+        ],
+        'field_home_link' => [
+          'label' => 'Homepage link',
+          'description' => 'Destination used when visitors select the header identity.',
+          'type' => 'link',
+          'settings' => ['title' => 0, 'link_type' => 17],
+          'widget' => 'link_default',
+          'formatter' => 'link',
+        ],
+      ],
+    ],
+    'sitewide_alert' => [
+      'label' => 'Sitewide alert',
+      'description' => 'Important, warning, or emergency information displayed across the site.',
+      'fields' => [
+        'field_alert_enabled' => [
+          'label' => 'Display alert',
+          'description' => 'Show this alert directly below the site header. Leave unchecked when there is no active public alert.',
+          'type' => 'boolean',
+          'default_value' => [['value' => 0]],
+          'widget' => 'boolean_checkbox',
+          'widget_settings' => ['display_label' => TRUE],
+          'formatter' => 'boolean',
+        ],
+        'field_alert_level' => [
+          'label' => 'Alert level',
+          'type' => 'list_string',
+          'storage_settings' => [
+            'allowed_values' => [
+              'information' => 'Information',
+              'important' => 'Important',
+              'emergency' => 'Emergency',
+            ],
+          ],
+          'required' => TRUE,
+          'widget' => 'options_select',
+          'formatter' => 'list_default',
+        ],
+        'field_heading' => [
+          'label' => 'Heading',
+          'type' => 'string',
+          'storage_settings' => ['max_length' => 255],
+          'required' => TRUE,
+          'widget' => 'string_textfield',
+          'formatter' => 'string',
+        ],
+        'body' => [
+          'label' => 'Message',
+          'type' => 'text_with_summary',
+          'widget' => 'text_textarea_with_summary',
+          'formatter' => 'text_default',
+        ],
+        'field_link' => [
+          'label' => 'More information',
+          'type' => 'link',
+          'settings' => ['title' => 2, 'link_type' => 17],
+          'widget' => 'link_default',
+          'formatter' => 'link',
+        ],
+      ],
+    ],
+    'footer_about' => [
+      'label' => 'Footer about',
+      'description' => 'Office identity and introductory text displayed in the global footer.',
+      'fields' => [
+        'body' => [
+          'label' => 'About text',
+          'type' => 'text_with_summary',
+          'required' => TRUE,
+          'widget' => 'text_textarea_with_summary',
+          'formatter' => 'text_default',
+        ],
+        'field_image' => [
+          'label' => 'Logo or image',
+          'type' => 'entity_reference',
+          'storage_settings' => ['target_type' => 'media'],
+          'settings' => [
+            'handler' => 'default:media',
+            'handler_settings' => ['target_bundles' => ['image' => 'image']],
+          ],
+          'widget' => 'media_library_widget',
+          'formatter' => 'entity_reference_entity_view',
+        ],
+      ],
+    ],
+    'contact_details' => [
+      'label' => 'Contact details',
+      'description' => 'Reusable public office contact details.',
+      'fields' => [
+        'field_phone' => [
+          'label' => 'Telephone',
+          'type' => 'string',
+          'storage_settings' => ['max_length' => 80],
+          'widget' => 'string_textfield',
+          'formatter' => 'string',
+        ],
+        'field_email' => [
+          'label' => 'Email',
+          'type' => 'email',
+          'widget' => 'email_default',
+          'formatter' => 'email_mailto',
+        ],
+        'field_address' => [
+          'label' => 'Address',
+          'type' => 'text_long',
+          'widget' => 'text_textarea',
+          'formatter' => 'text_default',
+        ],
+        'field_opening_hours' => [
+          'label' => 'Opening hours',
+          'type' => 'string_long',
+          'widget' => 'string_textarea',
+          'formatter' => 'basic_string',
+        ],
+      ],
+    ],
+    'call_to_action' => [
+      'label' => 'Call to action',
+      'description' => 'Reusable promotional panel with text, link, and optional image.',
+      'fields' => [
+        'field_heading' => [
+          'label' => 'Heading',
+          'type' => 'string',
+          'storage_settings' => ['max_length' => 255],
+          'required' => TRUE,
+          'widget' => 'string_textfield',
+          'formatter' => 'string',
+        ],
+        'body' => [
+          'label' => 'Summary',
+          'type' => 'text_with_summary',
+          'widget' => 'text_textarea_with_summary',
+          'formatter' => 'text_default',
+        ],
+        'field_link' => [
+          'label' => 'Action link',
+          'type' => 'link',
+          'settings' => ['title' => 2, 'link_type' => 17],
+          'widget' => 'link_default',
+          'formatter' => 'link',
+        ],
+        'field_image' => [
+          'label' => 'Image',
+          'type' => 'entity_reference',
+          'storage_settings' => ['target_type' => 'media'],
+          'settings' => [
+            'handler' => 'default:media',
+            'handler_settings' => ['target_bundles' => ['image' => 'image']],
+          ],
+          'widget' => 'media_library_widget',
+          'formatter' => 'entity_reference_entity_view',
+        ],
+      ],
+    ],
+  ];
+
+  foreach ($block_types as $bundle => $definition) {
+    if (!BlockContentType::load($bundle)) {
+      BlockContentType::create([
+        'id' => $bundle,
+        'label' => $definition['label'],
+        'description' => $definition['description'],
+        'revision' => TRUE,
+      ])->save();
+    }
+
+    $form_display = EntityFormDisplay::load("block_content.$bundle.default") ?? EntityFormDisplay::create([
+      'targetEntityType' => 'block_content',
+      'bundle' => $bundle,
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+    $view_display = EntityViewDisplay::load("block_content.$bundle.default") ?? EntityViewDisplay::create([
+      'targetEntityType' => 'block_content',
+      'bundle' => $bundle,
+      'mode' => 'default',
+      'status' => TRUE,
+    ]);
+
+    $form_display->setComponent('info', [
+      'type' => 'string_textfield',
+      'weight' => -10,
+      'region' => 'content',
+      'settings' => ['size' => 60, 'placeholder' => ''],
+    ]);
+
+    $weight = 0;
+    foreach ($definition['fields'] as $field_name => $field_definition) {
+      if (!FieldStorageConfig::loadByName('block_content', $field_name)) {
+        FieldStorageConfig::create([
+          'field_name' => $field_name,
+          'entity_type' => 'block_content',
+          'type' => $field_definition['type'],
+          'settings' => $field_definition['storage_settings'] ?? [],
+          'cardinality' => $field_definition['cardinality'] ?? 1,
+          'translatable' => TRUE,
+        ])->save();
+      }
+
+      if (!FieldConfig::loadByName('block_content', $bundle, $field_name)) {
+        FieldConfig::create([
+          'field_name' => $field_name,
+          'entity_type' => 'block_content',
+          'bundle' => $bundle,
+          'label' => $field_definition['label'],
+          'description' => $field_definition['description'] ?? '',
+          'required' => $field_definition['required'] ?? FALSE,
+          'default_value' => $field_definition['default_value'] ?? [],
+          'settings' => $field_definition['settings'] ?? [],
+        ])->save();
+      }
+
+      $form_display->setComponent($field_name, [
+        'type' => $field_definition['widget'],
+        'weight' => $weight,
+        'region' => 'content',
+        'settings' => $field_definition['widget_settings'] ?? [],
+      ]);
+      $view_display->setComponent($field_name, [
+        'type' => $field_definition['formatter'],
+        'weight' => $weight,
+        'region' => 'content',
+        'label' => 'hidden',
+        'settings' => $field_definition['formatter_settings'] ?? [],
+      ]);
+      $weight++;
+    }
+
+    $form_display->save();
+    $view_display->save();
+  }
+
+  $menus = [
+    'utility' => 'Utility navigation',
+    'footer-government' => 'Footer government links',
+    'footer-services' => 'Footer service links',
+    'legal' => 'Legal navigation',
+    'social' => 'Social links',
+  ];
+  foreach ($menus as $id => $label) {
+    if (!Menu::load($id)) {
+      Menu::create(['id' => $id, 'label' => $label])->save();
+    }
+  }
+
+  $utility_links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties([
+    'menu_name' => 'utility',
+    'title' => 'Search',
+  ]);
+  if (!$utility_links) {
+    MenuLinkContent::create([
+      'title' => 'Search',
+      'menu_name' => 'utility',
+      'link' => ['uri' => 'internal:/search/node'],
+      'enabled' => TRUE,
+      'weight' => 0,
+    ])->save();
+  }
+
+  $starter_footer_links = [
+    ['footer-government', 'Home', 'internal:/'],
+    ['footer-services', 'Find services', 'internal:/search/node?keys=services'],
+  ];
+  foreach ($starter_footer_links as [$menu_name, $title, $uri]) {
+    $links = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties([
+      'menu_name' => $menu_name,
+      'title' => $title,
+    ]);
+    if (!$links) {
+      MenuLinkContent::create([
+        'title' => $title,
+        'menu_name' => $menu_name,
+        'link' => ['uri' => $uri],
+        'enabled' => TRUE,
+        'weight' => 0,
+      ])->save();
+    }
+  }
+
+  $block_storage = \Drupal::entityTypeManager()->getStorage('block_content');
+  $identity_blocks = $block_storage->loadByProperties([
+    'type' => 'government_identity',
+    'info' => 'Kiribati Government website identity',
+  ]);
+  $identity = $identity_blocks ? reset($identity_blocks) : BlockContent::create([
+    'type' => 'government_identity',
+    'info' => 'Kiribati Government website identity',
+    'status' => TRUE,
+    'reusable' => TRUE,
+    'field_label' => 'A Kiribati Government Website',
+  ]);
+  $identity_changed = $identity->isNew();
+  if ($identity->get('field_logo')->isEmpty()) {
+    $logo_matches = Drupal::entityTypeManager()->getStorage('media')->loadByProperties([
+      'bundle' => 'image',
+      'name' => 'Government of Kiribati logo',
+    ]);
+    $logo = $logo_matches ? reset($logo_matches) : NULL;
+    $source_path = DRUPAL_ROOT . '/themes/custom/ob/src/assets/images/ob-government-mark.png';
+    if (!$logo && is_file($source_path)) {
+      $directory = 'public://branding';
+      Drupal::service('file_system')->prepareDirectory(
+        $directory,
+        FileSystemInterface::CREATE_DIRECTORY | FileSystemInterface::MODIFY_PERMISSIONS,
+      );
+      $file = Drupal::service('file.repository')->writeData(
+        file_get_contents($source_path),
+        $directory . '/ob-government-mark.png',
+        FileExists::Replace,
+      );
+      $logo = Media::create([
+        'bundle' => 'image',
+        'name' => 'Government of Kiribati logo',
+        'status' => TRUE,
+        'uid' => 1,
+        'field_media_image' => [
+          'target_id' => $file->id(),
+          'alt' => 'Government of Kiribati logo',
+        ],
+      ]);
+      $logo->save();
+    }
+    if ($logo) {
+      $identity->set('field_logo', ['target_id' => $logo->id()]);
+      $identity_changed = TRUE;
+    }
+  }
+  if ($identity->get('field_office_name')->isEmpty()) {
+    $identity->set('field_office_name', \Drupal::config('system.site')->get('name') ?: 'Office of Te Beretitenti');
+    $identity_changed = TRUE;
+  }
+  if ($identity->get('field_government_name')->isEmpty()) {
+    $identity->set('field_government_name', 'Government of Kiribati');
+    $identity_changed = TRUE;
+  }
+  if ($identity->get('field_home_link')->isEmpty()) {
+    $identity->set('field_home_link', ['uri' => 'internal:/']);
+    $identity_changed = TRUE;
+  }
+  if ($identity_changed) {
+    $identity->save();
+  }
+
+  $about_blocks = $block_storage->loadByProperties([
+    'type' => 'footer_about',
+    'info' => 'Footer about OB',
+  ]);
+  $footer_about = $about_blocks ? reset($about_blocks) : BlockContent::create([
+    'type' => 'footer_about',
+    'info' => 'Footer about OB',
+    'status' => TRUE,
+    'reusable' => TRUE,
+    'body' => [
+      'value' => '<p>Official information from the Office of Te Beretitenti, Government of Kiribati.</p>',
+      'format' => 'basic_html',
+    ],
+  ]);
+  if ($footer_about->isNew()) {
+    $footer_about->save();
+  }
+
+  $contact_blocks = $block_storage->loadByProperties([
+    'type' => 'contact_details',
+    'info' => 'Footer contact details',
+  ]);
+  $footer_contact = $contact_blocks ? reset($contact_blocks) : BlockContent::create([
+    'type' => 'contact_details',
+    'info' => 'Footer contact details',
+    'status' => TRUE,
+    'reusable' => TRUE,
+    'field_address' => [
+      'value' => '<p>Office of Te Beretitenti<br>Bairiki, Tarawa<br>Republic of Kiribati</p>',
+      'format' => 'basic_html',
+    ],
+  ]);
+  if ($footer_contact->isNew()) {
+    $footer_contact->save();
+  }
+
+  $region_migrations = [
+    'ob_branding' => 'branding',
+    'ob_main_menu' => 'primary_menu',
+    'ob_breadcrumbs' => 'highlighted',
+    'ob_local_actions' => 'highlighted',
+    'ob_messages' => 'highlighted',
+    'ob_page_title' => 'highlighted',
+    'ob_content' => 'content',
+    'ob_footer' => 'footer_navigation',
+  ];
+  foreach ($region_migrations as $block_id => $region) {
+    if ($block = Block::load($block_id)) {
+      $block->setRegion($region);
+      if ($block_id === 'ob_footer') {
+        $block->setStatus(FALSE);
+      }
+      if ($block_id === 'ob_branding') {
+        $block->setStatus(FALSE);
+      }
+      $block->save();
+    }
+  }
+
+  ob_site_place_block(
+    'ob_government_identity',
+    'block_content:' . $identity->uuid(),
+    'utility',
+    -20,
+    'Government website identity',
+  );
+  ob_site_place_block(
+    'ob_utility_menu',
+    'system_menu_block:utility',
+    'utility',
+    0,
+    'Utility navigation',
+  );
+  ob_site_place_block(
+    'ob_site_identity',
+    'block_content:' . $identity->uuid(),
+    'branding',
+    0,
+    'Government site identity',
+  );
+  ob_site_place_block(
+    'ob_footer_about',
+    'block_content:' . $footer_about->uuid(),
+    'footer_about',
+    0,
+    'About the Office',
+  );
+  ob_site_place_block(
+    'ob_footer_contact',
+    'block_content:' . $footer_contact->uuid(),
+    'footer_contact',
+    0,
+    'Contact',
+  );
+  ob_site_place_block('ob_footer_government', 'system_menu_block:footer-government', 'footer_navigation', 0, 'Government');
+  ob_site_place_block('ob_footer_services', 'system_menu_block:footer-services', 'footer_navigation', 10, 'Services');
+  ob_site_place_block('ob_legal_menu', 'system_menu_block:legal', 'footer_bottom', 0, 'Legal');
+  ob_site_place_block('ob_social_menu', 'system_menu_block:social', 'footer_bottom', 10, 'Social links');
+
+  \Drupal::service('config.factory')
+    ->getEditable('ob.settings')
+    ->set('logo.use_default', FALSE)
+    ->set('logo.path', 'themes/custom/ob/src/assets/images/ob-government-mark.svg')
+    ->save();
+}
+
+/**
+ * Creates or updates a block placement for the OB theme.
+ */
+function ob_site_place_block(string $id, string $plugin, string $region, int $weight, string $label): void {
+  $block = Block::load($id) ?? Block::create([
+    'id' => $id,
+    'theme' => 'ob',
+    'plugin' => $plugin,
+    'status' => TRUE,
+  ]);
+  $block->setRegion($region);
+  $block->setWeight($weight);
+  $is_menu = str_starts_with($plugin, 'system_menu_block:');
+  $settings = [
+    'id' => $plugin,
+    'label' => $label,
+    'label_display' => in_array($id, ['ob_footer_government', 'ob_footer_services'], TRUE),
+    'provider' => $is_menu ? 'system' : 'block_content',
+  ];
+  if ($is_menu) {
+    $settings += [
+      'level' => 1,
+      'depth' => 0,
+      'expand_all_items' => FALSE,
+    ];
+  }
+  else {
+    $settings['view_mode'] = 'full';
+  }
+  $block->set('settings', $settings);
+  $block->save();
+}
+
+/**
+ * Creates image styles and the responsive homepage hero display.
+ */
+function ob_site_ensure_image_styles(): void {
+  $styles = [
+    'ob_hero_large' => ['OB hero large', 1600, 720],
+    'ob_hero_medium' => ['OB hero medium', 960, 600],
+    'ob_hero_small' => ['OB hero small', 640, 640],
+    'ob_card' => ['OB content card', 720, 480],
+    'ob_profile' => ['OB profile portrait', 480, 600],
+    'ob_publication_cover' => ['OB publication cover', 480, 680],
+  ];
+
+  foreach ($styles as $id => [$label, $width, $height]) {
+    if (!ImageStyle::load($id)) {
+      $style = ImageStyle::create(['name' => $id, 'label' => $label]);
+      $style->addImageEffect([
+        'id' => 'image_scale_and_crop',
+        'weight' => 0,
+        'data' => [
+          'width' => $width,
+          'height' => $height,
+          'anchor' => 'center-center',
+        ],
+      ]);
+      $style->save();
+    }
+  }
+
+  if (!ResponsiveImageStyle::load('ob_hero')) {
+    ResponsiveImageStyle::create([
+      'id' => 'ob_hero',
+      'label' => 'OB homepage hero',
+      'breakpoint_group' => 'responsive_image',
+      'fallback_image_style' => 'ob_hero_small',
+      'image_style_mappings' => [[
+        'image_mapping_type' => 'sizes',
+        'image_mapping' => [
+          'sizes' => '(min-width: 1200px) 50vw, (min-width: 768px) 55vw, 100vw',
+          'sizes_image_styles' => ['ob_hero_large', 'ob_hero_medium', 'ob_hero_small'],
+        ],
+        'breakpoint_id' => 'responsive_image.viewport_sizing',
+        'multiplier' => '1x',
+      ]],
+    ])->save();
+  }
+
+  if (!EntityViewMode::load('media.homepage_hero')) {
+    EntityViewMode::create([
+      'id' => 'media.homepage_hero',
+      'label' => 'Homepage hero',
+      'targetEntityType' => 'media',
+      'status' => TRUE,
+    ])->save();
+  }
+
+  $image_media_type = \Drupal::entityTypeManager()->getStorage('media_type')->load('image');
+  if ($image_media_type) {
+    $source_field = $image_media_type->getSource()->getConfiguration()['source_field'];
+    $display = EntityViewDisplay::load('media.image.homepage_hero') ?? EntityViewDisplay::create([
+      'targetEntityType' => 'media',
+      'bundle' => 'image',
+      'mode' => 'homepage_hero',
+      'status' => TRUE,
+    ]);
+    $display->setComponent($source_field, [
+      'type' => 'responsive_image',
+      'label' => 'hidden',
+      'region' => 'content',
+      'settings' => [
+        'responsive_image_style' => 'ob_hero',
+        'image_link' => '',
+      ],
+    ]);
+    foreach (['created', 'name', 'thumbnail', 'uid'] as $component) {
+      $display->removeComponent($component);
+    }
+    $display->save();
+  }
+
+  $homepage_display = EntityViewDisplay::load('node.homepage.default');
+  if ($homepage_display && $homepage_display->getComponent('field_hero_image')) {
+    $homepage_display->setComponent('field_hero_image', [
+      'type' => 'entity_reference_entity_view',
+      'weight' => 3,
+      'region' => 'content',
+      'label' => 'hidden',
+      'settings' => [
+        'view_mode' => 'homepage_hero',
+        'link' => FALSE,
+      ],
+    ])->save();
+  }
+}
+
+
+
+/**
+ * Register the dedicated alert region and correct the alert placement.
+ */
+function ob_site_update_11016(): void {
+  $placement = Block::load('ob_sitewide_alert');
+  if ($placement) {
+    $placement->setRegion('alerts')->save();
+  }
+}
+
+/**
+ * Make the header identity and logo administrator-managed.
+ */
+function ob_site_update_11017(): void {
+  ob_site_ensure_global_structure();
+}
+
+/**
+ * Add the remaining top-level public sections to Main navigation.
+ */
+function ob_site_update_11018(): void {
+  ob_site_ensure_initial_landing_pages();
+}
+
+/**
+ * Add an administrator-controlled visibility switch for public alerts.
+ */
+function ob_site_update_11019(): void {
+  ob_site_ensure_global_structure();
+
+  $alert_blocks = \Drupal::entityTypeManager()->getStorage("block_content")->loadByProperties([
+    "type" => "sitewide_alert",
+    "info" => "Sitewide public alert",
+  ]);
+  if ($alert_blocks) {
+    $alert = reset($alert_blocks);
+    if ($alert->get("field_alert_enabled")->isEmpty()) {
+      $alert->set("field_alert_enabled", FALSE)->save();
+    }
+  }
+
+  $placement = Block::load("ob_sitewide_alert");
+  if ($placement) {
+    $placement->setRegion("alerts")->setStatus(TRUE)->save();
+  }
+}
+
+
+/**
+ * Connect Homepage Quick Access cards to managed destination pages.
+ */
+function ob_site_update_11020(): void {
+  ob_site_ensure_page_content_types();
+  ob_site_ensure_quick_access_destinations();
+}
+
+/**
+ * Standardize existing homepage slide action labels.
+ */
+function ob_site_update_11021(): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $ids = $storage->getQuery()
+    ->accessCheck(FALSE)
+    ->condition('type', 'homepage_slide')
+    ->exists('field_slide_link.uri')
+    ->execute();
+
+  foreach ($storage->loadMultiple($ids) as $slide) {
+    if ($slide->get('field_slide_link')->isEmpty()) {
+      continue;
+    }
+
+    $link = $slide->get('field_slide_link')->first();
+    if ($link->title === 'Click more') {
+      continue;
+    }
+
+    $link->title = 'Click more';
+    $slide->setNewRevision(TRUE);
+    $slide->setRevisionLogMessage('Standardize the homepage slide action label.');
+    $slide->save();
+  }
+}
+
+/**
+ * Add administrator-managed Important Public Notices.
+ */
+function ob_site_update_11022(): void {
+  ob_site_ensure_public_notices();
+}
+
+/**
+ * Complete the Information for the Public panel destinations.
+ */
+function ob_site_update_11023(): void {
+  ob_site_ensure_information_for_public_destinations();
+}
+
+/**
+ * Make the homepage public notices heading administrator-managed.
+ */
+function ob_site_update_11024(): void {
+  ob_site_ensure_homepage_notices_heading();
+}
+
+/**
+ * Adds the administrator-managed public notices heading to the homepage.
+ */
+function ob_site_ensure_homepage_notices_heading(): void {
+  if (!NodeType::load('homepage')) {
+    return;
+  }
+
+  $field_name = 'field_notices_heading';
+  $default_heading = 'Important Public Notices';
+
+  if (!FieldStorageConfig::loadByName('node', $field_name)) {
+    FieldStorageConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'type' => 'string',
+      'settings' => ['max_length' => 160],
+      'cardinality' => 1,
+      'translatable' => TRUE,
+    ])->save();
+  }
+
+  if (!FieldConfig::loadByName('node', 'homepage', $field_name)) {
+    FieldConfig::create([
+      'field_name' => $field_name,
+      'entity_type' => 'node',
+      'bundle' => 'homepage',
+      'label' => 'Public notices section heading',
+      'description' => 'Heading displayed above public notices on the homepage.',
+      'required' => TRUE,
+      'default_value' => [['value' => $default_heading]],
+    ])->save();
+  }
+
+  EntityFormDisplay::load('node.homepage.default')?->setComponent($field_name, [
+    'type' => 'string_textfield',
+    'weight' => 11,
+    'region' => 'content',
+    'settings' => [],
+  ])->save();
+
+  EntityViewDisplay::load('node.homepage.default')?->setComponent($field_name, [
+    'type' => 'string',
+    'weight' => 11,
+    'region' => 'content',
+    'label' => 'hidden',
+    'settings' => [],
+  ])->save();
+
+  $homepages = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'homepage']);
+  foreach ($homepages as $homepage) {
+    if (!$homepage->get($field_name)->isEmpty()) {
+      continue;
+    }
+
+    $homepage->set($field_name, $default_heading);
+    $homepage->setNewRevision(TRUE);
+    $homepage->setRevisionLogMessage('Add the homepage public notices heading.');
+    $homepage->save();
+  }
+}
+
+/**
+ * Separate reusable Standard Services from Honours and Awards content.
+ */
+function ob_site_update_11025(): void {
+  ob_site_ensure_service_content_types();
+}
+
+/**
+ * Move legacy Honours and Awards content to its dedicated content type.
+ */
+function ob_site_update_11026(): void {
+  ob_site_migrate_honours_awards_content();
+}

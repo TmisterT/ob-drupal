@@ -1,0 +1,21 @@
+uuid: f7e4d71e-03f9-4ab5-9962-f7f7cb34767c
+langcode: en
+status: true
+dependencies:
+  module:
+    - block_content
+id: block_content.field_government_name
+field_name: field_government_name
+entity_type: block_content
+type: string
+settings:
+  max_length: 160
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

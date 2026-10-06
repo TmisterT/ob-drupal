@@ -1,0 +1,9 @@
+uuid: 70f6dd34-32f4-4631-8bf8-2fdb6cd4cdf3
+langcode: en
+status: true
+dependencies: {  }
+name: 'Project type'
+vid: project_type
+description: 'Classifies projects, initiatives, grants, and programme updates.'
+weight: 2
+new_revision: false

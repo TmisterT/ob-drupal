@@ -1,0 +1,23 @@
+uuid: 8d3eb37a-1a4b-4971-994f-a48fe11c535d
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.sitewide_alert
+    - field.storage.block_content.field_link
+  module:
+    - link
+id: block_content.sitewide_alert.field_link
+field_name: field_link
+entity_type: block_content
+bundle: sitewide_alert
+label: 'More information'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 2
+  link_type: 17
+field_type: link

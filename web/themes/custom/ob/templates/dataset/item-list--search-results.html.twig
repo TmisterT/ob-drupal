@@ -1,0 +1,12 @@
+{# Stable container for both populated and empty inline search responses. #}
+<div data-ob-search-results>
+  {% if items %}
+    <{{ list_type }}{{ attributes.addClass('ob-search-results') }}>
+      {% for item in items %}
+        <li{{ item.attributes }}>{{ item.value }}</li>
+      {% endfor %}
+    </{{ list_type }}>
+  {% else %}
+    {{ empty }}
+  {% endif %}
+</div>

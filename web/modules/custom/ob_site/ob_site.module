@@ -1,0 +1,65 @@
+<?php
+
+declare(strict_types=1);
+
+use Drupal\views\Views;
+
+/**
+ * Implements hook_preprocess_node().
+ */
+function ob_site_preprocess_node(array &$variables): void {
+  $node = $variables['node'] ?? NULL;
+  if (!$node || $node->bundle() !== 'homepage' || ($variables['view_mode'] ?? '') !== 'full') {
+    return;
+  }
+
+  $view = Views::getView('homepage_hero_slider');
+  if ($view) {
+    $view->setDisplay('block_1');
+    $variables['homepage_slider'] = $view->render();
+  }
+
+  $notice_storage = \Drupal::entityTypeManager()->getStorage('node');
+  $today = \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime(), 'custom', 'Y-m-d');
+  $query = $notice_storage->getQuery()
+    ->accessCheck(TRUE)
+    ->condition('type', 'public_notice')
+    ->condition('status', 1);
+  $active_expiry = $query->orConditionGroup()
+    ->notExists('field_notice_expiry')
+    ->condition('field_notice_expiry.value', $today, '>=');
+  $notice_ids = $query
+    ->condition($active_expiry)
+    ->sort('field_notice_urgent.value', 'DESC')
+    ->sort('field_notice_date.value', 'DESC')
+    ->range(0, 3)
+    ->execute();
+  if ($notice_ids) {
+    $notices = $notice_storage->loadMultiple($notice_ids);
+    $notice_items = [];
+    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
+    foreach ($notice_ids as $notice_id) {
+      if (isset($notices[$notice_id])) {
+        $notice_items[] = $view_builder->view($notices[$notice_id], 'homepage_notice');
+      }
+    }
+    $variables['public_notices'] = [
+      '#type' => 'container',
+      '#attributes' => ['class' => ['homepage-notices__list']],
+      'items' => $notice_items,
+      '#cache' => [
+        'tags' => ['node_list:public_notice'],
+        'contexts' => ['user.permissions'],
+        'max-age' => 3600,
+      ],
+    ];
+  }
+
+  $president_view = Views::getView('current_president');
+  if ($president_view) {
+    $president_view->setDisplay('block_1');
+    $variables['current_president'] = $president_view->render();
+  }
+}
+
+require_once __DIR__ . '/includes/bilingual.module.inc';

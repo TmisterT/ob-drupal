@@ -1,0 +1,362 @@
+.service-page__intro {
+  margin-bottom: clamp(2rem, 5vw, 3.5rem);
+  padding-bottom: clamp(1.5rem, 4vw, 2.5rem);
+  border-bottom: 4px solid $government-gold;
+}
+
+.service-page__summary {
+  max-width: 52rem;
+  margin: 0;
+  color: $government-ink;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: clamp(1.2rem, 2.5vw, 1.65rem);
+  line-height: 1.55;
+}
+
+.service-page__availability {
+  display: flex;
+  margin-top: 1.25rem;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.6rem 1.25rem;
+  color: $government-muted;
+  font-size: 0.875rem;
+}
+
+.service-status {
+  display: inline-flex;
+  min-height: 30px;
+  padding: 0.3rem 0.7rem;
+  align-items: center;
+  border-left: 4px solid $government-blue;
+  color: $government-navy;
+  background: $government-surface;
+  font-weight: 800;
+}
+
+.service-status--open {
+  color: #12643a;
+  border-left-color: #238451;
+  background: #eef8f2;
+}
+
+.service-status--closed {
+  color: #8b2028;
+  border-left-color: $government-red;
+  background: #fcf0f1;
+}
+
+.service-status--coming-soon { border-left-color: $government-gold; }
+
+.service-page__contact > h2 {
+  margin: 0 0 1rem;
+  color: $government-navy;
+  font-size: 1.45rem;
+}
+
+.service-page__section,
+.service-page__contact {
+  margin-top: 2.75rem;
+  padding-top: 1.75rem;
+  border-top: 1px solid $government-border;
+  color: $government-ink;
+  line-height: 1.7;
+
+  .field,
+  p:last-child { margin-bottom: 0; }
+}
+
+.service-disclosure {
+  border-bottom: 1px solid $government-border;
+
+  > summary {
+    display: grid;
+    min-height: 54px;
+    padding: 0.85rem 0;
+    align-items: center;
+    column-gap: 0.75rem;
+    color: $government-navy;
+    cursor: pointer;
+    font-size: 1.05rem;
+    font-weight: 800;
+    grid-template-columns: minmax(0, 1fr) auto auto;
+    list-style: none;
+
+    &::-webkit-details-marker { display: none; }
+
+    &:focus-visible {
+      outline: 3px solid rgba($government-blue, 0.3);
+      outline-offset: 3px;
+    }
+
+    .service-disclosure__icon { transition: transform 160ms ease; }
+  }
+
+  &[open] > summary .service-disclosure__icon { transform: rotate(90deg); }
+}
+
+.service-disclosure__icon {
+  display: block;
+  width: 0.8rem;
+  height: 0.8rem;
+  background: $government-blue;
+  mask: url("/themes/custom/ob/assets/icons/bootstrap-icons/chevron-right.svg") center / contain no-repeat;
+}
+
+.service-page__overview {
+  margin-bottom: 1.5rem;
+  border-top: 1px solid $government-border;
+}
+
+.service-disclosure.service-page__section {
+  margin-top: 0;
+  padding-top: 0;
+}
+
+.service-disclosure__content {
+  padding: 0 0 1.25rem;
+  color: $government-ink;
+  line-height: 1.65;
+
+  .field,
+  p:last-child { margin-bottom: 0; }
+}
+
+.service-disclosure__count {
+  color: $government-muted;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.service-page__section-heading {
+  margin: 3rem 0 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 4px solid $government-navy;
+
+  p {
+    margin: 0 0 0.25rem;
+    color: $government-red;
+    font-size: 0.76rem;
+    font-weight: 800;
+    text-transform: uppercase;
+  }
+
+  h2 {
+    margin: 0;
+    color: $government-navy;
+    font-size: 1.65rem;
+  }
+}
+
+.award-group {
+  margin-top: 2rem;
+}
+
+.award-group__heading {
+  padding: 1rem 1.1rem;
+  border-left: 4px solid $government-gold;
+  background: $government-surface;
+
+  h3 {
+    margin: 0;
+    color: $government-navy;
+    font-size: 1.25rem;
+  }
+
+  .field,
+  p {
+    margin: 0.35rem 0 0;
+    color: $government-muted;
+    font-size: 0.9rem;
+  }
+}
+
+.award-group__list {
+  border-bottom: 1px solid $government-border;
+}
+
+.award-criterion {
+  border-top: 1px solid $government-border;
+}
+
+.award-criterion__summary {
+  display: grid;
+  min-height: 66px;
+  padding: 0.75rem 0;
+  align-items: center;
+  gap: 0.85rem;
+  cursor: pointer;
+  grid-template-columns: 2.25rem minmax(0, 1fr) 1rem;
+  list-style: none;
+
+  &::-webkit-details-marker { display: none; }
+
+  > .service-disclosure__icon { transition: transform 160ms ease; }
+
+  &:focus-visible {
+    outline: 3px solid rgba($government-blue, 0.3);
+    outline-offset: 2px;
+  }
+}
+
+.award-criterion[open] .award-criterion__summary > .service-disclosure__icon {
+  transform: rotate(90deg);
+}
+
+.award-criterion__number {
+  display: grid;
+  width: 2.25rem;
+  height: 2.25rem;
+  place-items: center;
+  color: #fff;
+  background: $government-blue;
+  font-weight: 800;
+}
+
+.award-criterion__title {
+  min-width: 0;
+}
+
+.award-criterion__name {
+  color: $government-navy;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.award-criterion__code {
+  margin-left: 0.45rem;
+  color: $government-red;
+  font-size: 0.76rem;
+  font-weight: 850;
+}
+
+.award-criterion__minimum {
+  display: block;
+  margin-top: 0.2rem;
+  color: $government-muted;
+  font-size: 0.76rem;
+  font-weight: 750;
+}
+
+.award-criterion__text {
+  padding: 0 1rem 1rem 3.1rem;
+  color: $government-muted;
+  line-height: 1.65;
+
+  .field,
+  p { margin: 0; }
+}
+
+.service-process ol {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.service-process li {
+  display: grid;
+  padding: 0.9rem 0;
+  align-items: start;
+  gap: 0.8rem;
+  border-bottom: 1px solid $government-border;
+  grid-template-columns: 2rem minmax(0, 1fr);
+
+  > span {
+    display: grid;
+    width: 1.8rem;
+    height: 1.8rem;
+    place-items: center;
+    color: $government-navy;
+    border: 2px solid $government-gold;
+    font-size: 0.8rem;
+    font-weight: 850;
+  }
+
+  .field,
+  p { margin: 0; }
+}
+
+.service-document {
+  display: flex;
+  padding: 1rem;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  border-top: 1px solid $government-border;
+  background: $government-surface;
+
+  strong,
+  span { display: block; }
+
+  span {
+    margin-top: 0.2rem;
+    color: $government-muted;
+    font-size: 0.8rem;
+  }
+
+  a {
+    display: inline-flex;
+    min-height: 42px;
+    padding: 0.55rem 0.75rem;
+    align-items: center;
+    gap: 0.4rem;
+    color: #fff;
+    background: $government-blue;
+    font-weight: 750;
+    text-decoration: none;
+  }
+}
+
+.service-page__action {
+  margin-top: 2.5rem;
+
+  a {
+    display: inline-flex;
+    min-height: 46px;
+    padding: 0.7rem 1rem;
+    align-items: center;
+    color: #fff;
+    background: $government-blue;
+    font-weight: 800;
+    text-decoration: none;
+  }
+}
+
+.service-page__contact {
+  a {
+    color: $government-blue;
+    font-weight: 750;
+  }
+}
+
+.service-page__metadata {
+  display: flex;
+  margin-top: 3rem;
+  padding-top: 1rem;
+  flex-wrap: wrap;
+  gap: 1rem 2.5rem;
+  border-top: 1px solid $government-border;
+  color: $government-muted;
+  font-size: 0.875rem;
+
+  > div {
+    display: flex;
+    gap: 0.45rem;
+  }
+  span { font-weight: 750; }
+}
+
+@media (max-width: 575.98px) {
+  .service-page__intro { margin-bottom: 2rem; }
+
+  .service-page__section { margin-top: 0; }
+
+  .award-group { margin-top: 1.25rem; }
+
+  .award-criterion__text { padding-left: 0; }
+
+  .service-document {
+    align-items: stretch;
+    flex-direction: column;
+  }
+}

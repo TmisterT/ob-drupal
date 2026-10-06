@@ -1,0 +1,60 @@
+{#
+/**
+ * @file
+ * FlexSlider carousel around the Homepage hero slider View.
+ */
+#}
+{% set slide_count = view.result|length %}
+
+{% if slide_count %}
+  <div
+    id="homepage-hero-carousel"
+    class="homepage-slider homepage-slider--flex" tabindex="0"
+    aria-roledescription="{{ 'carousel'|t }}"
+    aria-label="{{ 'Featured government information'|t }}"
+  >
+    <h1 class="visually-hidden">{{ site_name }}</h1>
+    {% if slide_count > 1 %}
+      <div class="homepage-slider__indicators">
+        {% for result in view.result %}
+          <button
+            type="button"
+            data-homepage-slide-to="{{ loop.index0 }}"
+            class="{{ loop.first ? 'active' : '' }}"
+            {% if loop.first %}aria-current="true"{% endif %}
+            aria-label="{{ 'Go to slide @number'|t({'@number': loop.index}) }}"
+          ></button>
+        {% endfor %}
+      </div>
+    {% endif %}
+
+    <div class="homepage-slider__slides">
+      {{ rows }}
+    </div>
+
+    {% if slide_count > 1 %}
+      <div class="homepage-slider__controls">
+        <button class="homepage-slider__control" type="button" data-homepage-direction="prev">
+          <span aria-hidden="true">←</span>
+          <span class="visually-hidden">{{ 'Previous slide'|t }}</span>
+        </button>
+        <button
+          class="homepage-slider__toggle"
+          type="button"
+          data-homepage-carousel-toggle
+          data-label-pause="{{ 'Pause slideshow'|t }}"
+          data-label-play="{{ 'Play slideshow'|t }}"
+          aria-pressed="false"
+        >
+          <svg class="homepage-slider__pause-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="M8 5v14M16 5v14"/></svg>
+          <svg class="homepage-slider__play-icon" viewBox="0 0 24 24" aria-hidden="true"><path d="m8 5 11 7-11 7z"/></svg>
+          <span class="visually-hidden">{{ 'Pause slideshow'|t }}</span>
+        </button>
+        <button class="homepage-slider__control" type="button" data-homepage-direction="next">
+          <span aria-hidden="true">→</span>
+          <span class="visually-hidden">{{ 'Next slide'|t }}</span>
+        </button>
+      </div>
+    {% endif %}
+  </div>
+{% endif %}

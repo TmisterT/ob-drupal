@@ -1,0 +1,27 @@
+<article{{ attributes.addClass('project-page') }}>
+  {{ title_prefix }}{{ title_suffix }}
+  <header class="project-page__intro">
+    <div class="project-meta">
+      {% for category in project_details.categories %}<span class="project-category">{{ category }}</span>{% endfor %}
+      {% if project_details.status %}<span class="project-status">{{ project_details.status }}</span>{% endif %}
+    </div>
+    <p class="project-date">{{ 'Published'|t }} <time datetime="{{ project_details.datetime }}">{{ project_details.date }}</time></p>
+    {% if project_details.summary %}<p class="project-page__summary">{{ project_details.summary }}</p>{% endif %}
+  </header>
+  {% if project_image %}<div class="project-page__image">{{ project_image }}</div>{% endif %}
+  <div class="project-page__layout">
+    <div class="project-page__body">{{ content.body }}</div>
+    {% if project_details.content_owner or project_details.last_reviewed %}
+      <aside class="project-page__details" aria-label="{{ 'Project information'|t }}">
+        <dl>
+          {% if project_details.content_owner %}<dt>{{ 'Content owner'|t }}</dt><dd>{{ project_details.content_owner }}</dd>{% endif %}
+          {% if project_details.last_reviewed %}<dt>{{ 'Last reviewed'|t }}</dt><dd>{{ project_details.last_reviewed }}</dd>{% endif %}
+        </dl>
+      </aside>
+    {% endif %}
+  </div>
+  {% if node.hasField('field_related_links') and not node.field_related_links.isEmpty and content.field_related_links %}
+    <section class="project-page__related"><h2>{{ 'Related information'|t }}</h2>{{ content.field_related_links }}</section>
+  {% endif %}
+  {{ content|without('body', 'field_summary', 'field_featured_image', 'field_project_type', 'field_project_status', 'field_content_owner', 'field_last_reviewed', 'field_featured', 'field_related_links', 'links') }}
+</article>

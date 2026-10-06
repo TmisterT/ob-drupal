@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Accessible breadcrumb trail.
+ */
+#}
+{% if breadcrumb %}
+  <nav class="site-breadcrumb" aria-label="{{ 'Breadcrumb'|t }}">
+    <ol class="site-breadcrumb__list">
+      {% for item in breadcrumb %}
+        <li class="site-breadcrumb__item{% if loop.last %} is-current{% endif %}">
+          {% if item.url and not loop.last %}
+            <a href="{{ item.url }}">{{ item.text }}</a>
+          {% else %}
+            <span{% if loop.last %} aria-current="page"{% endif %}>{{ item.text }}</span>
+          {% endif %}
+        </li>
+      {% endfor %}
+    </ol>
+  </nav>
+{% endif %}

@@ -1,0 +1,80 @@
+{#
+/**
+ * @file
+ * Full dashboard display for 100 Days priorities.
+ */
+#}
+{% set dashboard = hundred_days_dashboard|default({}) %}
+{% set rows = dashboard.rows|default([]) %}
+
+<article{{ attributes.addClass('hundred-days-page') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="hundred-days-page__intro">
+    <p>{{ 'Tracking priority activities across divisions.'|t }}</p>
+  </header>
+
+  <section class="hundred-days-summary" aria-label="{{ '100 Days summary'|t }}">
+    <div class="hundred-days-summary__item">
+      <strong>{{ dashboard.total|default(0) }}</strong>
+      <span>{{ 'Number of Priorities'|t }}</span>
+    </div>
+    <div class="hundred-days-summary__item">
+      <strong>{{ dashboard.completed|default(0) }}</strong>
+      <span>{{ 'Completed'|t }}</span>
+    </div>
+    <div class="hundred-days-summary__item">
+      <strong>{{ dashboard.not_completed|default(0) }}</strong>
+      <span>{{ 'Not Yet Completed'|t }}</span>
+    </div>
+    <div class="hundred-days-summary__item">
+      <strong>{{ dashboard.completion_percentage|default(0) }}%</strong>
+      <span>{{ 'Completion Percentage'|t }}</span>
+    </div>
+  </section>
+
+  {% if rows %}
+    <div class="hundred-days-table-wrap">
+      <table class="hundred-days-table">
+        <thead>
+          <tr>
+            <th scope="col">{{ 'Priority No'|t }}</th>
+            <th scope="col">{{ '100 Days Priorities Description'|t }}</th>
+            <th scope="col">{{ 'Division'|t }}</th>
+            <th scope="col">{{ 'Status'|t }}</th>
+            <th scope="col">{{ 'Progress (%)'|t }}</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for row in rows %}
+            <tr>
+              <td data-label="{{ 'Priority No'|t }}">
+                <span class="hundred-days-table__number">{{ row.number }}</span>
+              </td>
+              <td data-label="{{ 'Description'|t }}">
+                <p class="hundred-days-table__description">{{ row.description }}</p>
+              </td>
+              <td data-label="{{ 'Division'|t }}">{{ row.division ?: 'Not assigned'|t }}</td>
+              <td data-label="{{ 'Status'|t }}">
+                <span class="hundred-days-table__status hundred-days-table__status--{{ row.status_key|clean_class }}">{{ row.status }}</span>
+              </td>
+              <td data-label="{{ 'Progress (%)'|t }}">
+                <div class="hundred-days-table__progress">
+                  <strong>{{ row.progress }}%</strong>
+                  <span class="hundred-days-table__progress-track" aria-hidden="true">
+                    <span style="width: {{ row.progress }}%"></span>
+                  </span>
+                </div>
+              </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <div class="hundred-days-page__empty">{{ 'No 100 Days priorities have been published yet.'|t }}</div>
+  {% endif %}
+
+  {{ content|without('field_priority_number', 'field_description', 'field_division', 'field_100_days_priority', 'field_progress', 'field_status', 'links') }}
+</article>

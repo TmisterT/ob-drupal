@@ -1,0 +1,18 @@
+uuid: 57271ba8-ea1d-4fb0-ba35-5c89ee8d90ba
+langcode: en
+status: true
+dependencies:
+  config:
+    - node.type.update
+id: node.update.title
+field_name: title
+entity_type: node
+bundle: update
+label: Title
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

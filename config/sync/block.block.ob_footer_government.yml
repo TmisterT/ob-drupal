@@ -1,0 +1,25 @@
+uuid: 7b492b5e-aa21-468c-b28b-d00e3d755ae1
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.footer-government
+  module:
+    - system
+  theme:
+    - ob
+id: ob_footer_government
+theme: ob
+region: footer_navigation
+weight: 0
+provider: null
+plugin: 'system_menu_block:footer-government'
+settings:
+  id: 'system_menu_block:footer-government'
+  label: Government
+  label_display: '1'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

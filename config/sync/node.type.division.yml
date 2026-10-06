@@ -1,0 +1,18 @@
+uuid: a287a628-8dc3-4417-af1a-b01a4083bc32
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: 'OB Division'
+type: division
+description: 'An Office of Te Beretitenti division and its public responsibilities.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

@@ -1,0 +1,9 @@
+uuid: e216df99-5361-4d7d-8b0e-5f10384f6449
+langcode: en
+status: true
+dependencies: {  }
+id: gil
+label: Kiribati
+direction: ltr
+weight: 1
+locked: false

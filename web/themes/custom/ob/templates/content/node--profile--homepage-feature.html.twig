@@ -1,0 +1,25 @@
+{#
+/**
+ * @file
+ * Current President feature rendered on the homepage.
+ */
+#}
+<article{{ attributes.addClass('current-president') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  {% if not node.field_profile_image.isEmpty %}
+    <div class="current-president__portrait">{{ content.field_profile_image }}</div>
+  {% endif %}
+
+  <div class="current-president__content">
+    <span class="current-president__eyebrow">{{ 'Te Beretitenti'|t }}</span>
+    <h2>{{ label }}</h2>
+    <div class="current-president__position">{{ content.field_position }}</div>
+    <div class="current-president__summary">{{ content.field_profile_summary }}</div>
+    <a class="current-president__link" href="{{ url }}">
+      <span>{{ 'View official profile'|t }}</span>
+      <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+    </a>
+  </div>
+</article>

@@ -1,0 +1,24 @@
+uuid: cf060778-f1c1-4891-b01e-b46be986ee60
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.call_to_action
+    - field.storage.block_content.field_image
+    - media.type.image
+id: block_content.call_to_action.field_image
+field_name: field_image
+entity_type: block_content
+bundle: call_to_action
+label: Image
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+field_type: entity_reference

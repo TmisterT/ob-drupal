@@ -1,0 +1,18 @@
+uuid: 71000000-0000-4000-8000-000000000001
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus:
+      - main
+    parent: 'main:'
+name: 'Honours & Awards'
+type: honours_awards
+description: 'Public information about official honours, award criteria, and nomination processes.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

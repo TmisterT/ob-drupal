@@ -1,0 +1,63 @@
+{# Full article shared by Press releases, News, and future update types. #}
+<article{{ attributes.addClass('update-article') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="update-article__header">
+    {% include '@ob/templates/content/update-language-links.html.twig' with {languages: update_languages, compact: false} only %}
+    <div class="update-article__meta">
+      {% if update_details.types %}
+        <span class="update-article__type">{{ update_details.types|join(', ') }}</span>
+      {% endif %}
+      {% if update_details.date %}
+        <time datetime="{{ update_details.datetime }}">{{ update_details.date }}</time>
+      {% endif %}
+    </div>
+
+    {% if update_details.summary %}
+      <p class="update-article__summary">{{ update_details.summary }}</p>
+    {% endif %}
+  </header>
+
+  {% if not node.field_featured_image.isEmpty %}
+    <figure class="update-article__media">{{ content.field_featured_image }}</figure>
+  {% endif %}
+
+  <div class="update-article__layout">
+    <div class="update-article__body">{{ content.body }}</div>
+
+    {% if update_details.topics or update_details.content_owner or update_details.last_reviewed %}
+      <aside class="update-article__details" aria-label="{{ 'Article information'|t }}">
+        {% if update_details.topics %}
+          <div class="update-article__detail">
+            <h2>{{ 'Topics'|t }}</h2>
+            <ul>
+              {% for topic in update_details.topics %}<li>{{ topic }}</li>{% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+        {% if update_details.content_owner %}
+          <div class="update-article__detail">
+            <h2>{{ 'Content owner'|t }}</h2>
+            <p>{{ update_details.content_owner }}</p>
+          </div>
+        {% endif %}
+        {% if update_details.last_reviewed %}
+          <div class="update-article__detail">
+            <h2>{{ 'Last reviewed'|t }}</h2>
+            <p>{{ update_details.last_reviewed }}</p>
+          </div>
+        {% endif %}
+      </aside>
+    {% endif %}
+  </div>
+
+  {% if node.hasField('field_release_documents') and not node.field_release_documents.isEmpty %}
+    <section class="update-article__documents" aria-labelledby="release-documents-heading">
+      <h2 id="release-documents-heading">{{ 'Release documents'|t }}</h2>
+      {{ content.field_release_documents }}
+    </section>
+  {% endif %}
+
+  {{ content|without('field_summary', 'field_featured_image', 'field_update_type', 'field_update_date', 'field_topics', 'field_content_owner', 'field_last_reviewed', 'field_featured', 'field_release_documents', 'body', 'links') }}
+</article>

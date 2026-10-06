@@ -1,0 +1,50 @@
+{# Searchable archive shared by all News and Update View displays. #}
+<div{{ attributes.addClass('news-media-archive', 'updates-archive', dom_id ? 'js-view-dom-id-' ~ dom_id) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="news-media-archive__intro">
+    <p class="news-media-archive__eyebrow">{{ 'News & Media'|t }}</p>
+    {% if header %}<div class="news-media-archive__lead">{{ header }}</div>{% endif %}
+  </header>
+
+  <div class="menu-section-page__layout news-media-archive__layout">
+    {% include '@ob/templates/navigation/section-navigation.html.twig' with {
+      heading_id: 'updates-section-navigation-heading'
+    } %}
+
+    <div class="news-media-archive__main">
+      {% if exposed %}
+        <section class="news-media-archive__filters" aria-labelledby="updates-filter-heading">
+          <h2 id="updates-filter-heading">{{ 'Find a release'|t }}</h2>
+          {{ exposed }}
+        </section>
+      {% endif %}
+
+      {{ attachment_before }}
+
+      <div class="news-media-archive__results-heading">
+        <h2>{{ 'Latest releases'|t }}</h2>
+        <span aria-live="polite">
+          {% trans %}
+            {{ view.total_rows }} release
+          {% plural view.total_rows %}
+            {{ view.total_rows }} releases
+          {% endtrans %}
+        </span>
+      </div>
+
+      {% if rows %}
+        <div class="updates-archive__list">{{ rows }}</div>
+      {% elseif empty %}
+        <div class="news-media-archive__empty">{{ empty }}</div>
+      {% endif %}
+
+      {{ pager }}
+      {{ attachment_after }}
+      {{ more }}
+      {% if footer %}<footer>{{ footer }}</footer>{% endif %}
+      {{ feed_icons }}
+    </div>
+  </div>
+</div>

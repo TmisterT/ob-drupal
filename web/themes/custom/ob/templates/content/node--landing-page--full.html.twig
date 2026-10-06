@@ -1,0 +1,56 @@
+{#
+/**
+ * @file
+ * Full display for an administrator-managed Landing Page.
+ */
+#}
+<article{{ attributes.addClass('content-page', 'landing-page') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="content-page__intro{% if not node.field_hero_image.isEmpty %} content-page__intro--with-media{% endif %}">
+    <div class="content-page__lead">{{ content.field_summary }}</div>
+    {% if not node.field_hero_image.isEmpty %}
+      <div class="content-page__media">{{ content.field_hero_image }}</div>
+    {% endif %}
+  </header>
+
+  <div class="content-page__body">{{ content.body }}</div>
+
+  {% if contact_webform %}
+    <section class="contact-page__webform" aria-labelledby="contact-form-heading">
+      <h2 id="contact-form-heading">{{ 'Send a message'|t }}</h2>
+      {{ contact_webform }}
+    </section>
+  {% endif %}
+
+  {% if not node.field_featured_links.isEmpty %}
+    <section class="content-page__section content-page__section--links" aria-labelledby="featured-links-heading">
+      <h2 id="featured-links-heading">{{ 'Featured information'|t }}</h2>
+      {{ content.field_featured_links }}
+    </section>
+  {% endif %}
+
+  {% if not node.field_call_to_action.isEmpty %}
+    <div class="content-page__action">{{ content.field_call_to_action }}</div>
+  {% endif %}
+
+  {% if not node.field_topics.isEmpty or not node.field_audience.isEmpty %}
+    <aside class="content-page__metadata" aria-label="{{ 'Content classification'|t }}">
+      {% if not node.field_topics.isEmpty %}
+        <div>
+          <h2>{{ 'Topics'|t }}</h2>
+          {{ content.field_topics }}
+        </div>
+      {% endif %}
+      {% if not node.field_audience.isEmpty %}
+        <div>
+          <h2>{{ 'Audience'|t }}</h2>
+          {{ content.field_audience }}
+        </div>
+      {% endif %}
+    </aside>
+  {% endif %}
+
+  {{ content|without('field_summary', 'field_hero_image', 'body', 'field_featured_links', 'field_call_to_action', 'field_topics', 'field_audience') }}
+</article>

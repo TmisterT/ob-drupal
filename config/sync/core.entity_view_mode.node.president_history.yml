@@ -1,0 +1,11 @@
+uuid: 1554ec6c-288f-4aa8-8a55-86178bba0f5c
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.president_history
+label: 'President history card'
+description: null
+targetEntityType: node
+cache: true

@@ -1,0 +1,9 @@
+uuid: 7fb8a596-a76a-4080-8b70-5f48bc44664f
+langcode: en
+status: true
+dependencies: {  }
+name: 'Publication type'
+vid: publication_type
+description: 'Classifies official documents and publications.'
+weight: 1
+new_revision: false

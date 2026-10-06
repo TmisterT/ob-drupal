@@ -1,0 +1,86 @@
+{#
+/**
+ * @file
+ * Full display for a page in a menu-driven public section.
+ */
+#}
+{% set has_featured_image = node.hasField('field_featured_image') and not node.get('field_featured_image').isEmpty() %}
+{% set has_hero_image = node.hasField('field_hero_image') and not node.get('field_hero_image').isEmpty() %}
+{% set has_summary = node.hasField('field_summary') and not node.get('field_summary').isEmpty() %}
+{% set has_documents = node.hasField('field_documents') and not node.get('field_documents').isEmpty() %}
+{% set has_related_links = node.hasField('field_related_links') and not node.get('field_related_links').isEmpty() %}
+{% set has_featured_links = node.hasField('field_featured_links') and not node.get('field_featured_links').isEmpty() %}
+{% set has_call_to_action = node.hasField('field_call_to_action') and not node.get('field_call_to_action').isEmpty() %}
+
+<article{{ attributes.addClass('menu-section-page', 'menu-section-page--' ~ section_navigation.section_key) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="menu-section-page__intro{% if has_featured_image or has_hero_image %} menu-section-page__intro--with-media{% endif %}">
+    <div class="menu-section-page__intro-copy">
+      <p class="menu-section-page__eyebrow">{{ section_navigation.title }}</p>
+      {% if has_summary %}
+        <div class="menu-section-page__lead">{{ content.field_summary }}</div>
+      {% endif %}
+    </div>
+    {% if has_featured_image or has_hero_image %}
+      <div class="menu-section-page__media">
+        {{ has_featured_image ? content.field_featured_image : content.field_hero_image }}
+      </div>
+    {% endif %}
+  </header>
+
+  <div class="menu-section-page__layout">
+    {% include '@ob/templates/navigation/section-navigation.html.twig' with {
+      heading_id: 'section-navigation-heading'
+    } %}
+
+    <div class="menu-section-page__content">
+      <div class="menu-section-page__body">{{ content.body }}</div>
+
+      {% if has_featured_links %}
+        <section class="menu-section-page__section menu-section-page__section--links" aria-labelledby="section-featured-links-heading">
+          <h2 id="section-featured-links-heading">{{ 'In this section'|t }}</h2>
+          {{ content.field_featured_links }}
+        </section>
+      {% endif %}
+
+      {% if has_documents %}
+        <section class="menu-section-page__section" aria-labelledby="section-documents-heading">
+          <h2 id="section-documents-heading">{{ 'Documents'|t }}</h2>
+          {{ content.field_documents }}
+        </section>
+      {% endif %}
+
+      {% if has_related_links %}
+        <section class="menu-section-page__section menu-section-page__section--links" aria-labelledby="section-related-links-heading">
+          <h2 id="section-related-links-heading">{{ 'Related links'|t }}</h2>
+          {{ content.field_related_links }}
+        </section>
+      {% endif %}
+
+      {% if has_call_to_action %}
+        <div class="menu-section-page__action">{{ content.field_call_to_action }}</div>
+      {% endif %}
+
+      {% if section_navigation.previous or section_navigation.next %}
+        <nav class="section-page-pager" aria-label="{{ 'Section pages'|t }}">
+          {% if section_navigation.previous %}
+            <div class="section-page-pager__item section-page-pager__item--previous">
+              <span>{{ 'Previous'|t }}</span>
+              {{ section_navigation.previous.link }}
+            </div>
+          {% endif %}
+          {% if section_navigation.next %}
+            <div class="section-page-pager__item section-page-pager__item--next">
+              <span>{{ 'Next'|t }}</span>
+              {{ section_navigation.next.link }}
+            </div>
+          {% endif %}
+        </nav>
+      {% endif %}
+    </div>
+  </div>
+
+  {{ content|without('field_summary', 'field_featured_image', 'field_hero_image', 'body', 'field_featured_links', 'field_documents', 'field_related_links', 'field_call_to_action') }}
+</article>

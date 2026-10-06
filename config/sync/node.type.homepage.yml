@@ -1,0 +1,11 @@
+uuid: 3036d774-c575-47c7-8f21-2c481a9eea61
+langcode: en
+status: true
+dependencies: {  }
+name: Homepage
+type: homepage
+description: 'Controls the content displayed on the website home page.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

@@ -1,0 +1,21 @@
+uuid: b4a91e5d-2d81-41de-82a7-511dd328d091
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_update_date
+    - node.type.update
+  module:
+    - datetime
+id: node.update.field_update_date
+field_name: field_update_date
+entity_type: node
+bundle: update
+label: 'Public date'
+description: 'Official publication date.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

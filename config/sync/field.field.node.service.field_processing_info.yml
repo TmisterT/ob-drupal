@@ -1,0 +1,22 @@
+uuid: 71000000-0000-4000-8000-000000000020
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_processing_info
+    - node.type.service
+  module:
+    - text
+id: node.service.field_processing_info
+field_name: field_processing_info
+entity_type: node
+bundle: service
+label: 'Review and processing'
+description: 'Explain what happens after submission, including assessment and notification.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  {  }
+field_type: text_long

@@ -1,0 +1,91 @@
+<?php
+
+/**
+ * @file
+ * Presentation for project records and their public listing.
+ */
+
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\node\NodeInterface;
+
+/**
+ * Identifies the managed Projects & Initiatives landing page.
+ */
+function _ob_is_projects_landing_page(NodeInterface $node): bool {
+  return $node->bundle() === 'landing_page'
+    && ($node->label() === 'Projects & Initiatives'
+      || \Drupal::service('path_alias.manager')->getAliasByPath('/node/' . $node->id()) === '/projects');
+}
+
+/**
+ * Supplies project cards, dates, categories, and optional record information.
+ */
+function _ob_preprocess_projects(array &$variables): void {
+  $node = $variables['node'];
+  if (($variables['view_mode'] ?? '') === 'full' && _ob_is_projects_landing_page($node)) {
+    $storage = \Drupal::entityTypeManager()->getStorage('node');
+    $ids = $storage->getQuery()
+      ->accessCheck(TRUE)
+      ->condition('type', 'project')
+      ->condition('status', NodeInterface::PUBLISHED)
+      ->sort('created', 'DESC')
+      ->sort('nid', 'DESC')
+      ->pager(9)
+      ->execute();
+    $variables['project_cards'] = $ids
+      ? \Drupal::entityTypeManager()->getViewBuilder('node')->viewMultiple($storage->loadMultiple($ids), 'teaser')
+      : [];
+    $variables['section_navigation'] = _ob_menu_section_navigation();
+    $variables['project_pager'] = ['#type' => 'pager'];
+    (new CacheableMetadata())
+      ->addCacheTags(['node_list:project'])
+      ->addCacheContexts(['url.query_args:page', 'user.node_grants:view', 'user.permissions', 'languages:language_content'])
+      ->applyTo($variables['elements']);
+  }
+
+  if ($node->bundle() !== 'project') {
+    return;
+  }
+
+  $metadata = CacheableMetadata::createFromRenderArray($variables['elements']);
+  $read = static function (string $name) use ($node, $metadata) {
+    if (!$node->hasField($name)) {
+      return NULL;
+    }
+    $field = $node->get($name);
+    $access = $field->access('view', NULL, TRUE);
+    $metadata->addCacheableDependency($access);
+    return $access->isAllowed() && !$field->isEmpty() ? $field : NULL;
+  };
+  $categories = [];
+  if ($field = $read('field_project_type')) {
+    foreach ($field->referencedEntities() as $term) {
+      $metadata->addCacheableDependency($term);
+      $access = $term->access('view', NULL, TRUE);
+      $metadata->addCacheableDependency($access);
+      if ($access->isAllowed()) {
+        $categories[] = $term->label();
+      }
+    }
+  }
+  $formatter = \Drupal::service('date.formatter');
+  $status = $read('field_project_status');
+  $allowed = $status ? $status->getFieldDefinition()->getFieldStorageDefinition()->getSetting('allowed_values') : [];
+  $reviewed = $read('field_last_reviewed');
+  $variables['project_details'] = [
+    'summary' => $read('field_summary')?->value,
+    'categories' => $categories,
+    'date' => $formatter->format($node->getCreatedTime(), 'custom', 'j F Y'),
+    'datetime' => gmdate('c', $node->getCreatedTime()),
+    'status' => $status ? ($allowed[$status->value] ?? $status->value) : NULL,
+    'content_owner' => $read('field_content_owner')?->value,
+    'last_reviewed' => $reviewed ? $formatter->format(strtotime($reviewed->value), 'custom', 'j F Y') : NULL,
+  ];
+  $image = $read('field_featured_image');
+  $variables['project_image'] = $image ? $image->view([
+    'label' => 'hidden',
+    'type' => 'entity_reference_entity_view',
+    'settings' => ['view_mode' => 'default', 'link' => FALSE],
+  ]) : NULL;
+  $metadata->applyTo($variables['elements']);
+}

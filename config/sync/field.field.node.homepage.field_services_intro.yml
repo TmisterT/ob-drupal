@@ -1,0 +1,21 @@
+uuid: 3617b8ab-cec0-4ac1-a76c-6044674a3169
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_services_intro
+    - node.type.homepage
+id: node.homepage.field_services_intro
+field_name: field_services_intro
+entity_type: node
+bundle: homepage
+label: 'Services section introduction'
+description: 'Briefly explain what visitors can find in Services and information.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 'Find permits, grants, application forms and practical public information.'
+default_value_callback: ''
+settings: {  }
+field_type: string_long

@@ -1,0 +1,36 @@
+{# Shared listing card for every News and Update taxonomy type. #}
+<article{{ attributes.addClass('update-card', node.field_featured_image.isEmpty ? 'update-card--without-image') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  {% if not node.field_featured_image.isEmpty %}
+    <a class="update-card__media" href="{{ url }}" tabindex="-1" aria-hidden="true">
+      {{ content.field_featured_image }}
+    </a>
+  {% endif %}
+
+  <div class="update-card__content">
+    <div class="update-card__meta">
+      {% if update_details.types %}
+        <span class="update-card__type">{{ update_details.types|join(', ') }}</span>
+      {% endif %}
+      {% if update_details.date %}
+        <time datetime="{{ update_details.datetime }}">{{ update_details.date }}</time>
+      {% endif %}
+    </div>
+
+    <h2{{ title_attributes.addClass('update-card__title') }}>
+      <a href="{{ url }}" rel="bookmark">{{ label }}</a>
+    </h2>
+
+    {% if update_details.summary %}
+      <p class="update-card__summary">{{ update_details.summary }}</p>
+    {% endif %}
+
+    <a class="update-card__link" href="{{ url }}">
+      {{ 'Read more'|t }}<span class="visually-hidden">: {{ label }}</span>
+      <i class="bi bi-arrow-right" aria-hidden="true"></i>
+    </a>
+    {% include '@ob/templates/content/update-language-links.html.twig' with {languages: update_languages, compact: true} only %}
+  </div>
+</article>

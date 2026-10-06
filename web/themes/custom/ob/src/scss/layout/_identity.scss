@@ -1,0 +1,126 @@
+$identity-navy: #062b49;
+$identity-muted: #526977;
+
+/* Keep the public identity identical on the homepage and every inner page. */
+.ob-site .identity-bar__inner {
+  min-height: 104px;
+}
+
+.ob-site .site-identity-block {
+  min-width: 0;
+  flex: 0 1 auto;
+}
+
+.ob-site .site-identity {
+  min-width: 0;
+  gap: 0.85rem;
+  color: $identity-navy;
+}
+
+.ob-site .site-identity__crest {
+  width: 60px;
+  height: 60px;
+  flex: 0 0 60px;
+}
+
+.ob-site .site-identity__copy {
+  min-width: 0;
+  flex: 0 1 auto;
+}
+
+.ob-site .site-identity__name {
+  display: block;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.45rem;
+  font-weight: 700;
+  line-height: 1.15;
+  letter-spacing: 0;
+  text-transform: none;
+  white-space: nowrap;
+}
+
+.ob-site .site-identity__government,
+.ob-site .site-identity__slogan {
+  display: block;
+  margin-top: 0.3rem;
+  color: $identity-muted;
+  font-size: 0.72rem;
+  font-weight: 700;
+  line-height: 1.2;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+@media (min-width: 1200px) and (max-width: 1399.98px) {
+  .ob-site .identity-bar__inner {
+    min-height: 92px;
+  }
+
+  .ob-site .site-identity {
+    gap: 0.6rem;
+  }
+
+  .ob-site .site-identity__crest {
+    width: 52px;
+    height: 52px;
+    flex-basis: 52px;
+  }
+
+  .ob-site .site-identity__name {
+    font-size: 1.12rem;
+  }
+
+  .ob-site .site-identity__government,
+  .ob-site .site-identity__slogan {
+    font-size: 0.62rem;
+  }
+}
+
+@media (max-width: 1199.98px) {
+  .ob-site .identity-bar__inner {
+    min-height: 88px;
+  }
+
+  .ob-site .site-identity__name {
+    font-size: 1.3rem;
+  }
+}
+
+@media (max-width: 575.98px) {
+  .ob-site .identity-bar__inner {
+    min-height: 76px;
+    gap: 0.55rem;
+  }
+
+  .ob-site .site-identity {
+    gap: 0.5rem;
+  }
+
+  .ob-site .site-identity__crest {
+    width: 44px;
+    height: 44px;
+    flex-basis: 44px;
+  }
+
+  .ob-site .site-identity__name {
+    font-size: 1rem;
+  }
+
+  .ob-site .site-identity__government,
+  .ob-site .site-identity__slogan {
+    margin-top: 0.2rem;
+    font-size: 0.56rem;
+  }
+}
+
+@media (max-width: 359.98px) {
+  .ob-site .site-identity__name {
+    font-size: 0.88rem;
+  }
+
+  .ob-site .site-identity__government,
+  .ob-site .site-identity__slogan {
+    font-size: 0.52rem;
+  }
+}

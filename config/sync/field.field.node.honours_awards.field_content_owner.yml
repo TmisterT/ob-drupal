@@ -1,0 +1,20 @@
+uuid: 71000000-0000-4000-8000-000000000037
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_content_owner
+    - node.type.honours_awards
+id: node.honours_awards.field_content_owner
+field_name: field_content_owner
+entity_type: node
+bundle: honours_awards
+label: 'Content owner'
+description: 'Division or team responsible for this information.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  {  }
+field_type: string

@@ -1,0 +1,97 @@
+uuid: 244d4854-7787-47ce-8859-6e3bc349a8c4
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.homepage_slide.field_slide_heading
+    - field.field.node.homepage_slide.field_slide_image
+    - field.field.node.homepage_slide.field_slide_label
+    - field.field.node.homepage_slide.field_slide_link
+    - field.field.node.homepage_slide.field_slide_summary
+    - field.field.node.homepage_slide.field_slide_weight
+    - node.type.homepage_slide
+  module:
+    - path
+id: node.homepage_slide.default
+targetEntityType: node
+bundle: homepage_slide
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_slide_heading:
+    type: string_textfield
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_slide_image:
+    type: media_library_widget
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_slide_label:
+    type: string_textfield
+    weight: 0
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_slide_link:
+    type: link_default
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_slide_summary:
+    type: text_textarea
+    weight: 2
+    region: content
+    settings:
+      rows: 4
+      placeholder: ''
+    third_party_settings: {  }
+  field_slide_weight:
+    type: number
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 100
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -10
+    region: content
+    settings:
+      size: 60
+      placeholder: 'Internal title used in Drupal Admin'
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  promote: true
+  sticky: true

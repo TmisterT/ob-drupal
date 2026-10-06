@@ -1,0 +1,139 @@
+uuid: e1573124-085a-4f7b-a5d6-e49eeca34038
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.update.body
+    - field.field.node.update.field_content_owner
+    - field.field.node.update.field_featured
+    - field.field.node.update.field_featured_image
+    - field.field.node.update.field_last_reviewed
+    - field.field.node.update.field_release_documents
+    - field.field.node.update.field_summary
+    - field.field.node.update.field_topics
+    - field.field.node.update.field_update_date
+    - field.field.node.update.field_update_type
+    - node.type.update
+  module:
+    - datetime
+    - media_library
+    - path
+    - text
+id: node.update.default
+targetEntityType: node
+bundle: update
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 1
+    region: content
+    settings:
+      rows: 12
+      summary_rows: 3
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_content_owner:
+    type: string_textfield
+    weight: 4
+    region: content
+    settings:
+      size: 60
+    third_party_settings: {  }
+  field_featured:
+    type: boolean_checkbox
+    weight: 3
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_featured_image:
+    type: media_library_widget
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_last_reviewed:
+    type: datetime_default
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_release_documents:
+    type: media_library_widget
+    weight: 3
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_summary:
+    type: string_textarea
+    weight: 0
+    region: content
+    settings:
+      rows: 3
+    third_party_settings: {  }
+  field_topics:
+    type: options_select
+    weight: 8
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_update_date:
+    type: datetime_default
+    weight: 7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_update_type:
+    type: options_select
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: -9
+    region: content
+    settings:
+      include_locked: false
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  promote: true
+  status: true
+  sticky: true

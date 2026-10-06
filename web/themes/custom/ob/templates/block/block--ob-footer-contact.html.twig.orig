@@ -1,0 +1,23 @@
+{#
+/**
+ * @file
+ * Global footer contact details.
+ */
+#}
+<div{{ attributes.addClass('contact-details') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  <h2 class="site-footer__heading">{{ 'Contact'|t }}</h2>
+  {% if content.field_address %}
+    <div class="contact-details__address">{{ content.field_address }}</div>
+  {% endif %}
+  {% if content.field_phone %}
+    <div class="contact-details__item">{{ content.field_phone }}</div>
+  {% endif %}
+  {% if content.field_email %}
+    <div class="contact-details__item">{{ content.field_email }}</div>
+  {% endif %}
+  {% if content.field_opening_hours %}
+    <div class="contact-details__hours">{{ content.field_opening_hours }}</div>
+  {% endif %}
+</div>

@@ -1,0 +1,23 @@
+uuid: 3e319857-1c3f-4e05-bc1e-dc2b80ed51d3
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:sitewide_alert:fc5cbb54-33f5-424c-94e1-ff1753e4fa4d'
+  module:
+    - block_content
+  theme:
+    - ob
+id: ob_sitewide_alert
+theme: ob
+region: alerts
+weight: 0
+provider: null
+plugin: 'block_content:fc5cbb54-33f5-424c-94e1-ff1753e4fa4d'
+settings:
+  id: 'block_content:fc5cbb54-33f5-424c-94e1-ff1753e4fa4d'
+  label: 'Sitewide public alert'
+  label_display: ''
+  provider: block_content
+  view_mode: full
+visibility: {  }

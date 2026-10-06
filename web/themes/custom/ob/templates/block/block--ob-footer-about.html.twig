@@ -1,0 +1,15 @@
+{#
+/**
+ * @file
+ * Footer office introduction block.
+ */
+#}
+<div{{ attributes.addClass('footer-about') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  {% if content.field_image['#items'] is defined and not content.field_image['#items'].isEmpty %}
+    <div class="footer-about__image">{{ content.field_image }}</div>
+  {% endif %}
+  <div class="site-footer__name">{{ 'Office of Te Beretitenti'|t }}</div>
+  <div class="footer-about__body">{{ content.body }}</div>
+</div>

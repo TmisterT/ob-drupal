@@ -1,0 +1,30 @@
+name: ob
+description: "ob theme based on <a href='https://www.drupal.org/project/radix' target='_blank'>Radix 6.x</a> and Bootstrap 5.x"
+screenshot: screenshot.png
+'alt text': 'ob theme screenshot'
+core_version_requirement: ^11
+engine: twig
+type: theme
+'base theme': radix
+'interface translation project': ob
+'interface translation server pattern': themes/custom/ob/translations/%language.po
+regions:
+  utility: 'Government utility bar'
+  branding: 'Site branding'
+  primary_menu: 'Primary navigation'
+  alerts: 'Sitewide public alerts'
+  highlighted: 'Alerts and system messages'
+  content: 'Main content'
+  footer_about: 'Footer about'
+  footer_navigation: 'Footer navigation'
+  footer_contact: 'Footer contact'
+  footer_bottom: 'Footer bottom'
+  page_bottom: 'Page bottom'
+libraries:
+  - ob/style
+ckeditor5-stylesheets:
+  - build/css/main.style.css
+version: 6.0.9
+project: radix
+datestamp: 1789652915
+generator: 'radix_starterkit:6.0.9'

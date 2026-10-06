@@ -1,0 +1,19 @@
+uuid: a9350579-d39f-4dd6-a224-0252b680dddc
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_email
+    - node.type.division
+id: node.division.field_email
+field_name: field_email
+entity_type: node
+bundle: division
+label: Email
+description: 'Public email address.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email

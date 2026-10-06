@@ -1,0 +1,33 @@
+{# Announcement detail within the shared Public Notice section. #}
+{% set notice_link = node.field_notice_link.0 %}
+<article{{ attributes.addClass('content-page', 'public-notice-page', 'public-announcement') }}>
+  {{ title_prefix }}{{ title_suffix }}
+  <header class="public-notice-page__header public-announcement__header">
+    <div class="public-notice-page__meta">
+      {% if node.field_notice_urgent.value %}
+        <span class="public-notice-row__urgent">{{ 'Urgent'|t }}</span>
+      {% endif %}
+      <span>{{ content.field_notice_category }}</span>
+      {% if node.field_notice_date.value %}
+        <time datetime="{{ node.field_notice_date.value }}">{{ node.field_notice_date.value|date('j F Y') }}</time>
+      {% endif %}
+    </div>
+    {% if not node.field_notice_summary.isEmpty %}
+      <div class="content-page__lead public-announcement__summary">{{ content.field_notice_summary }}</div>
+    {% endif %}
+  </header>
+
+  <div class="content-page__body public-announcement__body">{{ content.body }}</div>
+  {{ content|without('field_notice_category', 'field_notice_date', 'field_notice_summary', 'field_notice_urgent', 'field_notice_link', 'body', 'links') }}
+
+  {% if notice_link %}
+    <div class="public-announcement__related">
+      <h2>{{ 'Related information'|t }}</h2>
+      <a href="{{ notice_link.url }}">{{ notice_link.title ?: 'View related information'|t }}</a>
+    </div>
+  {% endif %}
+
+  <footer class="public-announcement__footer">
+    <a href="{{ path('view.public_notices.page_1') }}">{{ 'All public notices'|t }}</a>
+  </footer>
+</article>

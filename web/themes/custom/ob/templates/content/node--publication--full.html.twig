@@ -1,0 +1,85 @@
+{# Full display for Publication records listed in the Resources tables. #}
+<article{{ attributes.addClass('menu-section-page', 'publication-page') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="publication-page__intro">
+    <p class="menu-section-page__eyebrow">{{ section_navigation.title }}</p>
+    <p class="publication-page__summary">{{ publication_details.summary }}</p>
+    <div class="publication-page__classification">
+      {% for type in publication_details.types %}<span>{{ type }}</span>{% endfor %}
+      <span>{{ publication_details.year }}</span>
+      <span>{{ publication_details.status }}</span>
+    </div>
+  </header>
+
+  <div class="menu-section-page__layout">
+    {% include '@ob/templates/navigation/section-navigation.html.twig' with {
+      heading_id: 'publication-section-navigation-heading'
+    } %}
+
+    <div class="menu-section-page__content publication-page__content">
+      <dl class="publication-page__facts">
+        {% if publication_details.organisations %}
+          <div><dt>{{ 'Publishing organisation'|t }}</dt><dd>{{ publication_details.organisations|join(', ') }}</dd></div>
+        {% endif %}
+        {% if publication_details.reference %}
+          <div><dt>{{ 'Reference number'|t }}</dt><dd>{{ publication_details.reference }}</dd></div>
+        {% endif %}
+        {% if publication_details.publication_date %}
+          <div><dt>{{ 'Publication date'|t }}</dt><dd>{{ publication_details.publication_date }}</dd></div>
+        {% endif %}
+        {% if publication_details.language %}
+          <div><dt>{{ 'Language'|t }}</dt><dd>{{ publication_details.language }}</dd></div>
+        {% endif %}
+      </dl>
+
+      {% if publication_documents %}
+        <section class="publication-page__documents" aria-labelledby="publication-documents-heading">
+          <div>
+            <p>{{ 'Official files'|t }}</p>
+            <h2 id="publication-documents-heading">{{ 'View or download'|t }}</h2>
+          </div>
+          {% for document in publication_documents %}
+            <article class="kv20-document publication-page__document">
+              <div class="kv20-document__icon" aria-hidden="true"><i class="bi bi-file-earmark-pdf"></i></div>
+              <div class="kv20-document__details">
+                <h3>{{ document.title }}</h3>
+                <p><span>{{ document.type }}</span><span>{{ document.size }}</span></p>
+              </div>
+              <div class="kv20-document__actions">
+                <a href="{{ document.url }}" target="_blank" rel="noopener">
+                  <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>{{ 'View file'|t }}
+                </a>
+                <a class="kv20-document__download" href="{{ document.url }}" download>
+                  <i class="bi bi-download" aria-hidden="true"></i>{{ 'Download'|t }}
+                </a>
+              </div>
+            </article>
+          {% endfor %}
+        </section>
+      {% endif %}
+
+      {% if publication_body %}
+        <section class="menu-section-page__body publication-page__body">
+          <h2>{{ 'About this publication'|t }}</h2>
+          {{ publication_body }}
+        </section>
+      {% endif %}
+
+      {% if publication_details.topics %}
+        <section class="publication-page__topics">
+          <h2>{{ 'Topics'|t }}</h2>
+          <p>{{ publication_details.topics|join(', ') }}</p>
+        </section>
+      {% endif %}
+
+      <aside class="publication-page__metadata" aria-label="{{ 'Publication information'|t }}">
+        <div><span>{{ 'Content owner'|t }}</span>{{ publication_details.content_owner }}</div>
+        <div><span>{{ 'Last reviewed'|t }}</span>{{ publication_details.last_reviewed }}</div>
+      </aside>
+    </div>
+  </div>
+
+  {{ content|without('field_summary', 'field_publication_type', 'field_publication_year', 'field_document_status', 'field_resource_section', 'field_organisation', 'field_reference_number', 'field_publication_date', 'field_language', 'field_documents', 'body', 'field_topics', 'field_content_owner', 'field_last_reviewed', 'field_featured', 'field_featured_image') }}
+</article>

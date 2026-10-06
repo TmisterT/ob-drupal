@@ -1,0 +1,48 @@
+uuid: 6523f388-8e4d-414d-983b-b62eda2721e5
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.contact_details
+    - field.field.block_content.contact_details.field_address
+    - field.field.block_content.contact_details.field_email
+    - field.field.block_content.contact_details.field_opening_hours
+    - field.field.block_content.contact_details.field_phone
+  module:
+    - text
+id: block_content.contact_details.default
+targetEntityType: block_content
+bundle: contact_details
+mode: default
+content:
+  field_address:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_email:
+    type: email_mailto
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_opening_hours:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_phone:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 0
+    region: content
+hidden: {  }

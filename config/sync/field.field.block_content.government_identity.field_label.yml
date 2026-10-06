@@ -1,0 +1,19 @@
+uuid: e24272c0-31ea-4518-9918-1929aa7e6606
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.government_identity
+    - field.storage.block_content.field_label
+id: block_content.government_identity.field_label
+field_name: field_label
+entity_type: block_content
+bundle: government_identity
+label: 'Government label'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

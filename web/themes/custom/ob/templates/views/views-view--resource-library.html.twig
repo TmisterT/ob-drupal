@@ -1,0 +1,104 @@
+{# Searchable publication tables shared by the public Resources pages. #}
+<div{{ attributes.addClass('resource-library', 'resource-library--' ~ resource_page.key, dom_id ? 'js-view-dom-id-' ~ dom_id) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="resource-library__intro">
+    <p class="resource-library__eyebrow">{{ resource_page.eyebrow }}</p>
+    <h2>{{ resource_page.heading }}</h2>
+    <p class="resource-library__summary">{{ resource_page.summary }}</p>
+    <p class="resource-library__detail">{{ resource_page.detail }}</p>
+  </header>
+
+  <div class="menu-section-page__layout resource-library__layout">
+    {% include '@ob/templates/navigation/section-navigation.html.twig' with {
+      heading_id: 'resource-section-navigation-heading'
+    } %}
+
+    <div class="resource-library__main">
+      {% if exposed %}
+        <section class="resource-library__filters" aria-labelledby="resource-filter-heading">
+          <h2 id="resource-filter-heading">{{ 'Search and filter'|t }}</h2>
+          {{ exposed }}
+        </section>
+      {% endif %}
+
+      {{ attachment_before }}
+
+      <div class="resource-library__results-heading">
+        <h2>{{ resource_page.results_heading }}</h2>
+        <span aria-live="polite">
+          {% trans %}
+            {{ resource_result_count }} publication
+          {% plural resource_result_count %}
+            {{ resource_result_count }} publications
+          {% endtrans %}
+        </span>
+      </div>
+
+      {% if resource_rows %}
+        <div class="resource-table-wrap">
+          <table class="resource-table">
+            <caption class="visually-hidden">{{ 'Resource search results'|t }}</caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ resource_page.title_label }}</th>
+                <th scope="col">{{ 'Type'|t }}</th>
+                <th scope="col">{{ 'Year'|t }}</th>
+                <th scope="col">{{ 'Organisation'|t }}</th>
+                <th scope="col">{{ resource_page.document_label }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in resource_rows %}
+                <tr>
+                  <td data-label="{{ resource_page.title_label }}">
+                    <a class="resource-table__title" href="{{ item.url }}">{{ item.title }}</a>
+                    {% if item.reference %}<span class="resource-table__reference">{{ 'Reference'|t }}: {{ item.reference }}</span>{% endif %}
+                    {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
+                    {% if item.published %}<span class="resource-table__published">{{ 'Published'|t }}: {{ item.published }}</span>{% endif %}
+                  </td>
+                  <td data-label="{{ 'Type'|t }}">{{ item.types|join(', ') }}</td>
+                  <td data-label="{{ 'Year'|t }}">{{ item.year }}</td>
+                  <td data-label="{{ 'Organisation'|t }}">{{ item.organisations|join(', ') }}</td>
+                  <td data-label="{{ resource_page.document_label }}">
+                    {% for document in item.documents %}
+                      <div class="resource-document">
+                        <span class="resource-document__meta">{{ document.type }} · {{ document.size }}</span>
+                        <div class="resource-document__actions">
+                          <a href="{{ document.url }}" target="_blank" rel="noopener">
+                            <i class="bi bi-box-arrow-up-right" aria-hidden="true"></i>{{ 'View'|t }}<span class="visually-hidden"> {{ document.title }}</span>
+                          </a>
+                          <a class="resource-document__download" href="{{ document.url }}" download>
+                            <i class="bi bi-download" aria-hidden="true"></i>{{ 'Download'|t }}<span class="visually-hidden"> {{ document.title }}</span>
+                          </a>
+                        </div>
+                      </div>
+                    {% else %}
+                      <span class="resource-document__unavailable">{{ 'Contact the publishing organisation'|t }}</span>
+                    {% endfor %}
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% elseif empty %}
+        <div class="resource-library__empty">{{ empty }}</div>
+      {% endif %}
+
+      <div class="archive-table-pagination">
+        {% if resource_rows %}
+          <p class="archive-table-pagination__summary" role="status">
+            {{ 'Showing @first–@last of @total publications'|t({'@first': table_result_range.first, '@last': table_result_range.last, '@total': resource_result_count}) }}
+          </p>
+        {% endif %}
+        {{ pager }}
+      </div>
+      {{ attachment_after }}
+      {{ more }}
+      {% if footer %}<footer>{{ footer }}</footer>{% endif %}
+      {{ feed_icons }}
+    </div>
+  </div>
+</div>

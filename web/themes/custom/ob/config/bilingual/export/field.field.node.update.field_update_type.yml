@@ -1,0 +1,28 @@
+uuid: d401d461-ff13-43e4-9acb-fe53646e8c1e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_update_type
+    - node.type.update
+    - taxonomy.vocabulary.update_type
+id: node.update.field_update_type
+field_name: field_update_type
+entity_type: node
+bundle: update
+label: 'Update type'
+description: 'Classify this official update.'
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      update_type: update_type
+    sort:
+      field: name
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

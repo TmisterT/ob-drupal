@@ -1,0 +1,22 @@
+uuid: 71000000-0000-4000-8000-000000000026
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_closing_date
+    - node.type.honours_awards
+  module:
+    - datetime
+id: node.honours_awards.field_closing_date
+field_name: field_closing_date
+entity_type: node
+bundle: honours_awards
+label: 'Closing date'
+description: 'Optional closing date or deadline.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  {  }
+field_type: datetime

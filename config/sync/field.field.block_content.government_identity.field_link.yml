@@ -1,0 +1,23 @@
+uuid: 60772528-1064-4a8e-941b-d1a2e9112d6c
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.government_identity
+    - field.storage.block_content.field_link
+  module:
+    - link
+id: block_content.government_identity.field_link
+field_name: field_link
+entity_type: block_content
+bundle: government_identity
+label: 'Information link'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  title: 2
+  link_type: 17
+field_type: link

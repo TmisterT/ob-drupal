@@ -1,0 +1,90 @@
+uuid: 9d3b3733-3a3a-4d31-8b9c-4662b6318c5d
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.president_history
+    - field.field.node.profile.body
+    - field.field.node.profile.field_content_owner
+    - field.field.node.profile.field_is_current
+    - field.field.node.profile.field_is_president
+    - field.field.node.profile.field_last_reviewed
+    - field.field.node.profile.field_position
+    - field.field.node.profile.field_president_label
+    - field.field.node.profile.field_presidential_number
+    - field.field.node.profile.field_presidential_title
+    - field.field.node.profile.field_profile_image
+    - field.field.node.profile.field_profile_summary
+    - field.field.node.profile.field_related_links
+    - field.field.node.profile.field_term_end_year
+    - field.field.node.profile.field_term_start_year
+    - node.type.profile
+  module:
+    - user
+id: node.profile.president_history
+targetEntityType: node
+bundle: profile
+mode: president_history
+content:
+  field_position:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_presidential_title:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_profile_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: profile_portrait
+      link: false
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_profile_summary:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_term_end_year:
+    type: number_integer
+    label: hidden
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_term_start_year:
+    type: number_integer
+    label: hidden
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 4
+    region: content
+hidden:
+  body: true
+  field_content_owner: true
+  field_is_current: true
+  field_is_president: true
+  field_last_reviewed: true
+  field_president_label: true
+  field_presidential_number: true
+  field_related_links: true
+  links: true

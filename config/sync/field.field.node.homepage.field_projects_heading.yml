@@ -1,0 +1,21 @@
+uuid: e0eeaf3c-8f0b-4ddc-b5c9-d8cf03571a0f
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_projects_heading
+    - node.type.homepage
+id: node.homepage.field_projects_heading
+field_name: field_projects_heading
+entity_type: node
+bundle: homepage
+label: 'Projects section heading'
+description: ''
+required: true
+translatable: true
+default_value:
+  -
+    value: 'Projects & initiatives'
+default_value_callback: ''
+settings: {  }
+field_type: string

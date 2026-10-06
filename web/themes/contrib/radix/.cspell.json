@@ -1,0 +1,43 @@
+{
+  "version": "0.2",
+  "language": "en",
+  "words": [
+    "arraydefault",
+    "autohide",
+    "bokmål",
+    "browserslistrc",
+    "browsersync",
+    "clientside",
+    "crossfade",
+    "deutsch",
+    "dropend",
+    "dropstart",
+    "dureau",
+    "formelement",
+    "intdefault",
+    "lightboxes",
+    "navbars",
+    "offcanvas",
+    "pdureau",
+    "radiocheckbox",
+    "simpleads",
+    "stringifying",
+    "stylelintignore",
+    "stylelintrc",
+    "tilgang",
+    "valuemins",
+    "vbtn",
+    "Åpen"
+  ],
+  "flagWords": [
+    "blacklist",
+    "blacklisted",
+    "blacklists",
+    "e-mail",
+    "grey",
+    "queuing",
+    "whitelist",
+    "whitelisted",
+    "whitelists"
+  ]
+}

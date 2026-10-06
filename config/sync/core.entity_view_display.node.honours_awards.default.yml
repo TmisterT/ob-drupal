@@ -1,0 +1,53 @@
+uuid: 72000000-0000-4000-8000-000000000004
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.honours_awards.body
+    - field.field.node.honours_awards.field_application_status
+    - field.field.node.honours_awards.field_application_steps
+    - field.field.node.honours_awards.field_audience
+    - field.field.node.honours_awards.field_award_categories
+    - field.field.node.honours_awards.field_closing_date
+    - field.field.node.honours_awards.field_contact_email
+    - field.field.node.honours_awards.field_content_owner
+    - field.field.node.honours_awards.field_documents
+    - field.field.node.honours_awards.field_eligibility
+    - field.field.node.honours_awards.field_last_reviewed
+    - field.field.node.honours_awards.field_opening_date
+    - field.field.node.honours_awards.field_processing_info
+    - field.field.node.honours_awards.field_requirements
+    - field.field.node.honours_awards.field_service_category
+    - field.field.node.honours_awards.field_service_link
+    - field.field.node.honours_awards.field_summary
+    - node.type.honours_awards
+  module:
+    - user
+id: node.honours_awards.default
+targetEntityType: node
+bundle: honours_awards
+mode: default
+content:
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  body: true
+  field_application_status: true
+  field_application_steps: true
+  field_audience: true
+  field_award_categories: true
+  field_closing_date: true
+  field_contact_email: true
+  field_content_owner: true
+  field_documents: true
+  field_eligibility: true
+  field_last_reviewed: true
+  field_opening_date: true
+  field_processing_info: true
+  field_requirements: true
+  field_service_category: true
+  field_service_link: true
+  field_summary: true

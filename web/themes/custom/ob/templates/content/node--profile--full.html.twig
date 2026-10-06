@@ -1,0 +1,87 @@
+{#
+/**
+ * @file
+ * Full public leadership profile.
+ */
+#}
+{% set in_menu_section = section_navigation.is_section ?? false %}
+{% set is_president = node.hasField('field_is_president') and node.field_is_president.value %}
+{% set presidential_title = node.hasField('field_president_label') ? node.field_president_label.value : null %}
+{% set start_year = node.hasField('field_term_start_year') ? node.field_term_start_year.value : null %}
+{% set end_year = node.hasField('field_term_end_year') ? node.field_term_end_year.value : null %}
+{% set has_related_links = node.hasField('field_related_links') and not node.field_related_links.isEmpty %}
+<article{{ attributes.addClass('content-page', 'profile-page', in_menu_section ? 'section-profile' : '') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  {% if in_menu_section %}
+    <p class="menu-section-page__eyebrow">{{ section_navigation.title }}</p>
+    <div class="menu-section-page__layout">
+      {% include '@ob/templates/navigation/section-navigation.html.twig' with {
+        heading_id: 'profile-section-heading'
+      } %}
+      <div class="menu-section-page__content">
+  {% endif %}
+
+  <header class="profile-page__header">
+    {% if not node.field_profile_image.isEmpty %}
+      <div class="profile-page__portrait">{{ content.field_profile_image }}</div>
+    {% endif %}
+    <div>
+      {% if is_president %}
+        <div class="profile-page__presidential-record">
+          <span>
+            {{ presidential_title ?: (node.field_is_current.value ? 'Current President'|t : 'Former President'|t) }}
+          </span>
+          {% if start_year %}<span>{{ start_year }}&ndash;{{ end_year ?: 'Present'|t }}</span>{% endif %}
+        </div>
+      {% endif %}
+      <div class="profile-page__position">{{ content.field_position }}</div>
+      <div class="content-page__lead">{{ content.field_profile_summary }}</div>
+    </div>
+  </header>
+
+  <div class="content-page__body">{{ content.body }}</div>
+
+  {% if has_related_links %}
+    <section class="content-page__section content-page__section--links" aria-labelledby="profile-sources-heading">
+      <h2 id="profile-sources-heading">{{ 'Sources and related links'|t }}</h2>
+      {{ content.field_related_links }}
+    </section>
+  {% endif %}
+
+  <aside class="content-page__metadata" aria-label="{{ 'Profile information'|t }}">
+    <div>
+      <h2>{{ 'Content owner'|t }}</h2>
+      {{ content.field_content_owner }}
+    </div>
+    <div>
+      <h2>{{ 'Last reviewed'|t }}</h2>
+      {{ content.field_last_reviewed }}
+    </div>
+  </aside>
+
+  {% if in_menu_section and (section_navigation.previous or section_navigation.next) %}
+    <nav class="section-page-pager" aria-label="{{ 'Section pages'|t }}">
+      {% if section_navigation.previous %}
+        <div class="section-page-pager__item section-page-pager__item--previous">
+          <span>{{ 'Previous'|t }}</span>
+          {{ section_navigation.previous.link }}
+        </div>
+      {% endif %}
+      {% if section_navigation.next %}
+        <div class="section-page-pager__item section-page-pager__item--next">
+          <span>{{ 'Next'|t }}</span>
+          {{ section_navigation.next.link }}
+        </div>
+      {% endif %}
+    </nav>
+  {% endif %}
+
+  {% if in_menu_section %}
+      </div>
+    </div>
+  {% endif %}
+
+  {{ content|without('field_profile_image', 'field_position', 'field_profile_summary', 'body', 'field_is_current', 'field_is_president', 'field_presidential_number', 'field_presidential_title', 'field_president_label', 'field_term_start_year', 'field_term_end_year', 'field_related_links', 'field_content_owner', 'field_last_reviewed') }}
+</article>

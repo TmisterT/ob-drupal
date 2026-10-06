@@ -1,0 +1,20 @@
+uuid: 26519531-0e33-4158-9cc0-1c2077207405
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_publication_date
+field_name: field_publication_date
+entity_type: node
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: false
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

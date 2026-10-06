@@ -1,0 +1,21 @@
+{# Social links are managed in Drupal at Structure > Menus > Social links. #}
+{% if items %}
+  <nav class="footer-social" aria-label="{{ 'Follow us'|t }}">
+    <ul class="footer-social__list">
+      {% for item in items %}
+        {% set link_classes = ['footer-social__link'] %}
+        {% if 'facebook.com' in item.url.toString %}
+          {% set link_classes = link_classes|merge(['footer-social__link--facebook']) %}
+        {% endif %}
+        <li{{ item.attributes.addClass('footer-social__item') }}>
+          <a class="{{ link_classes|join(' ') }}" href="{{ item.url }}" target="_blank" rel="noopener noreferrer">
+            {% if 'facebook.com' in item.url.toString %}
+              <span class="footer-social__icon footer-social__icon--facebook" aria-hidden="true"></span>
+            {% endif %}
+            <span>{{ item.title }}</span>
+          </a>
+        </li>
+      {% endfor %}
+    </ul>
+  </nav>
+{% endif %}

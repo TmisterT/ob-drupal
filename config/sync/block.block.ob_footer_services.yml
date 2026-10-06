@@ -1,0 +1,25 @@
+uuid: ee9bd86d-1c94-4f67-9b63-2ff2232c63b8
+langcode: en
+status: true
+dependencies:
+  config:
+    - system.menu.footer-services
+  module:
+    - system
+  theme:
+    - ob
+id: ob_footer_services
+theme: ob
+region: footer_navigation
+weight: 10
+provider: null
+plugin: 'system_menu_block:footer-services'
+settings:
+  id: 'system_menu_block:footer-services'
+  label: Services
+  label_display: '1'
+  provider: system
+  level: 1
+  depth: 0
+  expand_all_items: false
+visibility: {  }

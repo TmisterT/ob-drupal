@@ -1,0 +1,21 @@
+uuid: 9e1444e0-93fc-4369-b137-084e8c2f80a1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_activities_heading
+    - node.type.homepage
+id: node.homepage.field_activities_heading
+field_name: field_activities_heading
+entity_type: node
+bundle: homepage
+label: 'Activities section heading'
+description: ''
+required: true
+translatable: true
+default_value:
+  -
+    value: 'Te Beretitenti / Official activities'
+default_value_callback: ''
+settings: {  }
+field_type: string

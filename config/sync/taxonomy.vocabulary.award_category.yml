@@ -1,0 +1,9 @@
+uuid: 71000000-0000-4000-8000-000000000002
+langcode: en
+status: true
+dependencies: {  }
+name: 'Award categories'
+vid: award_category
+description: 'Official honour and award groups, categories, codes, and criteria.'
+weight: 0
+new_revision: false

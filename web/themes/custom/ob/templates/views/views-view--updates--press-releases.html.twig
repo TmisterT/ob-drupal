@@ -1,0 +1,112 @@
+{# Press Releases archive table. #}
+{{ press_release_cache }}
+<div{{ attributes.addClass('news-media-archive', 'updates-archive', 'press-releases-archive', dom_id ? 'js-view-dom-id-' ~ dom_id) }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="news-media-archive__intro">
+    <p class="news-media-archive__eyebrow">{{ 'News & Media'|t }}</p>
+    {% if header %}<div class="news-media-archive__lead">{{ header }}</div>{% endif %}
+  </header>
+
+  <div class="menu-section-page__layout news-media-archive__layout">
+    {% include '@ob/templates/navigation/section-navigation.html.twig' with {
+      heading_id: 'press-releases-section-navigation-heading'
+    } %}
+
+    <div class="news-media-archive__main">
+      {% if exposed %}
+        <section class="news-media-archive__filters" aria-labelledby="press-releases-filter-heading">
+          <h2 id="press-releases-filter-heading">{{ 'Find a press release'|t }}</h2>
+          {{ exposed }}
+        </section>
+      {% endif %}
+
+      {{ attachment_before }}
+
+      <div class="news-media-archive__results-heading">
+        <h2>{{ 'Press releases'|t }}</h2>
+        <span aria-live="polite">
+          {% trans %}
+            {{ press_release_total }} release
+          {% plural press_release_total %}
+            {{ press_release_total }} releases
+          {% endtrans %}
+        </span>
+      </div>
+
+      {% if press_release_rows %}
+        <div class="press-release-table-wrap">
+          <table class="press-release-table">
+            <caption class="visually-hidden">{{ 'Press release search results'|t }}</caption>
+            <thead>
+              <tr>
+                <th scope="col">{{ 'Image'|t }}</th>
+                <th scope="col">{{ 'Title'|t }}</th>
+                <th scope="col">{{ 'Category'|t }}</th>
+                <th scope="col">{{ 'Details'|t }}</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in press_release_rows %}
+                <tr>
+                  <td data-label="{{ 'Image'|t }}">
+                    <a class="press-release-table__image" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+                      {% if item.image %}
+                        {{ item.image }}
+                      {% else %}
+                        <span class="press-release-table__image-placeholder">{{ 'No image'|t }}</span>
+                      {% endif %}
+                    </a>
+                  </td>
+                  <td data-label="{{ 'Title'|t }}">
+                    <a class="press-release-table__title" href="{{ item.url }}">{{ item.title }}</a>
+                    {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
+                    {% include '@ob/templates/content/update-language-links.html.twig' with {languages: item.languages, compact: true} only %}
+                  </td>
+                  <td data-label="{{ 'Category'|t }}">
+                    {% if item.categories %}
+                      <span class="press-release-table__category">{{ item.categories|join(', ') }}</span>
+                    {% else %}
+                      <span class="press-release-table__muted">{{ 'Press release'|t }}</span>
+                    {% endif %}
+                  </td>
+                  <td data-label="{{ 'Details'|t }}">
+                    <div class="press-release-table__details">
+                      {% if item.date %}
+                        <time datetime="{{ item.datetime }}">{{ item.date }}</time>
+                      {% else %}
+                        <span class="press-release-table__muted">{{ 'Not dated'|t }}</span>
+                      {% endif %}
+                      {% if item.topics %}
+                        <span>{{ item.topics|join(', ') }}</span>
+                      {% endif %}
+                      <a class="press-release-table__action" href="{{ item.url }}">
+                        {{ 'Read More'|t }}<span class="visually-hidden">: {{ item.title }}</span>
+                      </a>
+                    </div>
+                  </td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      {% elseif empty %}
+        <div class="news-media-archive__empty">{{ empty }}</div>
+      {% endif %}
+
+      <div class="archive-table-pagination">
+        {% if press_release_rows %}
+          <p class="archive-table-pagination__summary" role="status">
+            {{ 'Showing @first–@last of @total releases'|t({'@first': table_result_range.first, '@last': table_result_range.last, '@total': press_release_total}) }}
+          </p>
+        {% endif %}
+        {{ pager }}
+      </div>
+      {{ attachment_after }}
+      {{ more }}
+      {% if footer %}<footer>{{ footer }}</footer>{% endif %}
+      {{ feed_icons }}
+    </div>
+  </div>
+</div>

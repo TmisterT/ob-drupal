@@ -1,0 +1,21 @@
+uuid: 3d7f0195-8832-4442-826e-33150dd07d89
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_last_reviewed
+    - node.type.basic_page
+  module:
+    - datetime
+id: node.basic_page.field_last_reviewed
+field_name: field_last_reviewed
+entity_type: node
+bundle: basic_page
+label: 'Last reviewed'
+description: 'Date this page was last checked for accuracy.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

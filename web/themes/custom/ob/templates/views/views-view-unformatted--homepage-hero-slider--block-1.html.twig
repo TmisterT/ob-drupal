@@ -1,0 +1,16 @@
+{#
+/**
+ * @file
+ * Carousel-item wrappers for Homepage Slide entities.
+ */
+#}
+{% for row in rows %}
+  <div
+    {{ row.attributes.addClass('homepage-slider__slide', loop.first ? 'active') }}
+    role="group"
+    aria-roledescription="{{ 'slide'|t }}"
+    aria-label="{{ 'Slide @current of @total'|t({'@current': loop.index, '@total': loop.length}) }}"
+  >
+    {{ row.content }}
+  </div>
+{% endfor %}

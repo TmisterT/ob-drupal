@@ -1,0 +1,95 @@
+uuid: bdd07562-0648-4eae-a245-d2c2730c71af
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.homepage_feature
+    - field.field.node.profile.body
+    - field.field.node.profile.field_content_owner
+    - field.field.node.profile.field_is_current
+    - field.field.node.profile.field_is_president
+    - field.field.node.profile.field_last_reviewed
+    - field.field.node.profile.field_position
+    - field.field.node.profile.field_presidential_number
+    - field.field.node.profile.field_profile_image
+    - field.field.node.profile.field_profile_summary
+    - field.field.node.profile.field_related_links
+    - field.field.node.profile.field_term_end_year
+    - field.field.node.profile.field_term_start_year
+    - node.type.profile
+  module:
+    - datetime
+    - text
+    - user
+id: node.profile.homepage_feature
+targetEntityType: node
+bundle: profile
+mode: homepage_feature
+content:
+  body:
+    type: text_default
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_content_owner:
+    type: string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_is_current:
+    type: boolean
+    label: hidden
+    settings:
+      format: yes-no
+      format_custom_false: ''
+      format_custom_true: ''
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_last_reviewed:
+    type: datetime_custom
+    label: hidden
+    settings:
+      timezone_override: ''
+      date_format: 'j F Y'
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_position:
+    type: string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_profile_image:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: profile_portrait
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_profile_summary:
+    type: basic_string
+    label: hidden
+    settings: {  }
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  field_is_president: true
+  field_presidential_number: true
+  field_related_links: true
+  field_term_end_year: true
+  field_term_start_year: true

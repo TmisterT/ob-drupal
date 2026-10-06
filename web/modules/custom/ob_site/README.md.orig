@@ -1,0 +1,58 @@
+# OB site architecture
+
+The `ob_site` module owns Drupal site structure. The `ob` Radix subtheme owns presentation.
+
+## Editorial ownership
+
+- Homepage-specific content: edit the Homepage node.
+- Global identity and footer copy: reusable content blocks.
+- Navigation links: Drupal menus.
+- Images and documents: Drupal Media.
+- Lists of content: Drupal Views.
+- HTML structure: Twig templates in the `ob` theme.
+- Visual styling and interaction: theme SCSS and JavaScript.
+
+Do not hardcode editorial copy, navigation links, or uploaded file URLs in Twig.
+
+## Global block types
+
+- Government identity
+- Sitewide alert
+- Footer about
+- Contact details
+- Call to action
+
+## Theme regions
+
+- Utility
+- Branding
+- Primary menu
+- Highlighted
+- Content
+- Footer about
+- Footer navigation
+- Footer contact
+- Footer bottom
+- Page bottom
+
+## Image styles
+
+The module provides homepage hero, card, profile, and publication-cover image styles. The Homepage hero Media reference uses the `Homepage hero` media view mode and the `OB homepage hero` responsive image style.
+
+## Development workflow
+
+After changing module update hooks, run:
+
+```bash
+ddev drush updatedb -y
+ddev drush cr
+```
+
+After changing theme SCSS or JavaScript, run:
+
+```bash
+cd web/themes/custom/ob
+npm run build
+ddev drush cr
+```
+

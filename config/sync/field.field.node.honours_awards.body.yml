@@ -1,0 +1,23 @@
+uuid: 71000000-0000-4000-8000-000000000022
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.honours_awards
+  module:
+    - text
+id: node.honours_awards.body
+field_name: body
+entity_type: node
+bundle: honours_awards
+label: 'About'
+description: 'Explain the purpose and public benefit.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+field_type: text_with_summary

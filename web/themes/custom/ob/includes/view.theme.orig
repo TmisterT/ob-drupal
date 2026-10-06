@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Theme and preprocess functions for views.
+ */
+
+/**
+ * Adds shared section navigation to News & Media archive pages.
+ */
+function ob_preprocess_views_view(array &$variables): void {
+  $view = $variables['view'] ?? NULL;
+  if (!$view || !in_array($view->id(), ['updates', 'public_notices'], TRUE)) {
+    return;
+  }
+
+  $navigation = _ob_menu_section_navigation();
+  if ($navigation['is_section']) {
+    $variables['section_navigation'] = $navigation;
+  }
+}

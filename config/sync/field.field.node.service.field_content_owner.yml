@@ -1,0 +1,19 @@
+uuid: 1ff3ddba-76f4-42e6-99b5-8104727f7bfe
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_content_owner
+    - node.type.service
+id: node.service.field_content_owner
+field_name: field_content_owner
+entity_type: node
+bundle: service
+label: 'Content owner'
+description: 'Division responsible for maintaining this information.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

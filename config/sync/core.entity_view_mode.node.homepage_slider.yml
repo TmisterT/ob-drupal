@@ -1,0 +1,11 @@
+uuid: 932b64f2-c4c3-4e0e-a5a0-008c27089b71
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.homepage_slider
+label: 'Homepage slider'
+description: null
+targetEntityType: node
+cache: true

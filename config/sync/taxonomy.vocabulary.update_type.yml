@@ -1,0 +1,9 @@
+uuid: 2409ddd3-84af-4565-b88d-cb16cca62283
+langcode: en
+status: true
+dependencies: {  }
+name: 'Update type'
+vid: update_type
+description: 'Classifies news and official updates for public listings.'
+weight: 0
+new_revision: false

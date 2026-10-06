@@ -1,0 +1,15 @@
+uuid: b6841ddd-aa83-4729-ab38-7be01b3b3746
+langcode: en
+status: true
+dependencies: {  }
+name: ob_publication_cover
+label: 'OB publication cover'
+effects:
+  1a073fb3-b27d-4cb6-b9b7-b73163b5f932:
+    uuid: 1a073fb3-b27d-4cb6-b9b7-b73163b5f932
+    id: image_scale_and_crop
+    weight: 0
+    data:
+      width: 480
+      height: 680
+      anchor: center-center

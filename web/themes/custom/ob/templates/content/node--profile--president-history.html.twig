@@ -1,0 +1,49 @@
+{#
+/**
+ * @file
+ * A President record in the History of Presidents directory.
+ */
+#}
+{% set current = node.field_is_current.value %}
+{% set presidential_title = node.hasField('field_president_label') ? node.field_president_label.value : null %}
+{% set start_year = node.field_term_start_year.value %}
+{% set end_year = node.field_term_end_year.value %}
+<article{{ attributes.addClass('president-record', current ? 'president-record--current' : '') }}>
+  <div class="president-record__portrait">
+    {% if not node.field_profile_image.isEmpty %}
+      <a href="{{ url }}" tabindex="-1" aria-hidden="true">{{ content.field_profile_image }}</a>
+    {% else %}
+      <div class="president-record__portrait-placeholder" aria-hidden="true"></div>
+    {% endif %}
+  </div>
+
+  <div class="president-record__content">
+    <div class="president-record__context">
+      {% if current %}
+        <span class="president-record__current">{{ 'Current President'|t }}</span>
+      {% endif %}
+      {% if presidential_title %}
+        <span>{{ presidential_title }}</span>
+      {% elseif not current %}
+        <span>{{ 'Former President'|t }}</span>
+      {% endif %}
+    </div>
+
+    <h3><a href="{{ url }}">{{ label }}</a></h3>
+
+    {% if start_year %}
+      <p class="president-record__term">
+        <span>{{ 'Term in office'|t }}</span>
+        <strong>{{ start_year }}&ndash;{{ end_year ?: 'Present'|t }}</strong>
+      </p>
+    {% endif %}
+
+    <div class="president-record__position">{{ content.field_position }}</div>
+    <div class="president-record__summary">{{ content.field_profile_summary }}</div>
+
+    <a class="president-record__profile-link" href="{{ url }}">
+      {{ 'View presidential profile'|t }}
+      <span aria-hidden="true">-&gt;</span>
+    </a>
+  </div>
+</article>

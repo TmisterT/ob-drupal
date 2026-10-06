@@ -1,0 +1,28 @@
+uuid: 1de60b40-0719-4338-9ce4-ecf5bd80969e
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_publication_type
+    - node.type.publication
+    - taxonomy.vocabulary.publication_type
+id: node.publication.field_publication_type
+field_name: field_publication_type
+entity_type: node
+bundle: publication
+label: 'Publication type'
+description: 'Classify this official document.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      publication_type: publication_type
+    sort:
+      field: name
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

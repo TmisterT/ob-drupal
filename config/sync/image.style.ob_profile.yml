@@ -1,0 +1,15 @@
+uuid: a591ac8a-c8a5-418c-bfd9-38e788c4dfa6
+langcode: en
+status: true
+dependencies: {  }
+name: ob_profile
+label: 'OB profile portrait'
+effects:
+  ed272364-d0e2-4857-8f56-0f9db40b9a10:
+    uuid: ed272364-d0e2-4857-8f56-0f9db40b9a10
+    id: image_scale_and_crop
+    weight: 0
+    data:
+      width: 480
+      height: 600
+      anchor: center-center

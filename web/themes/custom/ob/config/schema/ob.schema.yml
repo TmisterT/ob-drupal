@@ -1,0 +1,5 @@
+# Schema for the configuration files of the ob theme.
+
+ob.settings:
+  type: theme_settings
+  label: 'ob settings'

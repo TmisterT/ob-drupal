@@ -1,0 +1,22 @@
+uuid: 3503115e-ea56-4da5-baab-1933e9b9924c
+langcode: en
+status: true
+dependencies:
+  module:
+    - system
+  theme:
+    - ob
+_core:
+  default_config_hash: MBHIg2tP9I_YfGNvihgG_KT6hKl1aTlrVGn6wLCKXAY
+id: ob_messages
+theme: ob
+region: highlighted
+weight: -3
+provider: null
+plugin: system_messages_block
+settings:
+  id: system_messages_block
+  label: 'Status messages'
+  label_display: '0'
+  provider: system
+visibility: {  }

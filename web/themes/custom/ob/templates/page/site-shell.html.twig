@@ -1,0 +1,64 @@
+{#
+/**
+ * @file
+ * Shared page shell for all OB routes.
+ */
+#}
+<div class="ob-site {{ is_front ? 'ob-site--front' : 'ob-site--internal' }}">
+  <header class="site-header">
+    {% if page.utility %}
+      <div class="government-bar">
+        <div class="container government-bar__inner">{{ page.utility }}</div>
+      </div>
+    {% endif %}
+
+    <div class="identity-bar">
+      <div class="container identity-bar__inner">
+        {{ page.branding }}
+        <nav class="primary-navigation navbar navbar-expand-xl" aria-label="{{ 'Main navigation'|t }}">
+          <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#ob-main-navigation" aria-controls="ob-main-navigation" aria-expanded="false" aria-label="{{ 'Toggle navigation'|t }}">
+            <span class="navbar-toggler-icon"></span>
+            <span class="primary-navigation__toggle-label">{{ 'Menu'|t }}</span>
+          </button>
+          <div class="collapse navbar-collapse" id="ob-main-navigation">
+            {{ page.primary_menu }}
+          </div>
+        </nav>
+      </div>
+    </div>
+  </header>
+
+  {% if page.alerts %}
+    <div class="site-alerts">{{ page.alerts }}</div>
+  {% endif %}
+
+  {% if page.highlighted %}
+    <div class="site-system-region">
+      <div class="container">{{ page.highlighted }}</div>
+    </div>
+  {% endif %}
+
+  <main id="main-content" class="{{ is_front ? 'homepage-main' : 'site-main' }}">
+    {% if is_front %}
+      {{ page.content }}
+    {% else %}
+      <div class="container site-main__inner">{{ page.content }}</div>
+    {% endif %}
+  </main>
+
+  <footer class="site-footer">
+    <div class="container site-footer__grid">
+      <div class="site-footer__about">{{ page.footer_about }}</div>
+      <div class="site-footer__navigation">{{ page.footer_navigation }}</div>
+      <div class="site-footer__contact">{{ page.footer_contact }}</div>
+    </div>
+    <div class="site-footer__base">
+      <div class="container site-footer__base-inner">
+        <span class="site-footer__copyright">&copy; {{ 'now'|date('Y') }} {{ site_name }}</span>
+        <div class="site-footer__bottom">{{ page.footer_bottom }}</div>
+      </div>
+    </div>
+  </footer>
+
+  {{ page.page_bottom }}
+</div>

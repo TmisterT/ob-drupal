@@ -1,0 +1,20 @@
+uuid: 64cc60ce-0875-4b66-bcf1-e2315c1b757c
+langcode: en
+status: true
+dependencies:
+  module:
+    - media
+    - node
+id: node.field_release_documents
+field_name: field_release_documents
+entity_type: node
+type: entity_reference
+settings:
+  target_type: media
+module: core
+locked: false
+cardinality: -1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,0 +1,22 @@
+uuid: 71000000-0000-4000-8000-000000000030
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_processing_info
+    - node.type.honours_awards
+  module:
+    - text
+id: node.honours_awards.field_processing_info
+field_name: field_processing_info
+entity_type: node
+bundle: honours_awards
+label: 'Review and processing'
+description: 'Explain what happens after submission, including assessment and notification.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  {  }
+field_type: text_long

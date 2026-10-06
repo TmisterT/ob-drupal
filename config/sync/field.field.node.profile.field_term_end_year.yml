@@ -1,0 +1,23 @@
+uuid: 1c5647c4-d95b-46dc-b966-df78539d7a18
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_term_end_year
+    - node.type.profile
+id: node.profile.field_term_end_year
+field_name: field_term_end_year
+entity_type: node
+bundle: profile
+label: 'Term end year'
+description: 'Leave empty for the current President.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1979
+  max: 2200
+  prefix: ''
+  suffix: ''
+field_type: integer

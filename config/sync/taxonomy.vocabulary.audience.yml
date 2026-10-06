@@ -1,0 +1,9 @@
+uuid: 6ad900f4-fab8-46dc-ab90-2b3981f6bc9b
+langcode: en
+status: true
+dependencies: {  }
+name: Audience
+vid: audience
+description: 'Identifies the public audience for content and services.'
+weight: 5
+new_revision: false

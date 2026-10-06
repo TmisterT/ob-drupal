@@ -1,0 +1,28 @@
+uuid: 71000000-0000-4000-8000-000000000032
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_award_categories
+    - node.type.honours_awards
+    - taxonomy.vocabulary.award_category
+id: node.honours_awards.field_award_categories
+field_name: field_award_categories
+entity_type: node
+bundle: honours_awards
+label: 'Award categories and criteria'
+description: 'Select award terms in display order. Manage names, codes, criteria, and parent groups in the Award categories vocabulary.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      award_category: award_category
+    sort:
+      field: name
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

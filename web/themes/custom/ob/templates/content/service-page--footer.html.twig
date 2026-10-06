@@ -1,0 +1,36 @@
+{% if service_details.documents %}
+  <section class="service-page__section service-documents" aria-labelledby="service-documents-heading">
+    <h2 id="service-documents-heading">{{ documents_heading|default('Forms and official documents'|t) }}</h2>
+    {% for document in service_details.documents %}
+      <div class="service-document">
+        <div>
+          <strong>{{ document.title }}</strong>
+          <span>{{ document.type }} · {{ document.size }}</span>
+        </div>
+        <a href="{{ document.url }}" download>
+          <i class="bi bi-download" aria-hidden="true"></i>{{ 'Download'|t }}
+        </a>
+      </div>
+    {% endfor %}
+  </section>
+{% endif %}
+
+{% if service_details.action %}
+  <div class="service-page__action">
+    <a href="{{ service_details.action.url }}">{{ service_details.action.title }}</a>
+  </div>
+{% endif %}
+
+{% if service_details.contact_email %}
+  <section class="service-page__contact" aria-labelledby="service-contact-heading">
+    <h2 id="service-contact-heading">{{ 'Contact'|t }}</h2>
+    <a href="mailto:{{ service_details.contact_email }}">{{ service_details.contact_email }}</a>
+  </section>
+{% endif %}
+
+{% if service_details.content_owner or service_details.last_reviewed %}
+  <aside class="service-page__metadata" aria-label="{{ 'Page information'|t }}">
+    {% if service_details.content_owner %}<div><span>{{ 'Content owner'|t }}</span>{{ service_details.content_owner }}</div>{% endif %}
+    {% if service_details.last_reviewed %}<div><span>{{ 'Last reviewed'|t }}</span>{{ service_details.last_reviewed }}</div>{% endif %}
+  </aside>
+{% endif %}

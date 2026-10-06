@@ -1,0 +1,23 @@
+uuid: e17d4f4a-d7da-45fc-8594-9aceaaf152f9
+langcode: en
+status: true
+dependencies:
+  config:
+    - image.style.ob_hero_large
+    - image.style.ob_hero_medium
+    - image.style.ob_hero_small
+id: ob_hero
+label: 'OB homepage hero'
+image_style_mappings:
+  -
+    image_mapping_type: sizes
+    image_mapping:
+      sizes: '100vw'
+      sizes_image_styles:
+        - ob_hero_large
+        - ob_hero_medium
+        - ob_hero_small
+    breakpoint_id: responsive_image.viewport_sizing
+    multiplier: 1x
+breakpoint_group: responsive_image
+fallback_image_style: ob_hero_small

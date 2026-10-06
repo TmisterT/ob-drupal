@@ -1,0 +1,9 @@
+uuid: f05d12b4-f562-4341-aef8-865dd2c29d9e
+langcode: en
+status: true
+dependencies: {  }
+name: Location
+vid: location
+description: 'Identifies the geographic scope of content.'
+weight: 6
+new_revision: false

@@ -1,0 +1,29 @@
+uuid: cefccc8b-aa91-48a5-a9d0-8862f797b943
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_featured_image
+    - media.type.image
+    - node.type.basic_page
+id: node.basic_page.field_featured_image
+field_name: field_featured_image
+entity_type: node
+bundle: basic_page
+label: 'Featured image'
+description: 'Optional supporting image. Always provide meaningful alternative text in Media.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: null
+field_type: entity_reference

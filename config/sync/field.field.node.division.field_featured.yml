@@ -1,0 +1,23 @@
+uuid: b07f78fa-6ff4-4d7b-a05f-9f3937d05995
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_featured
+    - node.type.division
+id: node.division.field_featured
+field_name: field_featured
+entity_type: node
+bundle: division
+label: 'Feature on homepage'
+description: 'Allow this item to be selected by featured homepage Views.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Featured
+  off_label: 'Not featured'
+field_type: boolean

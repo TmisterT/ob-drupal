@@ -1,0 +1,21 @@
+uuid: 5590d8da-2f3f-42c5-a517-24507619b1eb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_updates_heading
+    - node.type.homepage
+id: node.homepage.field_updates_heading
+field_name: field_updates_heading
+entity_type: node
+bundle: homepage
+label: 'Updates section heading'
+description: ''
+required: true
+translatable: true
+default_value:
+  -
+    value: 'Latest updates'
+default_value_callback: ''
+settings: {  }
+field_type: string

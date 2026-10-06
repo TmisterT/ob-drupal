@@ -1,0 +1,8 @@
+uuid: ae277c61-8aa7-44ba-8627-4df3d6b94849
+langcode: en
+status: true
+dependencies: {  }
+id: footer_about
+label: 'Footer about'
+revision: true
+description: 'Office identity and introductory text displayed in the global footer.'

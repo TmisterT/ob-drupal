@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="720" viewBox="0 0 1600 720">
+  <defs>
+    <linearGradient id="hall" x1="0" y1="0" x2="1" y2="1"><stop stop-color="#143e5b"/><stop offset="1" stop-color="#087f9f"/></linearGradient>
+    <radialGradient id="light"><stop stop-color="#fff4b5" stop-opacity=".9"/><stop offset="1" stop-color="#f6bd16" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1600" height="720" fill="url(#hall)"/>
+  <circle cx="1150" cy="150" r="250" fill="url(#light)"/>
+  <path d="M0 610h1600v110H0Z" fill="#052d4b"/>
+  <path d="M860 564h410l-45-275H905Z" fill="#f4f8fa"/>
+  <path d="M900 305h330l-42-58H943Z" fill="#f6bd16"/>
+  <rect x="1017" y="368" width="96" height="196" fill="#c73a3a"/>
+  <circle cx="1065" cy="412" r="22" fill="#f6bd16"/>
+  <path d="M1065 434v70M1030 474h70" stroke="#fff" stroke-width="9"/>
+  <path d="M820 565h490" stroke="#f6bd16" stroke-width="13"/>
+  <g opacity=".72" fill="#d9edf3">
+    <circle cx="300" cy="510" r="62"/><path d="M190 610c18-81 55-124 110-128 57 3 95 46 114 128Z"/>
+    <circle cx="555" cy="492" r="54"/><path d="M460 610c15-75 47-114 95-118 50 3 83 43 100 118Z"/>
+  </g>
+  <path d="M120 150h570M120 196h450" stroke="#7fc4d5" stroke-width="12" opacity=".5"/>
+</svg>

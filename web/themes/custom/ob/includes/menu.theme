@@ -1,0 +1,21 @@
+<?php
+
+/**
+ * @file
+ * Theme and preprocess functions for menus.
+ */
+
+/**
+ * Sends the utility Search link to the shared homepage search.
+ */
+function ob_preprocess_menu(array &$variables): void {
+  if (($variables['menu_name'] ?? '') !== 'utility') {
+    return;
+  }
+  foreach ($variables['items'] as &$item) {
+    $url = $item['url'];
+    if ($url->isRouted() && $url->getRouteName() === 'search.view_node_search') {
+      $item['url'] = \Drupal\Core\Url::fromRoute('<front>', [], ['fragment' => 'site-search']);
+    }
+  }
+}

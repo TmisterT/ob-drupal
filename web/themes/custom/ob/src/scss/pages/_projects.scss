@@ -1,0 +1,108 @@
+.projects-archive__main { min-width: 0; }
+.projects-archive__layout--without-navigation { grid-template-columns: minmax(0, 1fr); }
+.projects-archive__eyebrow {
+  color: $government-red;
+  font-size: 0.8rem;
+  font-weight: 800;
+  text-transform: uppercase;
+}
+.projects-archive__intro { margin-bottom: 2rem; }
+.projects-archive__grid {
+  display: grid;
+  gap: 1.5rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.projects-archive .pagination-wrapper { margin-top: 2rem; }
+.projects-archive__empty {
+  padding: 1.5rem;
+  border-left: 4px solid $government-gold;
+  background: $government-surface;
+}
+.project-card {
+  display: flex;
+  min-width: 0;
+  overflow: hidden;
+  flex-direction: column;
+  border: 1px solid $government-border;
+  border-radius: 4px;
+  background: #fff;
+}
+.project-card__image,
+.project-card__placeholder {
+  overflow: hidden;
+  aspect-ratio: 16 / 10;
+  background: $government-surface;
+}
+.project-card__image {
+  .field,
+  .field__item,
+  .media { height: 100%; }
+  img { width: 100%; height: 100%; object-fit: cover; }
+  .field__label { display: none; }
+}
+.project-card__placeholder {
+  display: grid;
+  place-items: center;
+  color: $government-blue;
+  svg { width: 4rem; height: 4rem; }
+}
+.project-card__content {
+  display: flex;
+  padding: 1.25rem;
+  flex: 1;
+  flex-direction: column;
+  h3 { margin: 0.75rem 0 0.5rem; font-size: 1.15rem; line-height: 1.4; }
+  h3 a { color: $government-navy; text-underline-offset: 0.2em; }
+}
+.project-meta { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.project-category,
+.project-status {
+  padding: 0.25rem 0.5rem;
+  color: $government-navy;
+  background: $government-surface;
+  font-size: 0.75rem;
+  font-weight: 750;
+}
+.project-category { border-left: 3px solid $government-gold; }
+.project-status { border: 1px solid $government-border; }
+.project-date { color: $government-muted; font-size: 0.85rem; }
+.project-card__summary { color: $government-muted; line-height: 1.6; }
+.project-card__link {
+  display: inline-flex;
+  min-height: 44px;
+  margin-top: auto;
+  align-items: center;
+  gap: 0.3rem;
+  color: $government-blue;
+  font-weight: 750;
+}
+.project-page { max-width: 76rem; }
+.project-page__intro { padding-bottom: 1.5rem; border-bottom: 4px solid $government-gold; }
+.project-page__intro .project-date { margin-top: 1rem; }
+.project-page__summary { max-width: 52rem; color: $government-ink; font-size: 1.25rem; line-height: 1.6; }
+.project-page__image {
+  margin: 2rem 0;
+  img { display: block; width: 100%; max-height: 36rem; object-fit: contain; }
+  .field__label { display: none; }
+}
+.project-page__layout { display: flex; margin-top: 2rem; align-items: start; gap: 2rem; }
+.project-page__body { min-width: 0; flex: 1; }
+.project-page__details {
+  width: 17rem;
+  padding: 1.5rem;
+  border-top: 4px solid $government-blue;
+  background: $government-surface;
+  dl { margin: 0; }
+  dt { color: $government-navy; font-size: 0.85rem; }
+  dd { margin: 0.25rem 0 1rem; color: $government-muted; }
+  dd:last-child { margin-bottom: 0; }
+}
+.project-page__related { margin-top: 2rem; padding-top: 1.5rem; border-top: 1px solid $government-border; }
+@media (max-width: 1199.98px) {
+  .projects-archive__grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 767.98px) {
+  .projects-archive__grid { grid-template-columns: minmax(0, 1fr); }
+  .project-page__layout { flex-direction: column; }
+  .project-page__details { width: 100%; }
+}

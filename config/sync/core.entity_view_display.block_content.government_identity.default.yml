@@ -1,0 +1,80 @@
+uuid: 966a42ed-067a-4065-815b-d169fde8f192
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.government_identity
+    - field.field.block_content.government_identity.field_government_name
+    - field.field.block_content.government_identity.field_home_link
+    - field.field.block_content.government_identity.field_label
+    - field.field.block_content.government_identity.field_link
+    - field.field.block_content.government_identity.field_logo
+    - field.field.block_content.government_identity.field_office_name
+  module:
+    - link
+id: block_content.government_identity.default
+targetEntityType: block_content
+bundle: government_identity
+mode: default
+content:
+  field_government_name:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_home_link:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_label:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  field_link:
+    type: link
+    label: hidden
+    settings:
+      trim_length: 80
+      url_only: false
+      url_plain: false
+      rel: ''
+      target: ''
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_logo:
+    type: entity_reference_entity_view
+    label: hidden
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_office_name:
+    type: string
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
+    third_party_settings: {  }
+    weight: 3
+    region: content
+hidden: {  }

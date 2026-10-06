@@ -1,0 +1,21 @@
+uuid: 0e63ed12-2ba1-4a82-9b50-ab7716810135
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_presidential_title
+field_name: field_presidential_title
+entity_type: node
+type: string
+settings:
+  max_length: 80
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

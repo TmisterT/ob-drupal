@@ -1,0 +1,23 @@
+uuid: c509c4ba-6103-4880-86f9-2adbcf1b21c6
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:government_identity:fa772a25-3f18-4503-a1f4-ee5c7df43b5a'
+  module:
+    - block_content
+  theme:
+    - ob
+id: ob_site_identity
+theme: ob
+region: branding
+weight: 0
+provider: null
+plugin: 'block_content:fa772a25-3f18-4503-a1f4-ee5c7df43b5a'
+settings:
+  id: 'block_content:fa772a25-3f18-4503-a1f4-ee5c7df43b5a'
+  label: 'Government site identity'
+  label_display: ''
+  provider: block_content
+  view_mode: full
+visibility: {  }

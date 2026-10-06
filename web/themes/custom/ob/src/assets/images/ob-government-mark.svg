@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" role="img" aria-labelledby="title">
+  <title id="title">Office of Te Beretitenti</title>
+  <circle cx="36" cy="36" r="34" fill="#fbe8e8"/>
+  <circle cx="36" cy="29" r="10" fill="#c73a3a"/>
+  <g fill="none" stroke="#c73a3a" stroke-linecap="round">
+    <path d="M36 8v8M17 18l6 6M55 18l-6 6M9 34h9M54 34h9" stroke-width="3"/>
+    <path d="M14 47c8-6 14-6 22 0s14 6 22 0M14 54c8-6 14-6 22 0s14 6 22 0" stroke-width="4"/>
+  </g>
+</svg>

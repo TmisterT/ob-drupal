@@ -1,0 +1,8 @@
+uuid: 8db3586a-8850-4ac6-8340-baa853668799
+langcode: en
+status: true
+dependencies: {  }
+id: sitewide_alert
+label: 'Sitewide alert'
+revision: true
+description: 'Important, warning, or emergency information displayed across the site.'

@@ -1,0 +1,14 @@
+{% set has_section_nav = section_navigation.links is not empty %}
+<header class="service-page__intro">
+  <div class="service-page__intro-copy">
+    <p class="menu-section-page__eyebrow">{{ section_navigation.title }}</p>
+    <p class="service-page__summary">{{ service_details.summary }}</p>
+    {% if service_details.status %}
+      <div class="service-page__availability">
+        <span class="service-status service-status--{{ service_details.status_key|clean_class }}">{{ service_details.status }}</span>
+        {% if service_details.opening_date %}<span><strong>{{ 'Opens'|t }}:</strong> {{ service_details.opening_date }}</span>{% endif %}
+        {% if service_details.closing_date %}<span><strong>{{ 'Closes'|t }}:</strong> {{ service_details.closing_date }}</span>{% endif %}
+      </div>
+    {% endif %}
+  </div>
+</header>

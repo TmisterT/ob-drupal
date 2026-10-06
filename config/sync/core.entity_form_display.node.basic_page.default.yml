@@ -1,0 +1,123 @@
+uuid: d3c890ac-6a46-4619-9ecf-84d0a863a2c7
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.basic_page.body
+    - field.field.node.basic_page.field_audience
+    - field.field.node.basic_page.field_content_owner
+    - field.field.node.basic_page.field_documents
+    - field.field.node.basic_page.field_featured_image
+    - field.field.node.basic_page.field_last_reviewed
+    - field.field.node.basic_page.field_related_links
+    - field.field.node.basic_page.field_summary
+    - field.field.node.basic_page.field_topics
+    - node.type.basic_page
+  module:
+    - path
+id: node.basic_page.default
+targetEntityType: node
+bundle: basic_page
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 2
+    region: content
+    settings:
+      rows: 15
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_audience:
+    type: entity_reference_autocomplete_tags
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_content_owner:
+    type: string_textfield
+    weight: 7
+    region: content
+    settings:
+      size: 60
+      placeholder: 'For example, Cabinet Secretariat'
+    third_party_settings: {  }
+  field_documents:
+    type: media_library_widget
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_featured_image:
+    type: media_library_widget
+    weight: 1
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_last_reviewed:
+    type: datetime_default
+    weight: 8
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_related_links:
+    type: link_default
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_summary:
+    type: string_textarea
+    weight: 0
+    region: content
+    settings:
+      rows: 3
+      placeholder: 'Summarise this page in one or two sentences.'
+    third_party_settings: {  }
+  field_topics:
+    type: entity_reference_autocomplete_tags
+    weight: 5
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 100
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  promote: true
+  sticky: true

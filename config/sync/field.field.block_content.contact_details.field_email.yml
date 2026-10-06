@@ -1,0 +1,19 @@
+uuid: fb32a64b-5acf-49bb-bcf0-8a622cad8c71
+langcode: en
+status: true
+dependencies:
+  config:
+    - block_content.type.contact_details
+    - field.storage.block_content.field_email
+id: block_content.contact_details.field_email
+field_name: field_email
+entity_type: block_content
+bundle: contact_details
+label: Email
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: email

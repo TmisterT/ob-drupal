@@ -1,0 +1,23 @@
+uuid: 987b940d-67f8-4325-9c4a-87f8a9ef95f0
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_presidential_number
+    - node.type.profile
+id: node.profile.field_presidential_number
+field_name: field_presidential_number
+entity_type: node
+bundle: profile
+label: 'Presidential order (internal)'
+description: 'Used only to sort the presidential history. This number is not displayed publicly.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

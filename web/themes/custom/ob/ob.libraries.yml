@@ -1,0 +1,17 @@
+style:
+  css:
+    theme:
+      build/css/main.style.css: {}
+  js:
+    build/js/main.script.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+    - ob/flexslider
+
+flexslider:
+  version: 2.7.2
+  js:
+    build/assets/vendor/flexslider/jquery.flexslider.js: {}
+  dependencies:
+    - core/jquery

@@ -1,0 +1,21 @@
+{#
+/**
+ * @file
+ * Site branding rendered from Drupal's Site Branding block.
+ */
+#}
+<a class="site-identity" href="{{ path('<front>') }}" rel="home" aria-label="{{ site_name ~ ' ' ~ 'home'|t }}">
+  {% if site_logo %}
+    <span class="site-identity__crest">
+      <img src="{{ site_logo }}" alt="" width="72" height="72">
+    </span>
+  {% endif %}
+  <span class="site-identity__copy">
+    {% if site_name %}
+      <span class="site-identity__name">{{ site_name }}</span>
+    {% endif %}
+    {% if site_slogan %}
+      <span class="site-identity__government">{{ site_slogan }}</span>
+    {% endif %}
+  </span>
+</a>

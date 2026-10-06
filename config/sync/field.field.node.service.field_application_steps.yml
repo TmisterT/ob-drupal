@@ -1,0 +1,22 @@
+uuid: 71000000-0000-4000-8000-000000000019
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_application_steps
+    - node.type.service
+  module:
+    - text
+id: node.service.field_application_steps
+field_name: field_application_steps
+entity_type: node
+bundle: service
+label: 'Process steps'
+description: 'Add each application or nomination step in the correct order.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  {  }
+field_type: text_long

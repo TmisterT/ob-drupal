@@ -1,0 +1,101 @@
+uuid: 40e1e201-9d5b-47d4-ac53-33d42ab40285
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.publication.field_content_owner
+    - field.field.node.publication.field_documents
+    - field.field.node.publication.field_featured
+    - field.field.node.publication.field_featured_image
+    - field.field.node.publication.field_last_reviewed
+    - field.field.node.publication.field_publication_date
+    - field.field.node.publication.field_publication_type
+    - field.field.node.publication.field_reference_number
+    - field.field.node.publication.field_summary
+    - node.type.publication
+  module:
+    - user
+id: node.publication.default
+targetEntityType: node
+bundle: publication
+mode: default
+content:
+  field_content_owner:
+    type: string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 7
+    region: content
+  field_documents:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: true
+    third_party_settings: {  }
+    weight: 5
+    region: content
+  field_featured:
+    type: boolean
+    label: above
+    settings:
+      format: yes-no
+    third_party_settings: {  }
+    weight: 6
+    region: content
+  field_featured_image:
+    type: entity_reference_entity_view
+    label: above
+    settings:
+      view_mode: default
+      link: false
+    third_party_settings: {  }
+    weight: 4
+    region: content
+  field_last_reviewed:
+    type: datetime_custom
+    label: above
+    settings:
+      timezone_override: ''
+      date_format: 'j F Y'
+    third_party_settings: {  }
+    weight: 8
+    region: content
+  field_publication_date:
+    type: datetime_custom
+    label: above
+    settings:
+      timezone_override: ''
+      date_format: 'j F Y'
+    third_party_settings: {  }
+    weight: 2
+    region: content
+  field_publication_type:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: false
+    third_party_settings: {  }
+    weight: 1
+    region: content
+  field_reference_number:
+    type: string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 3
+    region: content
+  field_summary:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 0
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden: {  }

@@ -1,0 +1,19 @@
+uuid: 6a5cee7e-9ecb-4c3f-a3e8-de50a93bf90e
+langcode: en
+status: true
+dependencies:
+  module:
+    - link
+    - node
+id: node.field_quick_links
+field_name: field_quick_links
+entity_type: node
+type: link
+settings: {  }
+module: link
+locked: false
+cardinality: 4
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

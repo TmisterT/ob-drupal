@@ -1,0 +1,21 @@
+uuid: b97713bf-bf1c-4eb2-bf9f-7557000b215c
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_last_reviewed
+    - node.type.project
+  module:
+    - datetime
+id: node.project.field_last_reviewed
+field_name: field_last_reviewed
+entity_type: node
+bundle: project
+label: 'Last reviewed'
+description: 'Date this information was last verified.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

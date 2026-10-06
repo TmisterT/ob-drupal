@@ -1,0 +1,9 @@
+uuid: 9f844b41-57e1-443f-a3b2-5946277dc1c8
+langcode: en
+status: true
+dependencies: {  }
+name: 'Speech type'
+vid: speech_type
+description: 'Classifies formal communications by Te Beretitenti.'
+weight: 7
+new_revision: false

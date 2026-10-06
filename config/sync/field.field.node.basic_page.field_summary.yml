@@ -1,0 +1,19 @@
+uuid: f3516a5b-acf9-4cd8-b636-b2b8a9e1484d
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_summary
+    - node.type.basic_page
+id: node.basic_page.field_summary
+field_name: field_summary
+entity_type: node
+bundle: basic_page
+label: Summary
+description: 'A concise introduction displayed prominently below the page title.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

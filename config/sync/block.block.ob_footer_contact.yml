@@ -1,0 +1,23 @@
+uuid: f5da6e6d-2a13-44ea-8238-2f1f2e2cab77
+langcode: en
+status: true
+dependencies:
+  content:
+    - 'block_content:contact_details:ea1b8a86-89a5-46e0-aea8-61aaa639f73d'
+  module:
+    - block_content
+  theme:
+    - ob
+id: ob_footer_contact
+theme: ob
+region: footer_contact
+weight: 0
+provider: null
+plugin: 'block_content:ea1b8a86-89a5-46e0-aea8-61aaa639f73d'
+settings:
+  id: 'block_content:ea1b8a86-89a5-46e0-aea8-61aaa639f73d'
+  label: Contact
+  label_display: ''
+  provider: block_content
+  view_mode: full
+visibility: {  }

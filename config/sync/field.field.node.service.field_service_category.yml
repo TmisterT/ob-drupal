@@ -1,0 +1,28 @@
+uuid: d2fa43d5-7c1f-45e1-b39a-7b8394fa61ab
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_service_category
+    - node.type.service
+    - taxonomy.vocabulary.service_category
+id: node.service.field_service_category
+field_name: field_service_category
+entity_type: node
+bundle: service
+label: 'Service category'
+description: 'Group this service by public purpose.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      service_category: service_category
+    sort:
+      field: name
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

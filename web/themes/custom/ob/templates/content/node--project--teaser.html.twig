@@ -1,0 +1,20 @@
+<article{{ attributes.addClass('project-card') }}>
+  {{ title_prefix }}{{ title_suffix }}
+  {% if project_image %}
+    <div class="project-card__image">{{ project_image }}</div>
+  {% else %}
+    <div class="project-card__placeholder" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><path d="M3 21h18M5 21V8l7-5 7 5v13M9 21v-8h6v8M9 9h6"/></svg>
+    </div>
+  {% endif %}
+  <div class="project-card__content">
+    <div class="project-meta">
+      {% for category in project_details.categories %}<span class="project-category">{{ category }}</span>{% endfor %}
+      {% if project_details.status %}<span class="project-status">{{ project_details.status }}</span>{% endif %}
+    </div>
+    <h3{{ title_attributes }}><a href="{{ url }}" rel="bookmark">{{ label }}</a></h3>
+    <p class="project-date">{{ 'Published'|t }} <time datetime="{{ project_details.datetime }}">{{ project_details.date }}</time></p>
+    {% if project_details.summary %}<p class="project-card__summary">{{ project_details.summary }}</p>{% endif %}
+    <a class="project-card__link" href="{{ url }}">{{ 'View project'|t }}<span class="visually-hidden">: {{ label }}</span><span aria-hidden="true"> →</span></a>
+  </div>
+</article>

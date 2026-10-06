@@ -1,0 +1,29 @@
+uuid: 87e6d126-f85a-441d-bb49-656a235ba5f8
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_slide_image
+    - media.type.image
+    - node.type.homepage_slide
+id: node.homepage_slide.field_slide_image
+field_name: field_slide_image
+entity_type: node
+bundle: homepage_slide
+label: 'Slide image'
+description: 'Use a 1600 × 720 landscape image with meaningful alternative text.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: null
+field_type: entity_reference

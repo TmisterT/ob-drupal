@@ -1,0 +1,8 @@
+uuid: 03e23421-58f2-4945-9657-fe1086168b40
+langcode: en
+status: true
+dependencies: {  }
+id: call_to_action
+label: 'Call to action'
+revision: true
+description: 'Reusable promotional panel with text, link, and optional image.'

@@ -1,0 +1,29 @@
+uuid: 71000000-0000-4000-8000-000000000033
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_documents
+    - node.type.honours_awards
+    - media.type.document
+id: node.honours_awards.field_documents
+field_name: field_documents
+entity_type: node
+bundle: honours_awards
+label: 'Forms and official documents'
+description: 'Attach forms or guidance from the Media Library.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      document: document
+    sort:
+      field: _none
+      direction: ASC
+    auto_create: false
+    auto_create_bundle: null
+field_type: entity_reference

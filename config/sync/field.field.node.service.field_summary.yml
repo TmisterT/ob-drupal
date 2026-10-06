@@ -1,0 +1,19 @@
+uuid: 85d79157-94b7-4792-a194-d3eb5f84eec6
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_summary
+    - node.type.service
+id: node.service.field_summary
+field_name: field_summary
+entity_type: node
+bundle: service
+label: Summary
+description: 'A concise summary used in listings and homepage cards.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string_long

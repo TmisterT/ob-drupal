@@ -1,0 +1,30 @@
+uuid: 71000000-0000-4000-8000-000000000003
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_application_status
+field_name: field_application_status
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: open
+      label: Open
+    -
+      value: closed
+      label: Closed
+    -
+      value: coming_soon
+      label: 'Coming soon'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

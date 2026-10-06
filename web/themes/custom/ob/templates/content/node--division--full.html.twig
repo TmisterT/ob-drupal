@@ -1,0 +1,68 @@
+{#
+/**
+ * @file
+ * Full display for an Office of Te Beretitenti division.
+ */
+#}
+{% set in_menu_section = section_navigation.is_section ?? false %}
+{% set has_image = node.hasField('field_featured_image') and not node.field_featured_image.isEmpty %}
+{% set has_summary = node.hasField('field_summary') and not node.field_summary.isEmpty %}
+{% set has_contact = node.hasField('field_contact_details') and not node.field_contact_details.isEmpty %}
+{% set has_email = node.hasField('field_email') and not node.field_email.isEmpty %}
+{% set has_phone = node.hasField('field_phone') and not node.field_phone.isEmpty %}
+{% set has_review_date = node.hasField('field_last_reviewed') and not node.field_last_reviewed.isEmpty %}
+
+<article{{ attributes.addClass('menu-section-page', 'division-page') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+
+  <header class="menu-section-page__intro{% if has_image %} menu-section-page__intro--with-media{% endif %}">
+    <div class="menu-section-page__intro-copy">
+      <p class="menu-section-page__eyebrow">{{ in_menu_section ? section_navigation.title : 'Office division'|t }}</p>
+      {% if has_summary %}
+        <div class="menu-section-page__lead">{{ content.field_summary }}</div>
+      {% endif %}
+    </div>
+    {% if has_image %}
+      <div class="menu-section-page__media">{{ content.field_featured_image }}</div>
+    {% endif %}
+  </header>
+
+  <div class="menu-section-page__layout{% if not in_menu_section %} menu-section-page__layout--without-nav{% endif %}">
+    {% if in_menu_section %}
+      {% include '@ob/templates/navigation/section-navigation.html.twig' with {
+        heading_id: 'division-section-heading'
+      } %}
+    {% endif %}
+
+    <div class="menu-section-page__content">
+      <div class="menu-section-page__body">{{ content.body }}</div>
+
+      {% if has_contact or has_email or has_phone %}
+        <section class="division-contact" aria-labelledby="division-contact-heading">
+          <h2 id="division-contact-heading">{{ 'Contact @division'|t({'@division': label}) }}</h2>
+          {% if has_contact %}
+            <div class="division-contact__details">{{ content.field_contact_details }}</div>
+          {% endif %}
+          <dl class="division-contact__list">
+            {% if has_phone %}
+              <div><dt>{{ 'Phone'|t }}</dt><dd>{{ content.field_phone }}</dd></div>
+            {% endif %}
+            {% if has_email %}
+              <div><dt>{{ 'Email'|t }}</dt><dd>{{ content.field_email }}</dd></div>
+            {% endif %}
+          </dl>
+        </section>
+      {% endif %}
+
+      {% if has_review_date %}
+        <aside class="division-page__metadata" aria-label="{{ 'Page information'|t }}">
+          <span>{{ 'Last reviewed'|t }}</span>
+          {{ content.field_last_reviewed }}
+        </aside>
+      {% endif %}
+    </div>
+  </div>
+
+  {{ content|without('field_summary', 'field_featured_image', 'body', 'field_contact_details', 'field_email', 'field_phone', 'field_featured', 'field_last_reviewed') }}
+</article>

@@ -1,0 +1,22 @@
+uuid: b2af9611-e203-494c-b7a7-860094d145df
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_contact_details
+    - node.type.division
+  module:
+    - text
+id: node.division.field_contact_details
+field_name: field_contact_details
+entity_type: node
+bundle: division
+label: 'Contact details'
+description: 'Public address and contact guidance for this division.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  allowed_formats: {  }
+field_type: text_long

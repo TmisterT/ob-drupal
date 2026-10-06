@@ -1,0 +1,15 @@
+uuid: 7fbece51-d910-4e36-91e1-1b9503c7c147
+langcode: en
+status: true
+dependencies: {  }
+name: ob_card
+label: 'OB content card'
+effects:
+  6f09e3dd-2734-463a-8300-68c641fa4943:
+    uuid: 6f09e3dd-2734-463a-8300-68c641fa4943
+    id: image_scale_and_crop
+    weight: 0
+    data:
+      width: 720
+      height: 480
+      anchor: center-center

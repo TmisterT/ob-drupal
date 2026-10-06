@@ -1,0 +1,55 @@
+.menu-section-page__layout--without-nav {
+  display: block;
+
+  .menu-section-page__content { max-width: 48rem; }
+}
+
+.division-contact {
+  margin-top: 3rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  border-top: 4px solid $government-blue;
+  background: $government-surface;
+
+  h2 {
+    margin: 0 0 1rem;
+    color: $government-navy;
+    font-size: 1.4rem;
+  }
+}
+
+.division-contact__details {
+  margin-bottom: 1rem;
+
+  .field,
+  p { margin-bottom: 0; }
+}
+
+.division-contact__list {
+  margin: 0;
+
+  > div {
+    display: grid;
+    gap: 0.25rem;
+    padding: 0.75rem 0;
+    border-top: 1px solid $government-border;
+
+    @media (min-width: 520px) { grid-template-columns: 6rem minmax(0, 1fr); }
+  }
+
+  dt { color: $government-muted; }
+  dd { margin: 0; }
+  .field { margin: 0; }
+}
+
+.division-page__metadata {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 2rem;
+  padding-top: 1rem;
+  border-top: 1px solid $government-border;
+  color: $government-muted;
+  font-size: 0.875rem;
+
+  span { font-weight: 700; }
+  .field { margin: 0; }
+}

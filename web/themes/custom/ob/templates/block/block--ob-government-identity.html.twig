@@ -1,0 +1,22 @@
+{#
+/**
+ * @file
+ * Government utility-bar identity block.
+ */
+#}
+<div{{ attributes.addClass('government-identity') }}>
+  {{ title_prefix }}
+  {{ title_suffix }}
+  {% set has_logo = content.field_logo['#items'] is defined and not content.field_logo['#items'].isEmpty %}
+  <span class="government-bar__identity">
+    <span class="government-bar__mark{{ has_logo ? ' government-bar__mark--image' : '' }}" aria-hidden="true">
+      {% if has_logo %}
+        {{ content.field_logo }}
+      {% endif %}
+    </span>
+    {{ content.field_label }}
+  </span>
+  {% if content.field_link['#items'] is defined and not content.field_link['#items'].isEmpty %}
+    <span class="government-identity__link">{{ content.field_link }}</span>
+  {% endif %}
+</div>

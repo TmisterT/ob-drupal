@@ -1,0 +1,10 @@
+{% if languages %}
+  <nav class="update-languages{{ compact ? ' update-languages--compact' : '' }}" aria-label="{{ 'Article languages'|t }}">
+    <span class="update-languages__label">{{ (compact ? 'Available in:' : 'Read in:')|t }}</span>
+    {% for language in languages %}
+      <a class="update-languages__link{{ not compact and language.current ? ' is-current' : '' }}"
+         href="{{ language.url }}" hreflang="{{ language.langcode }}" lang="{{ language.langcode }}"
+         {% if not compact and language.current %}aria-current="page"{% endif %}>{{ language.label }}</a>
+    {% endfor %}
+  </nav>
+{% endif %}
