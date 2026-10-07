@@ -1,0 +1,24 @@
+uuid: 007f621d-88c8-4ddf-ae24-7c54a5add704
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.body
+    - node.type.public_notice
+  module:
+    - text
+id: node.public_notice.body
+field_name: body
+entity_type: node
+bundle: public_notice
+label: 'Notice details'
+description: 'Enter the complete approved public notice.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  display_summary: false
+  required_summary: false
+  allowed_formats: {  }
+field_type: text_with_summary

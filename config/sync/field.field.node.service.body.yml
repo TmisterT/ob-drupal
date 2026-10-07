@@ -11,8 +11,8 @@ id: node.service.body
 field_name: body
 entity_type: node
 bundle: service
-label: 'Main content'
-description: 'Approved public information for the full page.'
+label: About
+description: 'Explain the purpose and public benefit.'
 required: true
 translatable: true
 default_value: {  }

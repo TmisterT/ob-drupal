@@ -1,0 +1,19 @@
+uuid: 0484f99c-0bf4-49f4-8328-7f0c7e6763e3
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_award_code
+    - node.type.service
+id: node.service.field_award_code
+field_name: field_award_code
+entity_type: node
+bundle: service
+label: 'Award Code'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

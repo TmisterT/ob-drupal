@@ -264,23 +264,6 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
-        field_featured:
-          id: field_featured
-          table: node__field_featured
-          field: field_featured
-          entity_type: node
-          entity_field: field_featured
-          plugin_id: field
-          label: Featured on homepage
-          exclude: false
-          type: boolean
-          settings:
-            format: yes-no
-            format_custom_false: ''
-            format_custom_true: ''
-          empty: "\u2014"
-          hide_empty: false
-          click_sort_column: value
         operations:
           id: operations
           table: node
@@ -331,6 +314,23 @@ display:
           empty_zero: false
           hide_alter_empty: true
           destination: true
+        field_featured:
+          id: field_featured
+          table: node__field_featured
+          field: field_featured
+          entity_type: node
+          entity_field: field_featured
+          plugin_id: field
+          label: 'Featured on homepage'
+          exclude: false
+          empty: —
+          hide_empty: false
+          click_sort_column: value
+          type: boolean
+          settings:
+            format: yes-no
+            format_custom_false: ''
+            format_custom_true: ''
       pager:
         type: full
         options:
@@ -561,9 +561,8 @@ display:
           exposed: true
           expose:
             operator_id: featured_op
-            label: Featured on homepage
-            description: Filter by the saved feature selection. Homepage news highlights require
-              a published News or Press release.
+            label: 'Featured on homepage'
+            description: 'Filter by the saved feature selection. Homepage news highlights require a published News or Press release.'
             use_operator: false
             operator: featured_op
             identifier: featured
@@ -582,7 +581,6 @@ display:
           row_class: ''
           default_row_class: true
           columns:
-            field_featured: field_featured
             node_bulk_form: node_bulk_form
             title: title
             type: type
@@ -593,15 +591,9 @@ display:
             delete_node: delete_node
             dropbutton: dropbutton
             timestamp: title
+            field_featured: field_featured
           default: changed
           info:
-            field_featured:
-              sortable: true
-              default_sort_order: desc
-              align: ''
-              separator: ''
-              empty_column: false
-              responsive: ''
             node_bulk_form:
               align: ''
               separator: ''
@@ -670,6 +662,13 @@ display:
               separator: ''
               empty_column: false
               responsive: ''
+            field_featured:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
           override: true
           sticky: true
           summary: ''
@@ -701,7 +700,8 @@ display:
         - user
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:field.storage.node.field_featured'
   page_1:
     id: page_1
     display_title: Page
@@ -733,4 +733,5 @@ display:
         - user
         - 'user.node_grants:view'
         - user.permissions
-      tags: {  }
+      tags:
+        - 'config:field.storage.node.field_featured'

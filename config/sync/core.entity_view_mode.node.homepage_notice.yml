@@ -1,0 +1,11 @@
+uuid: 31ea1551-08b5-4812-85fa-107b8d6aa2e2
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.homepage_notice
+label: 'Homepage notice'
+description: null
+targetEntityType: node
+cache: true

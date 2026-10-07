@@ -59,7 +59,9 @@ content:
     type: link_default
     weight: 25
     region: content
-    settings: {  }
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
     third_party_settings: {  }
   field_hero_image:
     type: media_library_widget
@@ -96,7 +98,9 @@ content:
     type: string_textfield
     weight: 11
     region: content
-    settings: {  }
+    settings:
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_projects_heading:
     type: string_textfield
@@ -116,7 +120,9 @@ content:
     type: link_default
     weight: 27
     region: content
-    settings: {  }
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
     third_party_settings: {  }
   field_quick_links:
     type: link_default
@@ -156,7 +162,9 @@ content:
     type: link_default
     weight: 23
     region: content
-    settings: {  }
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
     third_party_settings: {  }
   field_updates_heading:
     type: string_textfield
@@ -175,6 +183,21 @@ content:
   field_updates_link:
     type: link_default
     weight: 21
+    region: content
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
     region: content
     settings: {  }
     third_party_settings: {  }

@@ -1,0 +1,28 @@
+uuid: 391a981f-37a2-421a-a75a-4c5c5c2fc150
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_resource_section
+    - node.type.publication
+    - taxonomy.vocabulary.resource_section
+id: node.publication.field_resource_section
+field_name: field_resource_section
+entity_type: node
+bundle: publication
+label: 'Resource section'
+description: 'Select the Resources table where this publication should appear.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      resource_section: resource_section
+    sort:
+      field: name
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

@@ -1,0 +1,7 @@
+uuid: d6fd2cfc-5dbd-4010-80bd-10eb144328fa
+langcode: en
+status: false
+dependencies: {  }
+formId: node_homepage_slide_form
+captchaType: default
+label: node_homepage_slide_form

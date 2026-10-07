@@ -1,10 +1,12 @@
-uuid: 71000000-0000-4000-8000-000000000034
+uuid: 79887a57-b9b5-48f8-baee-89c062f2033a
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_service_link
     - node.type.honours_awards
+  module:
+    - link
 id: node.honours_awards.field_service_link
 field_name: field_service_link
 entity_type: node

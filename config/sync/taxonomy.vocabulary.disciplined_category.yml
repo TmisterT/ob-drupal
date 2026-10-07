@@ -1,0 +1,9 @@
+uuid: d27025a7-01d6-4ba0-be24-6888b4d043f2
+langcode: en
+status: true
+dependencies: {  }
+name: 'Disciplined Category'
+vid: disciplined_category
+description: null
+weight: 0
+new_revision: false

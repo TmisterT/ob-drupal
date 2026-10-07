@@ -12,6 +12,8 @@ dependencies:
     - field.field.node.homepage_slide.field_slide_weight
     - node.type.homepage_slide
   module:
+    - link
+    - text
     - user
 id: node.homepage_slide.homepage_slider
 targetEntityType: node
@@ -74,4 +76,5 @@ content:
     third_party_settings: {  }
     weight: 100
     region: content
-hidden: {  }
+hidden:
+  langcode: true

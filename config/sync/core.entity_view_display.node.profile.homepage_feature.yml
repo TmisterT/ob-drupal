@@ -10,7 +10,9 @@ dependencies:
     - field.field.node.profile.field_is_president
     - field.field.node.profile.field_last_reviewed
     - field.field.node.profile.field_position
+    - field.field.node.profile.field_president_label
     - field.field.node.profile.field_presidential_number
+    - field.field.node.profile.field_presidential_title
     - field.field.node.profile.field_profile_image
     - field.field.node.profile.field_profile_summary
     - field.field.node.profile.field_related_links
@@ -89,7 +91,10 @@ content:
     region: content
 hidden:
   field_is_president: true
+  field_president_label: true
   field_presidential_number: true
+  field_presidential_title: true
   field_related_links: true
   field_term_end_year: true
   field_term_start_year: true
+  langcode: true

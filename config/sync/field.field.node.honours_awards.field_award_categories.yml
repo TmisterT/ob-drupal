@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000032
+uuid: 092165db-fa4f-4b80-833d-2305200c12bb
 langcode: en
 status: true
 dependencies:
@@ -12,7 +12,7 @@ entity_type: node
 bundle: honours_awards
 label: 'Award categories and criteria'
 description: 'Select award terms in display order. Manage names, codes, criteria, and parent groups in the Award categories vocabulary.'
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
@@ -25,4 +25,5 @@ settings:
       field: name
       direction: ASC
     auto_create: false
+    auto_create_bundle: ''
 field_type: entity_reference

@@ -1,0 +1,9 @@
+uuid: 5246c651-1aef-4ceb-9f6e-8e352faadd8b
+langcode: en
+status: true
+dependencies: {  }
+name: 'Resource section'
+vid: resource_section
+description: null
+weight: 0
+new_revision: false

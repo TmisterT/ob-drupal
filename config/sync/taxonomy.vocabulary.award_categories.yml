@@ -1,0 +1,9 @@
+uuid: 6e3cc8eb-efe6-4518-8b85-c26b085a48a6
+langcode: en
+status: true
+dependencies: {  }
+name: 'Civil Categories'
+vid: award_categories
+description: null
+weight: 0
+new_revision: false

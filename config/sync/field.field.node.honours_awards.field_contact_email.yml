@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000031
+uuid: dd896435-2208-4677-99d4-13d298980e5a
 langcode: en
 status: true
 dependencies:
@@ -15,6 +15,5 @@ required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
-settings:
-  {  }
-field_type: string
+settings: {  }
+field_type: email

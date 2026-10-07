@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000018
+uuid: ea8df708-00d6-40c0-b5ca-9a6da1665675
 langcode: en
 status: true
 dependencies:
@@ -11,12 +11,12 @@ id: node.service.field_requirements
 field_name: field_requirements
 entity_type: node
 bundle: service
-label: 'Requirements'
+label: Requirements
 description: 'List the information, evidence, or documents that must be provided.'
 required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  {  }
+  allowed_formats: {  }
 field_type: text_long

@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000036
+uuid: 1201f78a-ac99-4eef-a014-28dc18379ab1
 langcode: en
 status: true
 dependencies:
@@ -10,7 +10,7 @@ id: node.honours_awards.field_audience
 field_name: field_audience
 entity_type: node
 bundle: honours_awards
-label: 'Audience'
+label: Audience
 description: 'Select the public audiences for this service.'
 required: false
 translatable: true

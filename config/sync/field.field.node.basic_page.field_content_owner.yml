@@ -11,7 +11,7 @@ entity_type: node
 bundle: basic_page
 label: 'Content owner'
 description: 'Division or team responsible for keeping this page accurate.'
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''

@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000038
+uuid: 6c7038b8-380f-42c3-b318-f00b976dc061
 langcode: en
 status: true
 dependencies:
@@ -13,10 +13,9 @@ entity_type: node
 bundle: honours_awards
 label: 'Last reviewed'
 description: 'Date this information was last verified.'
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
-settings:
-  {  }
+settings: {  }
 field_type: datetime

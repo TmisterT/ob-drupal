@@ -1,0 +1,20 @@
+uuid: aa5d804b-aa40-4014-ac24-f69e8d89a2b4
+langcode: en
+status: true
+dependencies:
+  module:
+    - datetime
+    - node
+id: node.field_notice_expiry
+field_name: field_notice_expiry
+entity_type: node
+type: datetime
+settings:
+  datetime_type: date
+module: datetime
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

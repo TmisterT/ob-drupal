@@ -1,0 +1,21 @@
+uuid: 623b4504-0ae0-464c-96fe-393608d3022a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_last_reviewed
+    - node.type.landing_page
+  module:
+    - datetime
+id: node.landing_page.field_last_reviewed
+field_name: field_last_reviewed
+entity_type: node
+bundle: landing_page
+label: 'Last reviewed'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

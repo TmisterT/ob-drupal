@@ -1,6 +1,6 @@
 uuid: 9a223a27-cad5-4ac0-84c5-ff6359547566
 langcode: en
-status: false
+status: true
 dependencies:
   config:
     - system.menu.footer
@@ -13,13 +13,13 @@ _core:
 id: ob_footer
 theme: ob
 region: footer_navigation
-weight: -5
+weight: 0
 provider: null
 plugin: 'system_menu_block:footer'
 settings:
   id: 'system_menu_block:footer'
-  label: 'Footer menu'
-  label_display: '0'
+  label: 'Quick Links'
+  label_display: '1'
   provider: system
   level: 1
   depth: 0

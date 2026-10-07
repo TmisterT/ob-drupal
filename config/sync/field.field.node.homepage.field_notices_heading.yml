@@ -1,4 +1,4 @@
-uuid: dce03a10-4056-4a67-aab9-0a1ced46d6ab
+uuid: 54e484a9-5aaa-44cf-a4ff-f00db15a6bbd
 langcode: en
 status: true
 dependencies:
@@ -9,13 +9,13 @@ id: node.homepage.field_notices_heading
 field_name: field_notices_heading
 entity_type: node
 bundle: homepage
-label: 'Public notices section heading'
-description: 'Heading displayed above public notices on the homepage.'
+label: 'Official updates section heading'
+description: 'Heading above the combined public notices, announcements, news and press releases board on the homepage.'
 required: true
 translatable: true
 default_value:
   -
-    value: 'Important Public Notices'
+    value: 'Official updates'
 default_value_callback: ''
 settings: {  }
 field_type: string

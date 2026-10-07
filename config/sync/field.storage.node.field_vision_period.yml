@@ -1,0 +1,21 @@
+uuid: 4c45632a-befb-43c7-8b1f-f676b971d60a
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_vision_period
+field_name: field_vision_period
+entity_type: node
+type: string
+settings:
+  max_length: 50
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

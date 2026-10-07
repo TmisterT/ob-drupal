@@ -13,6 +13,8 @@ dependencies:
     - field.field.node.division.field_summary
     - node.type.division
   module:
+    - datetime
+    - text
     - user
 id: node.division.default
 targetEntityType: node
@@ -21,21 +23,21 @@ mode: default
 content:
   body:
     type: text_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 2
     region: content
   field_contact_details:
     type: text_default
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 3
     region: content
   field_email:
     type: email_mailto
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 5
@@ -50,7 +52,7 @@ content:
     region: content
   field_featured_image:
     type: entity_reference_entity_view
-    label: above
+    label: hidden
     settings:
       view_mode: default
       link: false
@@ -59,7 +61,7 @@ content:
     region: content
   field_last_reviewed:
     type: datetime_custom
-    label: above
+    label: hidden
     settings:
       timezone_override: ''
       date_format: 'j F Y'
@@ -68,14 +70,16 @@ content:
     region: content
   field_phone:
     type: string
-    label: above
-    settings: {  }
+    label: hidden
+    settings:
+      link_to_entity: false
+      link_rel: canonical
     third_party_settings: {  }
     weight: 4
     region: content
   field_summary:
     type: basic_string
-    label: above
+    label: hidden
     settings: {  }
     third_party_settings: {  }
     weight: 0
@@ -85,4 +89,5 @@ content:
     third_party_settings: {  }
     weight: 100
     region: content
-hidden: {  }
+hidden:
+  langcode: true

@@ -3,7 +3,7 @@
   <div class="container">
     <header class="official-board__heading">
       <span class="official-board__eyebrow">{{ 'From the Office of Te Beretitenti'|t }}</span>
-      <h2 id="official-updates-title">{{ 'Official updates'|t }}</h2>
+      <h2 id="official-updates-title">{{ heading|default('')|trim ?: 'Official updates'|t }}</h2>
       <p>{{ 'Public notices, announcements, news and press releases.'|t }}</p>
     </header>
     <div class="official-board__layout">

@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000024
+uuid: c237dfca-ba4e-49c1-9291-35d5f45aabcc
 langcode: en
 status: true
 dependencies:
@@ -11,12 +11,11 @@ id: node.honours_awards.field_application_status
 field_name: field_application_status
 entity_type: node
 bundle: honours_awards
-label: 'Availability'
+label: Availability
 description: 'Current public availability of applications or nominations.'
 required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''
-settings:
-  {  }
+settings: {  }
 field_type: list_string

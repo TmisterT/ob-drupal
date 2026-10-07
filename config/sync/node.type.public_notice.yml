@@ -1,0 +1,17 @@
+uuid: 6d21b951-d951-4f94-bf86-d4140f8caaa7
+langcode: en
+status: true
+dependencies:
+  module:
+    - menu_ui
+third_party_settings:
+  menu_ui:
+    available_menus: {  }
+    parent: ''
+name: 'Public Notice'
+type: public_notice
+description: 'A dated public notice displayed on the homepage and in the public notice archive.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: false

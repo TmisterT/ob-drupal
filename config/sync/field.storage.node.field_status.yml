@@ -1,0 +1,33 @@
+uuid: 024f36d9-2724-45ac-9733-d69a38ef72c0
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_status
+field_name: field_status
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: not_started
+      label: 'Not Started'
+    -
+      value: in_progress
+      label: 'In Progress'
+    -
+      value: completed
+      label: Completed
+    -
+      value: on_hold
+      label: On-Hold
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

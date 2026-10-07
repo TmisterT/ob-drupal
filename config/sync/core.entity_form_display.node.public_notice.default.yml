@@ -1,0 +1,118 @@
+uuid: 0844a7df-e6fe-484b-bc12-89f4d32576b1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.public_notice.body
+    - field.field.node.public_notice.field_notice_category
+    - field.field.node.public_notice.field_notice_date
+    - field.field.node.public_notice.field_notice_expiry
+    - field.field.node.public_notice.field_notice_link
+    - field.field.node.public_notice.field_notice_summary
+    - field.field.node.public_notice.field_notice_urgent
+    - node.type.public_notice
+  module:
+    - datetime
+    - link
+    - path
+    - text
+id: node.public_notice.default
+targetEntityType: node
+bundle: public_notice
+mode: default
+content:
+  body:
+    type: text_textarea_with_summary
+    weight: 1
+    region: content
+    settings:
+      rows: 12
+      summary_rows: 3
+      placeholder: ''
+    third_party_settings: {  }
+  created:
+    type: datetime_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_notice_category:
+    type: options_select
+    weight: 2
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_notice_date:
+    type: datetime_default
+    weight: 3
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_notice_expiry:
+    type: datetime_default
+    weight: 4
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_notice_link:
+    type: link_default
+    weight: 6
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_notice_summary:
+    type: string_textarea
+    weight: 0
+    region: content
+    settings:
+      rows: 3
+      placeholder: 'Summarise the notice in one or two sentences.'
+    third_party_settings: {  }
+  field_notice_urgent:
+    type: boolean_checkbox
+    weight: 5
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 100
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -10
+    region: content
+    settings:
+      size: 60
+      placeholder: 'Public notice title'
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  promote: true
+  sticky: true

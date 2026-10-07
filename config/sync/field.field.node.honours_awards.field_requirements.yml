@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000028
+uuid: 350cd98c-e0af-46a1-b9cd-ff7af79fa786
 langcode: en
 status: true
 dependencies:
@@ -11,12 +11,12 @@ id: node.honours_awards.field_requirements
 field_name: field_requirements
 entity_type: node
 bundle: honours_awards
-label: 'Requirements'
+label: Requirements
 description: 'List the information, evidence, or documents that must be provided.'
 required: true
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  {  }
+  allowed_formats: {  }
 field_type: text_long

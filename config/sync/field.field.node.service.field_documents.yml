@@ -10,8 +10,8 @@ id: node.service.field_documents
 field_name: field_documents
 entity_type: node
 bundle: service
-label: 'Forms and documents'
-description: 'Attach forms or guidance documents from the Media Library.'
+label: 'Forms and official documents'
+description: 'Attach forms or guidance from the Media Library.'
 required: false
 translatable: true
 default_value: {  }

@@ -1,0 +1,29 @@
+uuid: 8f9ea65b-569f-4cea-acd0-64e15568af57
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_100_days_priority
+    - node.type.100_days_priority
+    - taxonomy.vocabulary.100_days_cycle
+id: node.100_days_priority.field_100_days_priority
+field_name: field_100_days_priority
+entity_type: node
+bundle: 100_days_priority
+label: '100 Days Priority '
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      100_days_cycle: 100_days_cycle
+    sort:
+      field: name
+      direction: asc
+    auto_create: false
+    auto_create_bundle: ''
+field_type: entity_reference

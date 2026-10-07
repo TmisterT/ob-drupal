@@ -1,0 +1,19 @@
+uuid: dfe975e9-856d-4a77-81b5-a8cc27414640
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.taxonomy_term.field_award_code
+    - taxonomy.vocabulary.award_categories
+id: taxonomy_term.award_categories.field_award_code
+field_name: field_award_code
+entity_type: taxonomy_term
+bundle: award_categories
+label: 'Award code'
+description: 'Official abbreviation, for example KGO. Leave empty for category headings.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

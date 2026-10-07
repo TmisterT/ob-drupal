@@ -2,7 +2,7 @@ uuid: 1c01639a-ccdb-4abf-b264-5cf149f09713
 langcode: en
 status: true
 dependencies: {  }
-name: Topics
+name: Category
 vid: topics
 description: 'Cross-site subjects used to connect related content. Add terms only when an editorial need exists.'
 weight: 4

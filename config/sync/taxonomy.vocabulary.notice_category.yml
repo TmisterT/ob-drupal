@@ -1,0 +1,9 @@
+uuid: 0510b857-0702-4512-b21b-c552e94bcb4a
+langcode: en
+status: true
+dependencies: {  }
+name: 'Public notice category'
+vid: notice_category
+description: 'Classifies time-sensitive notices published for the public.'
+weight: 2
+new_revision: false

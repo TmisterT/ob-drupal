@@ -14,6 +14,10 @@ dependencies:
     - field.field.node.project.field_summary
     - node.type.project
   module:
+    - datetime
+    - link
+    - options
+    - text
     - user
 id: node.project.default
 targetEntityType: node
@@ -99,4 +103,5 @@ content:
     third_party_settings: {  }
     weight: 100
     region: content
-hidden: {  }
+hidden:
+  langcode: true

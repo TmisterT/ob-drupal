@@ -113,3 +113,26 @@ function ob_site_official_updates(): array {
 }
 
 require_once __DIR__ . '/includes/bilingual.module.inc';
+
+/**
+ * Makes the existing board heading easy to find on Homepage edit forms.
+ */
+function ob_site_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state, string $form_id): void {
+  $form_object = $form_state->getFormObject();
+  if (!$form_object instanceof \Drupal\Core\Entity\EntityFormInterface) {
+    return;
+  }
+  $entity = $form_object->getEntity();
+  if (!$entity instanceof \Drupal\node\NodeInterface || $entity->bundle() !== 'homepage' || !isset($form['field_notices_heading'])) {
+    return;
+  }
+  $form['official_updates_settings'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Official updates board'),
+    '#description' => t('Change the heading above the public notices, announcements, news and press releases on the homepage.'),
+    '#weight' => -8,
+  ];
+  // Group the existing widget without moving it or changing its saved value.
+  $form['field_notices_heading']['#group'] = 'official_updates_settings';
+  $form['field_notices_heading']['#weight'] = 0;
+}

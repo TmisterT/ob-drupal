@@ -1,0 +1,23 @@
+uuid: 78bea9c0-9dbe-45d6-bc19-0dadd23e44d1
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_priority_number
+    - node.type.100_days_priority
+id: node.100_days_priority.field_priority_number
+field_name: field_priority_number
+entity_type: node
+bundle: 100_days_priority
+label: 'Priority Number'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: null
+  max: null
+  prefix: ''
+  suffix: ''
+field_type: integer

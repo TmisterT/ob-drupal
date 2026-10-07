@@ -1,0 +1,21 @@
+uuid: 6649fcdf-7f97-47c8-8db7-407d1417b4fb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_notice_expiry
+    - node.type.public_notice
+  module:
+    - datetime
+id: node.public_notice.field_notice_expiry
+field_name: field_notice_expiry
+entity_type: node
+bundle: public_notice
+label: 'Homepage expiry date'
+description: 'Optional. After this date the notice leaves the homepage but remains in the archive.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

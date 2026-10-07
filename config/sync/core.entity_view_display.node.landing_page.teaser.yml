@@ -4,8 +4,21 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.landing_page.body
+    - field.field.node.landing_page.field_audience
+    - field.field.node.landing_page.field_call_to_action
+    - field.field.node.landing_page.field_content_owner
+    - field.field.node.landing_page.field_document_version
+    - field.field.node.landing_page.field_documents
+    - field.field.node.landing_page.field_featured_links
+    - field.field.node.landing_page.field_gallery_images
     - field.field.node.landing_page.field_hero_image
+    - field.field.node.landing_page.field_language
+    - field.field.node.landing_page.field_last_reviewed
+    - field.field.node.landing_page.field_publication_date
     - field.field.node.landing_page.field_summary
+    - field.field.node.landing_page.field_topics
+    - field.field.node.landing_page.field_vision_period
     - node.type.landing_page
   module:
     - user
@@ -35,4 +48,18 @@ content:
     third_party_settings: {  }
     weight: 100
     region: content
-hidden: {  }
+hidden:
+  body: true
+  field_audience: true
+  field_call_to_action: true
+  field_content_owner: true
+  field_document_version: true
+  field_documents: true
+  field_featured_links: true
+  field_gallery_images: true
+  field_language: true
+  field_last_reviewed: true
+  field_publication_date: true
+  field_topics: true
+  field_vision_period: true
+  langcode: true

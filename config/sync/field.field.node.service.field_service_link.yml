@@ -11,8 +11,8 @@ id: node.service.field_service_link
 field_name: field_service_link
 entity_type: node
 bundle: service
-label: 'Access service'
-description: 'Link to the online service or service information page.'
+label: 'Primary action'
+description: 'Optional link to an online form or service system.'
 required: false
 translatable: true
 default_value: {  }

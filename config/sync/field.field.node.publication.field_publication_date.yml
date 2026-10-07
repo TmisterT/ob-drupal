@@ -12,8 +12,8 @@ field_name: field_publication_date
 entity_type: node
 bundle: publication
 label: 'Publication date'
-description: 'Official publication date.'
-required: true
+description: 'Enter the exact date when known; Publication year remains required.'
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''

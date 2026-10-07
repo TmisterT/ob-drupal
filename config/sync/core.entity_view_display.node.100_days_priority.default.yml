@@ -1,0 +1,75 @@
+uuid: 681e999d-601f-415d-8bab-2e4174c344bb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.100_days_priority.field_100_days_priority
+    - field.field.node.100_days_priority.field_description
+    - field.field.node.100_days_priority.field_division
+    - field.field.node.100_days_priority.field_priority_number
+    - field.field.node.100_days_priority.field_progress
+    - field.field.node.100_days_priority.field_status
+    - node.type.100_days_priority
+  module:
+    - options
+    - user
+id: node.100_days_priority.default
+targetEntityType: node
+bundle: 100_days_priority
+mode: default
+content:
+  field_100_days_priority:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 106
+    region: content
+  field_description:
+    type: basic_string
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 107
+    region: content
+  field_division:
+    type: entity_reference_label
+    label: above
+    settings:
+      link: true
+    third_party_settings: {  }
+    weight: 103
+    region: content
+  field_priority_number:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 101
+    region: content
+  field_progress:
+    type: number_integer
+    label: above
+    settings:
+      thousand_separator: ''
+      prefix_suffix: true
+    third_party_settings: {  }
+    weight: 104
+    region: content
+  field_status:
+    type: list_default
+    label: above
+    settings: {  }
+    third_party_settings: {  }
+    weight: 105
+    region: content
+  links:
+    settings: {  }
+    third_party_settings: {  }
+    weight: 100
+    region: content
+hidden:
+  langcode: true

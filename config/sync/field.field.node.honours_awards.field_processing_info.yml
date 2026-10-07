@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000030
+uuid: 5e2db1e3-8817-4cf0-92d9-06e698108c3f
 langcode: en
 status: true
 dependencies:
@@ -18,5 +18,5 @@ translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  {  }
+  allowed_formats: {  }
 field_type: text_long

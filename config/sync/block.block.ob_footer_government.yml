@@ -1,6 +1,6 @@
 uuid: 7b492b5e-aa21-468c-b28b-d00e3d755ae1
 langcode: en
-status: true
+status: false
 dependencies:
   config:
     - system.menu.footer-government

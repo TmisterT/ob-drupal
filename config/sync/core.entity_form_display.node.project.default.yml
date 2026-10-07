@@ -14,7 +14,11 @@ dependencies:
     - field.field.node.project.field_summary
     - node.type.project
   module:
+    - datetime
+    - link
+    - media_library
     - path
+    - text
 id: node.project.default
 targetEntityType: node
 bundle: project
@@ -84,6 +88,13 @@ content:
     region: content
     settings:
       rows: 3
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
     third_party_settings: {  }
   path:
     type: path

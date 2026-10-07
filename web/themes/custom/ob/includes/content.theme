@@ -39,6 +39,9 @@ function ob_theme_suggestions_node_alter(array &$suggestions, array $variables):
     if (_ob_is_projects_landing_page($node)) {
       $suggestions[] = 'node__landing_page__projects';
     }
+    if ($node->bundle() === 'basic_page' && $node->getUntranslated()->label() === 'Cabinet') {
+      $suggestions[] = 'node__cabinet';
+    }
     if ($node->bundle() === 'landing_page' && $node->hasField('field_vision_period') && !$node->get('field_vision_period')->isEmpty()) {
       $suggestions[] = 'node__kv20';
     }

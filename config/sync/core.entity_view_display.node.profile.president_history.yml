@@ -87,4 +87,5 @@ hidden:
   field_president_label: true
   field_presidential_number: true
   field_related_links: true
+  langcode: true
   links: true

@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000012
+uuid: a0d5f048-9b66-4ec7-8f0b-fb400a2d0c53
 langcode: en
 status: true
 dependencies:
@@ -9,9 +9,9 @@ field_name: field_award_code
 entity_type: taxonomy_term
 type: string
 settings:
-  max_length: 40
+  max_length: 20
   case_sensitive: false
-  is_ascii: false
+  is_ascii: true
 module: core
 locked: false
 cardinality: 1

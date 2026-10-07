@@ -13,17 +13,22 @@ type_settings:
   states:
     archived:
       label: Archived
-      weight: 5
+      weight: 1
       published: false
       default_revision: true
     draft:
       label: Draft
-      weight: -5
+      weight: -1
       published: false
       default_revision: false
+    needs_review:
+      label: 'Needs review'
+      weight: 0
+      published: false
+      default_revision: true
     published:
       label: Published
-      weight: 0
+      weight: -2
       published: true
       default_revision: true
   transitions:
@@ -32,21 +37,21 @@ type_settings:
       from:
         - published
       to: archived
-      weight: 2
+      weight: 4
     archived_draft:
-      label: 'Restore to Draft'
+      label: 'Restore to draft'
       from:
         - archived
       to: draft
-      weight: 3
+      weight: 5
     archived_published:
       label: Restore
       from:
         - archived
       to: published
-      weight: 4
+      weight: 6
     create_new_draft:
-      label: 'Create New Draft'
+      label: 'Create new draft'
       from:
         - draft
         - published
@@ -55,9 +60,20 @@ type_settings:
     publish:
       label: Publish
       from:
-        - draft
-        - published
+        - needs_review
       to: published
+      weight: 3
+    return_to_draft:
+      label: 'Return to draft'
+      from:
+        - needs_review
+      to: draft
+      weight: 2
+    submit_for_review:
+      label: 'Submit for review'
+      from:
+        - draft
+      to: needs_review
       weight: 1
   entity_types: {  }
-  default_moderation_state: draft
+  default_moderation_state: published

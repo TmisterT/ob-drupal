@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000010
+uuid: f8f8d911-d2e7-47c1-869c-99b665a83de7
 langcode: en
 status: true
 dependencies:
@@ -7,11 +7,8 @@ dependencies:
 id: node.field_contact_email
 field_name: field_contact_email
 entity_type: node
-type: string
-settings:
-  max_length: 254
-  case_sensitive: false
-  is_ascii: false
+type: email
+settings: {  }
 module: core
 locked: false
 cardinality: 1

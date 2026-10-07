@@ -10,7 +10,7 @@ field_name: field_content_owner
 entity_type: node
 bundle: service
 label: 'Content owner'
-description: 'Division responsible for maintaining this information.'
+description: 'Division or team responsible for this information.'
 required: true
 translatable: true
 default_value: {  }

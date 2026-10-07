@@ -1,11 +1,11 @@
-uuid: 71000000-0000-4000-8000-000000000033
+uuid: 741166c2-b189-41e4-ba5d-6f56c113715d
 langcode: en
 status: true
 dependencies:
   config:
     - field.storage.node.field_documents
-    - node.type.honours_awards
     - media.type.document
+    - node.type.honours_awards
 id: node.honours_awards.field_documents
 field_name: field_documents
 entity_type: node

@@ -1,0 +1,20 @@
+uuid: b31c4895-ffd4-441e-b080-834b078a897b
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - taxonomy
+id: node.field_100_days_priority
+field_name: field_100_days_priority
+entity_type: node
+type: entity_reference
+settings:
+  target_type: taxonomy_term
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000025
+uuid: 9e220595-e1e9-431f-bdd9-7e65708a449f
 langcode: en
 status: true
 dependencies:
@@ -17,6 +17,5 @@ required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
-settings:
-  {  }
+settings: {  }
 field_type: datetime

@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000029
+uuid: f8679e12-5f49-49a8-b9f7-9e21621743c6
 langcode: en
 status: true
 dependencies:
@@ -13,10 +13,10 @@ entity_type: node
 bundle: honours_awards
 label: 'Process steps'
 description: 'Add each application or nomination step in the correct order.'
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
 settings:
-  {  }
+  allowed_formats: {  }
 field_type: text_long

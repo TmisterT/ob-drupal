@@ -13,7 +13,10 @@ dependencies:
     - field.field.node.division.field_summary
     - node.type.division
   module:
+    - datetime
+    - media_library
     - path
+    - text
 id: node.division.default
 targetEntityType: node
 bundle: division
@@ -78,6 +81,13 @@ content:
     region: content
     settings:
       rows: 3
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
     third_party_settings: {  }
   path:
     type: path

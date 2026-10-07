@@ -1,0 +1,19 @@
+uuid: f8cf6d55-291f-4be6-94dc-2e729cfadf49
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_president_label
+    - node.type.profile
+id: node.profile.field_president_label
+field_name: field_president_label
+entity_type: node
+bundle: profile
+label: 'President label'
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

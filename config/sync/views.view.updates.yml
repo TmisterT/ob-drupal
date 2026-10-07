@@ -292,34 +292,6 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }
-  press_releases:
-    id: press_releases
-    display_title: 'Press releases'
-    display_plugin: page
-    position: 1
-    display_options:
-      title: 'Press releases'
-      defaults:
-        title: false
-      display_extenders: {  }
-      path: news-media/press-releases
-      menu:
-        type: none
-        title: ''
-        description: ''
-        weight: 0
-        expanded: false
-        menu_name: main
-        parent: ''
-    cache_metadata:
-      max-age: -1
-      contexts:
-        - 'languages:language_interface'
-        - url
-        - url.query_args
-        - 'user.node_grants:view'
-        - user.permissions
-      tags: {  }
   news:
     id: news
     display_title: News
@@ -327,21 +299,6 @@ display:
     position: 2
     display_options:
       title: News
-      defaults:
-        title: false
-        filters: false
-        header: false
-      header: {}
-      display_extenders: {}
-      path: news-media/news
-      menu:
-        type: none
-        title: ''
-        description: ''
-        weight: 0
-        expanded: false
-        menu_name: main
-        parent: ''
       filters:
         status:
           id: status
@@ -373,13 +330,13 @@ display:
           plugin_id: taxonomy_index_tid
           operator: or
           value:
-          - 1
+            - 1
           group: 1
           exposed: false
+          reduce_duplicates: true
           vid: update_type
           type: select
           hierarchy: false
-          reduce_duplicates: true
         title:
           id: title
           table: node_field_data
@@ -393,7 +350,7 @@ display:
           exposed: true
           expose:
             operator_id: title_op
-            label: Search news
+            label: 'Search news'
             description: ''
             use_operator: false
             operator: title_op
@@ -414,15 +371,15 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {}
-            group_items: {}
+            default_group_multiple: {  }
+            group_items: {  }
         field_topics_target_id:
           id: field_topics_target_id
           table: node__field_topics
           field: field_topics_target_id
           plugin_id: taxonomy_index_tid
           operator: or
-          value: {}
+          value: {  }
           group: 1
           exposed: true
           expose:
@@ -448,20 +405,63 @@ display:
             multiple: false
             remember: false
             default_group: All
-            default_group_multiple: {}
-            group_items: {}
+            default_group_multiple: {  }
+            group_items: {  }
           reduce_duplicates: false
           vid: topics
           type: select
           hierarchy: false
           limit: true
           error_message: true
+      defaults:
+        title: false
+        filters: false
+        header: false
+      header: {  }
+      display_extenders: {  }
+      path: news-media/news
+      menu:
+        type: none
+        title: ''
+        description: ''
+        weight: 0
+        expanded: false
+        menu_name: main
+        parent: ''
     cache_metadata:
       max-age: -1
       contexts:
-      - languages:language_interface
-      - url
-      - url.query_args
-      - user.node_grants:view
-      - user.permissions
-      tags: {}
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }
+  press_releases:
+    id: press_releases
+    display_title: 'Press releases'
+    display_plugin: page
+    position: 1
+    display_options:
+      title: 'Press releases'
+      defaults:
+        title: false
+      display_extenders: {  }
+      path: news-media/press-releases
+      menu:
+        type: none
+        title: ''
+        description: ''
+        weight: 0
+        expanded: false
+        menu_name: main
+        parent: ''
+    cache_metadata:
+      max-age: -1
+      contexts:
+        - 'languages:language_interface'
+        - url
+        - url.query_args
+        - 'user.node_grants:view'
+        - user.permissions
+      tags: {  }

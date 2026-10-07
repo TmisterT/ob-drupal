@@ -4,8 +4,15 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - field.field.node.basic_page.body
+    - field.field.node.basic_page.field_audience
+    - field.field.node.basic_page.field_content_owner
+    - field.field.node.basic_page.field_documents
     - field.field.node.basic_page.field_featured_image
+    - field.field.node.basic_page.field_last_reviewed
+    - field.field.node.basic_page.field_related_links
     - field.field.node.basic_page.field_summary
+    - field.field.node.basic_page.field_topics
     - node.type.basic_page
   module:
     - user
@@ -35,4 +42,12 @@ content:
     third_party_settings: {  }
     weight: 100
     region: content
-hidden: {  }
+hidden:
+  body: true
+  field_audience: true
+  field_content_owner: true
+  field_documents: true
+  field_last_reviewed: true
+  field_related_links: true
+  field_topics: true
+  langcode: true

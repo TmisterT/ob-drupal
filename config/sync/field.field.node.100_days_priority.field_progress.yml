@@ -1,0 +1,23 @@
+uuid: a8d9c35b-7e8a-4dfc-80c2-7e6e1eae3660
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_progress
+    - node.type.100_days_priority
+id: node.100_days_priority.field_progress
+field_name: field_progress
+entity_type: node
+bundle: 100_days_priority
+label: Progress
+description: ''
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 0
+  max: 100
+  prefix: ''
+  suffix: ''
+field_type: integer

@@ -149,3 +149,4 @@ content:
     region: content
 hidden:
   field_presidential_number: true
+  langcode: true

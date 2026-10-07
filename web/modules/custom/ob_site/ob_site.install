@@ -3484,3 +3484,35 @@ function ob_site_update_11029(): void {
     $content->set('display', $displays)->save();
   }
 }
+
+/**
+ * Reuse the Homepage heading field for the combined Official updates board.
+ */
+function ob_site_update_11030(): void {
+  $field = FieldConfig::loadByName('node', 'homepage', 'field_notices_heading');
+  if (!$field) {
+    return;
+  }
+  $field->setLabel('Official updates section heading')
+    ->setDescription('Heading above the combined public notices, announcements, news and press releases board on the homepage.')
+    ->setDefaultValue([['value' => 'Official updates']])
+    ->save();
+
+  // Update only the previous stock heading, preserving staff-written headings.
+  $homepages = \Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'homepage']);
+  foreach ($homepages as $homepage) {
+    $changed = FALSE;
+    foreach ($homepage->getTranslationLanguages() as $langcode => $language) {
+      $translation = $homepage->getTranslation($langcode);
+      if ($translation->get('field_notices_heading')->value === 'Important Public Notices') {
+        $translation->set('field_notices_heading', 'Official updates');
+        $changed = TRUE;
+      }
+    }
+    if ($changed) {
+      $homepage->setNewRevision(TRUE);
+      $homepage->setRevisionLogMessage('Use the existing heading field for the Official updates board.');
+      $homepage->save();
+    }
+  }
+}

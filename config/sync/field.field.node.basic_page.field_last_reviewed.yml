@@ -13,7 +13,7 @@ entity_type: node
 bundle: basic_page
 label: 'Last reviewed'
 description: 'Date this page was last checked for accuracy.'
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''

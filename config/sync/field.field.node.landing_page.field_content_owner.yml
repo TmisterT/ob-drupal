@@ -1,0 +1,19 @@
+uuid: e34b7987-1375-4f70-8698-ec4368789d78
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_content_owner
+    - node.type.landing_page
+id: node.landing_page.field_content_owner
+field_name: field_content_owner
+entity_type: node
+bundle: landing_page
+label: 'Content owner'
+description: ''
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

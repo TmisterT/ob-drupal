@@ -1,0 +1,28 @@
+uuid: c61ef97c-c18e-4396-86dc-01dca980078a
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_organisation
+    - node.type.publication
+    - taxonomy.vocabulary.organisation
+id: node.publication.field_organisation
+field_name: field_organisation
+entity_type: node
+bundle: publication
+label: Organisation
+description: 'Select the organisation responsible for issuing the document.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:taxonomy_term'
+  handler_settings:
+    target_bundles:
+      organisation: organisation
+    sort:
+      field: name
+      direction: ASC
+    auto_create: false
+field_type: entity_reference

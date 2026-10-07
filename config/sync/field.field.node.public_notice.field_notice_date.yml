@@ -1,0 +1,21 @@
+uuid: adeb56c0-348c-4e81-8b38-29aea2b67603
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_notice_date
+    - node.type.public_notice
+  module:
+    - datetime
+id: node.public_notice.field_notice_date
+field_name: field_notice_date
+entity_type: node
+bundle: public_notice
+label: 'Publication date'
+description: 'Date the notice is published to the public.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: datetime

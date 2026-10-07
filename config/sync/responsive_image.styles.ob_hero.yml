@@ -12,7 +12,7 @@ image_style_mappings:
   -
     image_mapping_type: sizes
     image_mapping:
-      sizes: '100vw'
+      sizes: 100vw
       sizes_image_styles:
         - ob_hero_large
         - ob_hero_medium

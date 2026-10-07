@@ -1,4 +1,4 @@
-uuid: 71000000-0000-4000-8000-000000000014
+uuid: d9201732-9d2c-436f-a57a-0e0887e58cc6
 langcode: en
 status: true
 dependencies:
@@ -11,12 +11,11 @@ id: node.service.field_application_status
 field_name: field_application_status
 entity_type: node
 bundle: service
-label: 'Availability'
+label: Availability
 description: 'Current public availability of applications or nominations.'
-required: true
+required: false
 translatable: true
 default_value: {  }
 default_value_callback: ''
-settings:
-  {  }
+settings: {  }
 field_type: list_string

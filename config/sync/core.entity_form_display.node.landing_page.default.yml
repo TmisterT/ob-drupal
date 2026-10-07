@@ -6,13 +6,25 @@ dependencies:
     - field.field.node.landing_page.body
     - field.field.node.landing_page.field_audience
     - field.field.node.landing_page.field_call_to_action
+    - field.field.node.landing_page.field_content_owner
+    - field.field.node.landing_page.field_document_version
+    - field.field.node.landing_page.field_documents
     - field.field.node.landing_page.field_featured_links
+    - field.field.node.landing_page.field_gallery_images
     - field.field.node.landing_page.field_hero_image
+    - field.field.node.landing_page.field_language
+    - field.field.node.landing_page.field_last_reviewed
+    - field.field.node.landing_page.field_publication_date
     - field.field.node.landing_page.field_summary
     - field.field.node.landing_page.field_topics
+    - field.field.node.landing_page.field_vision_period
     - node.type.landing_page
   module:
+    - datetime
+    - link
+    - media_library
     - path
+    - text
 id: node.landing_page.default
 targetEntityType: node
 bundle: landing_page
@@ -26,6 +38,7 @@ content:
       rows: 12
       summary_rows: 3
       placeholder: ''
+      show_summary: false
     third_party_settings: {  }
   created:
     type: datetime_timestamp
@@ -37,23 +50,82 @@ content:
     type: entity_reference_autocomplete_tags
     weight: 6
     region: content
-    settings: {  }
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
     third_party_settings: {  }
   field_call_to_action:
     type: link_default
     weight: 4
     region: content
-    settings: {  }
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_content_owner:
+    type: string_textfield
+    weight: 12
+    region: content
+    settings:
+      size: 60
+      placeholder: 'Office of Te Beretitenti'
+    third_party_settings: {  }
+  field_document_version:
+    type: string_textfield
+    weight: 10
+    region: content
+    settings:
+      size: 60
+      placeholder: 'First edition'
+    third_party_settings: {  }
+  field_documents:
+    type: media_library_widget
+    weight: 6
+    region: content
+    settings:
+      media_types:
+        - document
     third_party_settings: {  }
   field_featured_links:
     type: link_default
     weight: 3
     region: content
-    settings: {  }
+    settings:
+      placeholder_url: ''
+      placeholder_title: ''
+    third_party_settings: {  }
+  field_gallery_images:
+    type: media_library_widget
+    weight: 7
+    region: content
+    settings:
+      media_types:
+        - image
     third_party_settings: {  }
   field_hero_image:
     type: media_library_widget
     weight: 1
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_language:
+    type: options_select
+    weight: 11
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_last_reviewed:
+    type: datetime_default
+    weight: 13
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_publication_date:
+    type: datetime_default
+    weight: 9
     region: content
     settings: {  }
     third_party_settings: {  }
@@ -69,7 +141,26 @@ content:
     type: entity_reference_autocomplete_tags
     weight: 5
     region: content
-    settings: {  }
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  field_vision_period:
+    type: string_textfield
+    weight: 8
+    region: content
+    settings:
+      size: 60
+      placeholder: 2016-2036
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
     third_party_settings: {  }
   path:
     type: path

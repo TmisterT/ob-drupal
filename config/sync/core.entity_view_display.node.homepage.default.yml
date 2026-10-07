@@ -105,7 +105,9 @@ content:
   field_notices_heading:
     type: string
     label: hidden
-    settings: {  }
+    settings:
+      link_to_entity: false
+      link_rel: canonical
     third_party_settings: {  }
     weight: 11
     region: content
@@ -218,4 +220,5 @@ content:
     third_party_settings: {  }
     weight: 100
     region: content
-hidden: {  }
+hidden:
+  langcode: true

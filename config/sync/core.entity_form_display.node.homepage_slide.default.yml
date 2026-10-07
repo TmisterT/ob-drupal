@@ -11,7 +11,10 @@ dependencies:
     - field.field.node.homepage_slide.field_slide_weight
     - node.type.homepage_slide
   module:
+    - link
+    - media_library
     - path
+    - text
 id: node.homepage_slide.default
 targetEntityType: node
 bundle: homepage_slide
@@ -60,6 +63,13 @@ content:
     weight: 5
     region: content
     settings: {  }
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
     third_party_settings: {  }
   path:
     type: path
