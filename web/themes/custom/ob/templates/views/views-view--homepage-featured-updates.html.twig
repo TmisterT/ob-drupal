@@ -1,0 +1,5 @@
+{# Featured articles use the existing Update teaser and its media fields. #}
+<div{{ attributes.addClass('homepage-updates__view') }}>
+  {{ title_prefix }}{{ title_suffix }}
+  {% if rows %}<div class="homepage-updates__grid">{{ rows }}</div>{% endif %}
+</div>

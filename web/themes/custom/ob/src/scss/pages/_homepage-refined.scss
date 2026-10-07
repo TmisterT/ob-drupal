@@ -929,6 +929,79 @@ $ob-surface: #f3f7f8;
   .pager { margin-top: 2rem; }
 }
 
+.homepage-updates {
+  padding: 3rem 0;
+  background: $ob-surface;
+
+  &__heading {
+    display: flex;
+    margin-bottom: 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+
+    h2 {
+      margin: 0;
+      color: $ob-navy;
+      font-size: clamp(1.5rem, 3vw, 2rem);
+    }
+  }
+
+  &__links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+
+    a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      gap: 0.5rem;
+      color: $ob-blue;
+      font-weight: 600;
+      text-underline-offset: 0.2em;
+    }
+  }
+
+  &__grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr);
+    gap: 1.5rem;
+
+    > .views-row:first-child {
+      grid-row: span 2;
+    }
+
+    &:has(> .views-row:only-child) {
+      grid-template-columns: minmax(0, 1fr);
+
+      .update-card { max-width: 52rem; }
+    }
+  }
+
+  .update-card__title { font-size: 1.25rem; }
+
+  .views-row:first-child .update-card__title {
+    font-size: clamp(1.4rem, 2.5vw, 1.8rem);
+  }
+
+  .views-row:not(:first-child) .update-card__media { aspect-ratio: 16 / 7; }
+
+  a:focus-visible {
+    outline: 3px solid $ob-gold;
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 767.98px) {
+    &__grid {
+      grid-template-columns: minmax(0, 1fr);
+
+      > .views-row:first-child { grid-row: auto; }
+    }
+  }
+}
+
 .public-announcement {
   max-width: 52rem;
 }
@@ -962,6 +1035,46 @@ $ob-surface: #f3f7f8;
   margin-top: 2.5rem;
   padding-top: 1.25rem;
   border-top: 1px solid $ob-border;
+}
+
+.update-article__footer {
+  display: flex;
+  margin-top: 2.5rem;
+  padding-top: 1.25rem;
+  flex-wrap: wrap;
+  gap: 1rem;
+  border-top: 1px solid $ob-border;
+}
+
+.public-announcement__back-link,
+.update-article__back-link {
+  display: inline-flex;
+  min-height: 44px;
+  padding: 0.7rem 1.1rem;
+  align-items: center;
+  gap: 0.65rem;
+  border: 1px solid $ob-navy;
+  border-radius: 0.375rem;
+  background: #fff;
+  color: $ob-navy;
+  font-weight: 600;
+  line-height: 1.4;
+  text-decoration: none;
+
+  svg {
+    flex-shrink: 0;
+  }
+
+  &:hover {
+    background: $ob-navy;
+    color: #fff;
+    text-decoration: none;
+  }
+
+  &:focus-visible {
+    outline: 3px solid $ob-gold;
+    outline-offset: 3px;
+  }
 }
 
 .public-holiday {

@@ -1,0 +1,57 @@
+{# One board backed by existing Public Notice and News and Update content. #}
+<section class="official-board" id="official-updates" aria-labelledby="official-updates-title" data-official-board>
+  <div class="container">
+    <header class="official-board__heading">
+      <span class="official-board__eyebrow">{{ 'From the Office of Te Beretitenti'|t }}</span>
+      <h2 id="official-updates-title">{{ 'Official updates'|t }}</h2>
+      <p>{{ 'Public notices, announcements, news and press releases.'|t }}</p>
+    </header>
+    <div class="official-board__layout">
+      <div class="official-board__features">
+        {% for item in items %}
+          <article class="official-board__feature{{ item.image ? '' : ' official-board__feature--text' }}" id="official-update-{{ item.id }}" data-board-panel>
+            {% if item.image %}<div class="official-board__media">{{ item.image }}</div>{% endif %}
+            <div class="official-board__content">
+              <div class="official-board__meta">
+                {% if item.urgent %}<span class="official-board__urgent">{{ 'Urgent'|t }}</span>{% endif %}
+                <span>{{ item.category }}</span>
+                {% if item.date %}<time datetime="{{ item.datetime }}">{{ item.date }}</time>{% endif %}
+              </div>
+              <h3>{{ item.title }}</h3>
+              {% if item.summary %}<p class="official-board__summary">{{ item.summary }}</p>{% endif %}
+              {% if item.url %}<a class="official-board__read" href="{{ item.url }}">{{ item.link_label }}<span class="visually-hidden">: {{ item.title }}</span><span aria-hidden="true"> →</span></a>{% endif %}
+            </div>
+          </article>
+        {% endfor %}
+      </div>
+      <div class="official-board__side">
+        <h3 class="official-board__list-heading">{{ 'On the notice board'|t }}</h3>
+        <ul class="official-board__list">
+          {% for item in items %}
+            <li>
+              <a class="official-board__fallback" href="#official-update-{{ item.id }}" data-board-fallback>{{ item.title }}</a>
+              <button type="button" class="official-board__item" data-board-select="{{ loop.index0 }}" aria-controls="official-update-{{ item.id }}" aria-pressed="{{ loop.first ? 'true' : 'false' }}" hidden>
+                <span class="official-board__thumbnail" aria-hidden="true">
+                  {% if item.image %}{{ item.image }}{% else %}<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" focusable="false"><path d="M5 3h14v18H5zM8 7h8M8 11h8M8 15h5"/></svg>{% endif %}
+                </span>
+                <span class="official-board__item-copy">
+                  <span class="official-board__item-meta">{% if item.urgent %}<span class="official-board__urgent">{{ 'Urgent'|t }}</span>{% endif %}{{ item.category }}</span>
+                  <strong>{{ item.title }}</strong>
+                  {% if item.date %}<time datetime="{{ item.datetime }}">{{ item.date }}</time>{% endif %}
+                </span>
+              </button>
+            </li>
+          {% endfor %}
+        </ul>
+        <div class="official-board__controls" data-board-controls hidden>
+          <span><span data-board-current>1</span> / {{ items|length }}</span>
+          <div>
+            <button type="button" data-board-prev aria-label="{{ 'Previous update'|t }}">←</button>
+            <button type="button" data-board-next aria-label="{{ 'Next update'|t }}">→</button>
+          </div>
+        </div>
+        <p class="visually-hidden" data-board-status role="status" aria-live="polite" aria-atomic="true" data-status-template="{{ 'Update @current of @total: @title'|t }}"></p>
+      </div>
+    </div>
+  </div>
+</section>

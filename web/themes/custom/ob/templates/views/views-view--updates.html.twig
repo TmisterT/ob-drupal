@@ -16,7 +16,7 @@
     <div class="news-media-archive__main">
       {% if exposed %}
         <section class="news-media-archive__filters" aria-labelledby="updates-filter-heading">
-          <h2 id="updates-filter-heading">{{ 'Find a release'|t }}</h2>
+          <h2 id="updates-filter-heading">{{ view.current_display == 'news' ? 'Find news'|t : 'Find a release'|t }}</h2>
           {{ exposed }}
         </section>
       {% endif %}
@@ -24,13 +24,21 @@
       {{ attachment_before }}
 
       <div class="news-media-archive__results-heading">
-        <h2>{{ 'Latest releases'|t }}</h2>
+        <h2>{{ view.current_display == 'news' ? 'Latest news'|t : 'Latest releases'|t }}</h2>
         <span aria-live="polite">
+          {% if view.current_display == 'news' %}
+            {% trans %}
+              {{ view.total_rows }} news item
+            {% plural view.total_rows %}
+              {{ view.total_rows }} news items
+            {% endtrans %}
+          {% else %}
           {% trans %}
             {{ view.total_rows }} release
           {% plural view.total_rows %}
             {{ view.total_rows }} releases
           {% endtrans %}
+          {% endif %}
         </span>
       </div>
 

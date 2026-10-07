@@ -139,21 +139,9 @@
     </nav>
   {% endif %}
 
-  {% if public_notices %}
-    <section class="homepage-notices" aria-labelledby="homepage-notices-title">
-      <div class="container">
-        <div class="homepage-notices__heading">
-          <div>
-            <h2 id="homepage-notices-title">{{ node.field_notices_heading.value }}</h2>
-          </div>
-          <a class="homepage-notices__all" href="{{ path('view.public_notices.page_1') }}">
-            <span>{{ 'View all notices'|t }}</span>
-            <span aria-hidden="true">→</span>
-          </a>
-        </div>
-        {{ public_notices }}
-      </div>
-    </section>
+  {{ official_updates_cache }}
+  {% if official_updates %}
+    {% include '@ob/templates/content/homepage-official-updates.html.twig' with {items: official_updates} only %}
   {% endif %}
 
   {% if current_president %}

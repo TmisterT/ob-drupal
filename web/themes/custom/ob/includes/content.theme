@@ -115,6 +115,19 @@ function ob_preprocess_node(array &$variables): void {
       return $labels;
     };
     $public_date = $node->get('field_update_date')->value;
+    $variables['update_archive_links'] = [];
+    foreach ($node->get('field_update_type')->referencedEntities() as $category) {
+      $translation_cache->addCacheableDependency($category);
+      $route = match ($category->uuid()) {
+        '9dc398f9-fb5c-4891-bde4-06f2e0e08798' => ['view.updates.news', t('All news')],
+        'c976e83d-4542-4999-bddf-ac5fbed43e66' => ['view.updates.press_releases', t('All press releases')],
+        default => NULL,
+      };
+      if ($route) {
+        $variables['update_archive_links'][] = ['url' => \Drupal\Core\Url::fromRoute($route[0]), 'label' => $route[1]];
+      }
+    }
+    $translation_cache->applyTo($variables['elements']);
 
     $variables['update_details'] = [
       'summary' => $node->get('field_summary')->value,

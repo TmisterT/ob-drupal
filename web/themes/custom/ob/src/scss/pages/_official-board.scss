@@ -1,0 +1,263 @@
+.official-board {
+  padding: 3.5rem 0;
+  background: $ob-surface;
+  color: $ob-ink;
+
+  [hidden] { display: none !important; }
+
+  &__heading {
+    margin-bottom: 1.75rem;
+
+    h2 {
+      margin: 0.35rem 0 0.65rem;
+      color: $ob-navy;
+      font-size: clamp(1.8rem, 3vw, 2.4rem);
+    }
+
+    p {
+      margin: 0;
+      color: $ob-muted;
+    }
+  }
+
+  &__eyebrow {
+    color: $ob-blue;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  &__layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1.45fr) minmax(0, 1fr);
+    align-items: start;
+    gap: 1.5rem;
+  }
+
+  &__feature {
+    overflow: hidden;
+    margin-bottom: 1rem;
+    border: 1px solid $ob-border;
+    border-top: 4px solid $ob-navy;
+    border-radius: 0.5rem;
+    background: #fff;
+    scroll-margin-top: 6rem;
+  }
+
+  &__media {
+    overflow: hidden;
+    aspect-ratio: 16 / 9;
+    background: $ob-border;
+
+    .field { margin: 0; }
+
+    img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+    }
+
+    > div,
+    article,
+    .field,
+    .field__item { height: 100%; }
+  }
+
+  &__content {
+    padding: clamp(1.25rem, 3vw, 2rem);
+
+    h3 {
+      margin: 1rem 0;
+      color: $ob-navy;
+      font-size: clamp(1.4rem, 2.5vw, 1.9rem);
+      line-height: 1.3;
+      overflow-wrap: anywhere;
+    }
+  }
+
+  &__feature--text &__content { padding-block: clamp(2rem, 5vw, 3rem); }
+
+  &__meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.6rem 1rem;
+    color: $ob-muted;
+    font-size: 0.85rem;
+    font-weight: 600;
+  }
+
+  &__urgent {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    border-radius: 0.25rem;
+    background: $ob-red;
+    color: #fff;
+    font-size: 0.75rem;
+    font-weight: 700;
+  }
+
+  &__summary {
+    margin-bottom: 1.5rem;
+    color: $ob-muted;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+  }
+
+  &__read {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 0.5rem;
+    color: $ob-blue;
+    font-weight: 700;
+    text-underline-offset: 0.2em;
+  }
+
+  &__side {
+    overflow: hidden;
+    border: 1px solid $ob-border;
+    border-radius: 0.5rem;
+    background: #fff;
+  }
+
+  &__list-heading {
+    margin: 0;
+    padding: 1rem 1.25rem;
+    border-bottom: 1px solid $ob-border;
+    color: $ob-navy;
+    font-size: 1rem;
+  }
+
+  &__list {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+
+    li + li { border-top: 1px solid $ob-border; }
+  }
+
+  &__item {
+    display: flex;
+    width: 100%;
+    padding: 1rem;
+    align-items: center;
+    gap: 1rem;
+    border: 0;
+    border-left: 4px solid transparent;
+    background: #fff;
+    color: $ob-ink;
+    text-align: left;
+
+    &:hover { background: $ob-surface; }
+
+    &[aria-pressed="true"] {
+      border-left-color: $ob-gold;
+      background: $ob-navy;
+      color: #fff;
+    }
+  }
+
+  &__thumbnail {
+    display: flex;
+    overflow: hidden;
+    width: 4rem;
+    height: 4rem;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    border-radius: 0.25rem;
+    background: $ob-surface;
+    color: $ob-blue;
+
+    .field { margin: 0; }
+
+    img {
+      width: 4rem;
+      height: 4rem;
+      object-fit: cover;
+    }
+
+    svg {
+      width: 2rem;
+      height: 2rem;
+    }
+  }
+
+  &__item-copy {
+    display: grid;
+    min-width: 0;
+    gap: 0.4rem;
+
+    strong {
+      font-size: 0.95rem;
+      line-height: 1.45;
+      overflow-wrap: anywhere;
+    }
+
+    time { font-size: 0.75rem; }
+  }
+
+  &__item-meta {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  &__controls {
+    display: flex;
+    padding: 1rem;
+    align-items: center;
+    justify-content: space-between;
+    border-top: 1px solid $ob-border;
+    color: $ob-muted;
+
+    button {
+      width: 44px;
+      height: 44px;
+      border: 1px solid $ob-border;
+      border-radius: 0.25rem;
+      background: #fff;
+      color: $ob-navy;
+
+      &:hover { background: $ob-surface; }
+    }
+  }
+
+  &__archives {
+    display: flex;
+    margin-top: 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.75rem;
+
+    a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      gap: 0.5rem;
+      color: $ob-blue;
+      font-weight: 600;
+    }
+  }
+
+  &__fallback {
+    display: block;
+    padding: 1rem;
+    color: $ob-blue;
+  }
+
+  a:focus-visible,
+  button:focus-visible {
+    outline: 3px solid $ob-gold;
+    outline-offset: -3px;
+  }
+
+  @media (max-width: 767.98px) {
+    padding: 2.5rem 0;
+
+    &__layout { grid-template-columns: minmax(0, 1fr); }
+  }
+}

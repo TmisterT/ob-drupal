@@ -8,6 +8,7 @@ dependencies:
     - taxonomy.vocabulary.topics
     - taxonomy.vocabulary.update_type
   content:
+    - 'taxonomy_term:update_type:9dc398f9-fb5c-4891-bde4-06f2e0e08798'
     - 'taxonomy_term:update_type:c976e83d-4542-4999-bddf-ac5fbed43e66'
   module:
     - datetime
@@ -319,3 +320,148 @@ display:
         - 'user.node_grants:view'
         - user.permissions
       tags: {  }
+  news:
+    id: news
+    display_title: News
+    display_plugin: page
+    position: 2
+    display_options:
+      title: News
+      defaults:
+        title: false
+        filters: false
+        header: false
+      header: {}
+      display_extenders: {}
+      path: news-media/news
+      menu:
+        type: none
+        title: ''
+        description: ''
+        weight: 0
+        expanded: false
+        menu_name: main
+        parent: ''
+      filters:
+        status:
+          id: status
+          table: node_field_data
+          field: status
+          entity_type: node
+          entity_field: status
+          plugin_id: boolean
+          operator: '='
+          value: '1'
+          group: 1
+          exposed: false
+        type:
+          id: type
+          table: node_field_data
+          field: type
+          entity_type: node
+          entity_field: type
+          plugin_id: bundle
+          operator: in
+          value:
+            update: update
+          group: 1
+          exposed: false
+        field_update_type_target_id:
+          id: field_update_type_target_id
+          table: node__field_update_type
+          field: field_update_type_target_id
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value:
+          - 1
+          group: 1
+          exposed: false
+          vid: update_type
+          type: select
+          hierarchy: false
+          reduce_duplicates: true
+        title:
+          id: title
+          table: node_field_data
+          field: title
+          entity_type: node
+          entity_field: title
+          plugin_id: string
+          operator: contains
+          value: ''
+          group: 1
+          exposed: true
+          expose:
+            operator_id: title_op
+            label: Search news
+            description: ''
+            use_operator: false
+            operator: title_op
+            identifier: search
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {}
+            group_items: {}
+        field_topics_target_id:
+          id: field_topics_target_id
+          table: node__field_topics
+          field: field_topics_target_id
+          plugin_id: taxonomy_index_tid
+          operator: or
+          value: {}
+          group: 1
+          exposed: true
+          expose:
+            operator_id: topics_op
+            label: Topic
+            description: ''
+            use_operator: false
+            operator: topics_op
+            identifier: topic
+            required: false
+            remember: false
+            multiple: false
+            remember_roles:
+              authenticated: authenticated
+            reduce: false
+          is_grouped: false
+          group_info:
+            label: ''
+            description: ''
+            identifier: ''
+            optional: true
+            widget: select
+            multiple: false
+            remember: false
+            default_group: All
+            default_group_multiple: {}
+            group_items: {}
+          reduce_duplicates: false
+          vid: topics
+          type: select
+          hierarchy: false
+          limit: true
+          error_message: true
+    cache_metadata:
+      max-age: -1
+      contexts:
+      - languages:language_interface
+      - url
+      - url.query_args
+      - user.node_grants:view
+      - user.permissions
+      tags: {}

@@ -30,6 +30,7 @@ require_once __DIR__ . '/includes/service.install.inc';
  * Implements hook_install().
  */
 function ob_site_install(): void {
+  ob_site_configure_login_flood_protection();
   if (!NodeType::load('homepage')) {
     NodeType::create([
       'type' => 'homepage',
@@ -3407,4 +3408,79 @@ function ob_site_update_11025(): void {
  */
 function ob_site_update_11026(): void {
   ob_site_migrate_honours_awards_content();
+}
+
+/**
+ * Configure Drupal core's failed-login protection for staff accounts.
+ */
+function ob_site_configure_login_flood_protection(): void {
+  \Drupal::configFactory()->getEditable('user.flood')
+    // Keep account limits scoped to an IP to avoid global account lockouts.
+    ->set('uid_only', FALSE)
+    ->set('ip_limit', 20)
+    ->set('ip_window', 3600)
+    ->set('user_limit', 5)
+    ->set('user_window', 21600)
+    ->save();
+}
+
+/**
+ * Tighten failed-login limits without importing unrelated site configuration.
+ */
+function ob_site_update_11027(): void {
+  ob_site_configure_login_flood_protection();
+}
+
+/**
+ * Connect featured updates to the homepage and add the News archive.
+ */
+function ob_site_update_11028(): void {
+  $directory = DRUPAL_ROOT . '/../config/sync/';
+  $featured = \Symfony\Component\Yaml\Yaml::parseFile($directory . 'views.view.homepage_featured_updates.yml');
+  $view = View::load('homepage_featured_updates');
+  if (!$view) {
+    View::create($featured)->save();
+  }
+
+  // Add the new display without overwriting the existing release archive.
+  $updates = View::load('updates');
+  if ($updates) {
+    $configuration = \Symfony\Component\Yaml\Yaml::parseFile($directory . 'views.view.updates.yml');
+    $displays = $updates->get('display');
+    if (!isset($displays['news'])) {
+      $displays['news'] = $configuration['display']['news'];
+      $updates->set('display', $displays)->save();
+    }
+  }
+
+  FieldConfig::loadByName('node', 'update', 'field_featured')
+    ?->setDescription('Show published News and Press release items in the homepage highlights. The three newest selected items appear, ordered by publication date.')
+    ->save();
+}
+
+/**
+ * Add News search and topic filters and feature controls to Admin Content.
+ */
+function ob_site_update_11029(): void {
+  $directory = DRUPAL_ROOT . '/../config/sync/';
+  $updates = View::load('updates');
+  if ($updates) {
+    $configuration = \Symfony\Component\Yaml\Yaml::parseFile($directory . 'views.view.updates.yml');
+    $displays = $updates->get('display');
+    $displays['news']['display_options']['filters'] = $configuration['display']['news']['display_options']['filters'];
+    $displays['news']['display_options']['defaults']['filters'] = FALSE;
+    $updates->set('display', $displays)->save();
+  }
+  $content = View::load('content');
+  if ($content) {
+    $configuration = \Symfony\Component\Yaml\Yaml::parseFile($directory . 'views.view.content.yml');
+    $options = $configuration['display']['default']['display_options'];
+    $displays = $content->get('display');
+    $default = &$displays['default']['display_options'];
+    $default['fields']['field_featured'] = $options['fields']['field_featured'];
+    $default['filters']['field_featured_value'] = $options['filters']['field_featured_value'];
+    $default['style']['options']['columns']['field_featured'] = 'field_featured';
+    $default['style']['options']['info']['field_featured'] = $options['style']['options']['info']['field_featured'];
+    $content->set('display', $displays)->save();
+  }
 }

@@ -2,6 +2,8 @@ uuid: 0246148b-477d-4de2-b1d8-0c63dbc6fd4a
 langcode: en
 status: true
 dependencies:
+  config:
+    - field.storage.node.field_featured
   module:
     - node
     - user
@@ -262,6 +264,23 @@ display:
           multi_type: separator
           separator: ', '
           field_api_classes: false
+        field_featured:
+          id: field_featured
+          table: node__field_featured
+          field: field_featured
+          entity_type: node
+          entity_field: field_featured
+          plugin_id: field
+          label: Featured on homepage
+          exclude: false
+          type: boolean
+          settings:
+            format: yes-no
+            format_custom_false: ''
+            format_custom_true: ''
+          empty: "\u2014"
+          hide_empty: false
+          click_sort_column: value
         operations:
           id: operations
           table: node
@@ -531,6 +550,27 @@ display:
           expose:
             operator_limit_selection: false
             operator_list: {  }
+        field_featured_value:
+          id: field_featured_value
+          table: node__field_featured
+          field: field_featured_value
+          plugin_id: boolean
+          operator: '='
+          value: All
+          group: 1
+          exposed: true
+          expose:
+            operator_id: featured_op
+            label: Featured on homepage
+            description: Filter by the saved feature selection. Homepage news highlights require
+              a published News or Press release.
+            use_operator: false
+            operator: featured_op
+            identifier: featured
+            required: false
+            remember: false
+            multiple: false
+          is_grouped: false
       filter_groups:
         operator: AND
         groups:
@@ -542,6 +582,7 @@ display:
           row_class: ''
           default_row_class: true
           columns:
+            field_featured: field_featured
             node_bulk_form: node_bulk_form
             title: title
             type: type
@@ -554,6 +595,13 @@ display:
             timestamp: title
           default: changed
           info:
+            field_featured:
+              sortable: true
+              default_sort_order: desc
+              align: ''
+              separator: ''
+              empty_column: false
+              responsive: ''
             node_bulk_form:
               align: ''
               separator: ''

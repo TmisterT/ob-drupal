@@ -60,4 +60,14 @@
   {% endif %}
 
   {{ content|without('field_summary', 'field_featured_image', 'field_update_type', 'field_update_date', 'field_topics', 'field_content_owner', 'field_last_reviewed', 'field_featured', 'field_release_documents', 'body', 'links') }}
+  {% if update_archive_links %}
+    <nav class="update-article__footer" aria-label="{{ 'Return to article archives'|t }}">
+      {% for link in update_archive_links %}
+        <a class="update-article__back-link" href="{{ link.url }}">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><path d="m12 19-7-7 7-7M5 12h14" /></svg>
+          <span>{{ link.label }}</span>
+        </a>
+      {% endfor %}
+    </nav>
+  {% endif %}
 </article>

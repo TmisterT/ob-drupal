@@ -1,6 +1,7 @@
 // * Bootstrap libraries
 import './_bootstrap';
 import './_homepage-search';
+import './_official-board';
 
 // * Any other global site-wide JavaScript should be placed below.
 

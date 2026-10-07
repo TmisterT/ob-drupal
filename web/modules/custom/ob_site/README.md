@@ -2,6 +2,42 @@
 
 The `ob_site` module owns Drupal site structure. The `ob` Radix subtheme owns presentation.
 
+## Login flood protection
+
+Drupal core enforces failed-login limits; no extra module is required. The OB
+policy allows 20 failed attempts per IP within one hour and five failed attempts
+per account/IP combination within six hours. Subsequent login attempts are
+temporarily rejected, including attempts with a correct password while blocked.
+Public page browsing is unaffected. These limits are not protection against
+general HTTP floods or denial-of-service traffic.
+
+Fresh module installations apply the policy automatically. Existing sites apply
+it through update hook `ob_site_update_11027`. From the project root:
+
+```bash
+ddev drush updatedb -y
+ddev drush config:get user.flood
+```
+
+`updatedb` runs all pending updates, so review pending updates on staging before
+production deployment. Outside DDEV, use `vendor/bin/drush` instead.
+The same policy is exported in `config/sync/user.flood.yml`.
+
+Account limits remain scoped to the account/IP combination (`uid_only: false`)
+to avoid letting an attacker lock a staff account out globally. IP rotation can
+bypass that account scope; MFA and upstream rate limiting remain complementary
+protections. Staff sharing an office IP also share the IP limit.
+
+Inspect blocked-login messages in Drupal's recent log messages. Let the window
+expire, or use a trusted operator's Drush access to clear only the affected
+identifier through the `user.flood_control` service. Do not truncate the flood
+table or disable flood protection to recover a single login.
+
+Behind a reverse proxy, configure only the actual trusted proxy addresses and
+headers in server-specific settings so Drupal sees the real client IP. Do not
+trust arbitrary forwarded headers. Never test failures against a real staff
+account: use an isolated test account and IP and clean up its flood records.
+
 ## Editorial ownership
 
 - Homepage-specific content: edit the Homepage node, including hero, search text, quick links, and public information panels.
@@ -98,4 +134,3 @@ After changing theme SCSS or JavaScript, run:
 npm run build
 ddev drush cr
 ```
-

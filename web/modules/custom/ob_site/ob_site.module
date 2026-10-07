@@ -19,47 +19,97 @@ function ob_site_preprocess_node(array &$variables): void {
     $variables['homepage_slider'] = $view->render();
   }
 
-  $notice_storage = \Drupal::entityTypeManager()->getStorage('node');
-  $today = \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime(), 'custom', 'Y-m-d');
-  $query = $notice_storage->getQuery()
-    ->accessCheck(TRUE)
-    ->condition('type', 'public_notice')
-    ->condition('status', 1);
-  $active_expiry = $query->orConditionGroup()
-    ->notExists('field_notice_expiry')
-    ->condition('field_notice_expiry.value', $today, '>=');
-  $notice_ids = $query
-    ->condition($active_expiry)
-    ->sort('field_notice_urgent.value', 'DESC')
-    ->sort('field_notice_date.value', 'DESC')
-    ->range(0, 3)
-    ->execute();
-  if ($notice_ids) {
-    $notices = $notice_storage->loadMultiple($notice_ids);
-    $notice_items = [];
-    $view_builder = \Drupal::entityTypeManager()->getViewBuilder('node');
-    foreach ($notice_ids as $notice_id) {
-      if (isset($notices[$notice_id])) {
-        $notice_items[] = $view_builder->view($notices[$notice_id], 'homepage_notice');
-      }
-    }
-    $variables['public_notices'] = [
-      '#type' => 'container',
-      '#attributes' => ['class' => ['homepage-notices__list']],
-      'items' => $notice_items,
-      '#cache' => [
-        'tags' => ['node_list:public_notice'],
-        'contexts' => ['user.permissions'],
-        'max-age' => 3600,
-      ],
-    ];
-  }
-
+  $board = ob_site_official_updates();
+  $variables['official_updates'] = $board['items'];
+  $variables['official_updates_cache'] = ['#markup' => ''];
+  $board['cache']->applyTo($variables['official_updates_cache']);
+  $board['cache']->applyTo($variables['elements']);
   $president_view = Views::getView('current_president');
+
   if ($president_view) {
     $president_view->setDisplay('block_1');
     $variables['current_president'] = $president_view->render();
   }
+}
+
+/**
+ * Combines active notices with the existing featured News/Press release View.
+ */
+function ob_site_official_updates(): array {
+  $cache = (new \Drupal\Core\Cache\CacheableMetadata())
+    ->addCacheTags(['node_list:public_notice', 'node_list:update', 'config:views.view.homepage_featured_updates'])
+    ->addCacheContexts(['user.permissions', 'user.node_grants:view', 'languages:language_content', 'languages:language_interface', 'timezone'])
+    ->setCacheMaxAge(3600);
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  $today = \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime(), 'custom', 'Y-m-d');
+  $timezone = new \DateTimeZone(date_default_timezone_get());
+  $midnight = (new \DateTimeImmutable($today, $timezone))->modify('+1 day')->getTimestamp();
+  $cache->addCacheTags(['config:system.date']);
+  $cache->setCacheMaxAge(min(3600, max(1, $midnight - \Drupal::time()->getRequestTime())));
+  $query = $storage->getQuery()->accessCheck(TRUE)->condition('type', 'public_notice')->condition('status', 1);
+  $expiry = $query->orConditionGroup()->notExists('field_notice_expiry')->condition('field_notice_expiry.value', $today, '>=');
+  $ids = $query->condition($expiry)->sort('field_notice_urgent.value', 'DESC')->sort('field_notice_date.value', 'DESC')->sort('nid', 'DESC')->range(0, 3)->execute();
+  $nodes = array_values($storage->loadMultiple($ids));
+  $view = Views::getView('homepage_featured_updates');
+  if ($view) {
+    $cache->addCacheableDependency($view->storage);
+    $view->setDisplay('block_1');
+    $view->execute();
+    foreach ($view->result as $row) {
+      if ($row->_entity) {
+        $nodes[] = $row->_entity;
+      }
+    }
+  }
+  $items = [];
+  foreach ($nodes as $node) {
+    $node = \Drupal::service('entity.repository')->getTranslationFromContext($node);
+    $access = $node->access('view', NULL, TRUE);
+    $cache->addCacheableDependency($node)->addCacheableDependency($access);
+    if (!$node->isPublished() || !$access->isAllowed()) {
+      continue;
+    }
+    $notice = $node->bundle() === 'public_notice';
+    $categories = [];
+    $detail = !$notice;
+    foreach ($node->get($notice ? 'field_notice_category' : 'field_update_type')->referencedEntities() as $category) {
+      $category_key = strtolower(trim($category->getUntranslated()->label()));
+      $category = \Drupal::service('entity.repository')->getTranslationFromContext($category);
+      $cache->addCacheableDependency($category);
+      $categories[] = $category->label();
+      if (in_array($category_key, ['announcement', 'announcements', 'public holiday', 'public holidays'], TRUE)) {
+        $detail = TRUE;
+      }
+    }
+    $url = $detail ? $node->toUrl() : NULL;
+    if ($notice && !$detail && !$node->get('field_notice_link')->isEmpty()) {
+      $url = $node->get('field_notice_link')->first()->getUrl();
+    }
+    $image = NULL;
+    if (!$notice && !$node->get('field_featured_image')->isEmpty()) {
+      $media = $node->get('field_featured_image')->entity;
+      if ($media) {
+        $media_access = $media->access('view', NULL, TRUE);
+        $cache->addCacheableDependency($media)->addCacheableDependency($media_access);
+        if ($media_access->isAllowed()) {
+          $image = $node->get('field_featured_image')->view(['label' => 'hidden', 'type' => 'entity_reference_entity_view', 'settings' => ['view_mode' => 'default', 'link' => FALSE]]);
+        }
+      }
+    }
+    $date = $node->get($notice ? 'field_notice_date' : 'field_update_date')->value;
+    $items[] = [
+      'id' => $node->id(), 'title' => $node->label(),
+      'summary' => $node->get($notice ? 'field_notice_summary' : 'field_summary')->value,
+      'category' => implode(', ', $categories) ?: ($notice ? t('Public notice') : t('News / Press release')),
+      'datetime' => $date,
+      'date' => $date ? \Drupal::service('date.formatter')->format(strtotime($date), 'custom', 'j F Y') : NULL,
+      'urgent' => $notice && (bool) $node->get('field_notice_urgent')->value,
+      'image' => $image, 'url' => $url,
+      'link_label' => $notice && !$detail ? t('View related information') : t('Read more'),
+    ];
+  }
+  usort($items, static fn(array $a, array $b): int => ($b['urgent'] <=> $a['urgent']) ?: strcmp($b['datetime'] ?? '', $a['datetime'] ?? '') ?: ((int) $b['id'] <=> (int) $a['id']));
+  return ['items' => $items, 'cache' => $cache];
 }
 
 require_once __DIR__ . '/includes/bilingual.module.inc';
