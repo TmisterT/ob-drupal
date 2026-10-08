@@ -3516,3 +3516,14 @@ function ob_site_update_11030(): void {
     }
   }
 }
+
+/**
+ * Use the existing Kiribati coat of arms as the public theme favicon.
+ */
+function ob_site_update_11031(): void {
+  \Drupal::configFactory()->getEditable('ob.settings')
+    ->set('favicon.use_default', FALSE)
+    ->set('favicon.path', 'themes/custom/ob/favicon.png')
+    ->set('favicon.mimetype', 'image/png')
+    ->save();
+}
