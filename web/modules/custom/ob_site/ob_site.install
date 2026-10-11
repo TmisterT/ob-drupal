@@ -1396,6 +1396,7 @@ function ob_site_ensure_public_notices(): void {
   $view_display->save();
   $homepage_display->save();
   $teaser_display->save();
+  ob_site_ensure_public_notice_media();
 
   if (!View::load('public_notices')) {
     View::create([
@@ -1609,7 +1610,7 @@ function ob_site_ensure_homepage_slider(): void {
     ],
     'field_slide_image' => [
       'label' => 'Slide image',
-      'description' => 'Use a 1600 × 720 landscape image with meaningful alternative text.',
+      'description' => 'Recommended: 2500 × 800 pixels (25:8 landscape banner). Keep faces and important details near the centre with space above heads. Smaller screens crop the sides. Include meaningful alternative text.',
       'required' => FALSE,
       'settings' => $media_settings,
       'widget' => 'media_library_widget',
@@ -3137,7 +3138,7 @@ function ob_site_place_block(string $id, string $plugin, string $region, int $we
  */
 function ob_site_ensure_image_styles(): void {
   $styles = [
-    'ob_hero_large' => ['OB hero large', 1600, 720],
+    'ob_hero_large' => ['OB hero large', 2500, 800],
     'ob_hero_medium' => ['OB hero medium', 960, 600],
     'ob_hero_small' => ['OB hero small', 640, 640],
     'ob_card' => ['OB content card', 720, 480],
@@ -3149,11 +3150,11 @@ function ob_site_ensure_image_styles(): void {
     if (!ImageStyle::load($id)) {
       $style = ImageStyle::create(['name' => $id, 'label' => $label]);
       $style->addImageEffect([
-        'id' => 'image_scale_and_crop',
+        'id' => str_starts_with($id, 'ob_hero_') ? 'image_scale' : 'image_scale_and_crop',
         'weight' => 0,
         'data' => [
           'width' => $width,
-          'height' => $height,
+          'height' => str_starts_with($id, 'ob_hero_') ? NULL : $height,
           'anchor' => 'center-center',
         ],
       ]);
@@ -3526,4 +3527,90 @@ function ob_site_update_11031(): void {
     ->set('favicon.path', 'themes/custom/ob/favicon.png')
     ->set('favicon.mimetype', 'image/png')
     ->save();
+}
+
+/**
+ * Remove taxonomy-only options from the update title-search filters.
+ */
+function ob_site_update_11032(): void {
+  $view = View::load('updates');
+  if (!$view) {
+    return;
+  }
+  $displays = $view->get('display');
+  foreach ($displays as &$display) {
+    unset($display['display_options']['filters']['title']['expose']['reduce']);
+  }
+  unset($display);
+  $view->set('display', $displays)->save();
+}
+
+/**
+ * Resolve the front page to its internal path for every URL language.
+ */
+function ob_site_update_11033(): void {
+  $config = \Drupal::configFactory()->getEditable('system.site');
+  $front = $config->get('page.front');
+  if (!$front) {
+    return;
+  }
+  $language = \Drupal::languageManager()->getDefaultLanguage()->getId();
+  $path = \Drupal::service('path_alias.manager')->getPathByAlias($front, $language);
+  if ($path !== $front) {
+    $config->set('page.front', $path)->save();
+  }
+}
+
+/**
+ * Add optional media to the existing Public Notice editing workflow.
+ */
+function ob_site_ensure_public_notice_media(): void {
+  $directory = DRUPAL_ROOT . '/../config/sync/';
+  foreach (['field_featured_image', 'field_documents'] as $name) {
+    if (!FieldStorageConfig::loadByName('node', $name)) {
+      FieldStorageConfig::create(\Symfony\Component\Yaml\Yaml::parseFile($directory . "field.storage.node.$name.yml"))->save();
+    }
+    if (!FieldConfig::loadByName('node', 'public_notice', $name)) {
+      FieldConfig::create(\Symfony\Component\Yaml\Yaml::parseFile($directory . "field.field.node.public_notice.$name.yml"))->save();
+    }
+  }
+  $form = EntityFormDisplay::load('node.public_notice.default');
+  $view = EntityViewDisplay::load('node.public_notice.default');
+  foreach (['field_featured_image' => 7, 'field_documents' => 8] as $name => $weight) {
+    $form?->setComponent($name, ['type' => 'media_library_widget', 'weight' => $weight, 'settings' => ['media_types' => []]]);
+    $view?->setComponent($name, ['type' => 'entity_reference_entity_view', 'label' => $name === 'field_documents' ? 'above' : 'hidden', 'weight' => $weight, 'settings' => ['view_mode' => 'default', 'link' => FALSE]]);
+  }
+  $form?->save();
+  $view?->save();
+}
+
+/**
+ * Enable Public Notice images and PDF documents without changing content.
+ */
+function ob_site_update_11034(): void {
+  ob_site_ensure_public_notice_media();
+}
+
+/**
+ * Standardize homepage slide guidance and preserve source image proportions.
+ */
+function ob_site_update_11035(): void {
+  $directory = DRUPAL_ROOT . '/../config/sync/';
+  $field = FieldConfig::loadByName('node', 'homepage_slide', 'field_slide_image');
+  $configuration = \Symfony\Component\Yaml\Yaml::parseFile($directory . 'field.field.node.homepage_slide.field_slide_image.yml');
+  $field?->setDescription($configuration['description'])->save();
+  foreach (['ob_hero_large', 'ob_hero_medium', 'ob_hero_small'] as $name) {
+    $configuration = \Symfony\Component\Yaml\Yaml::parseFile($directory . "image.style.$name.yml");
+    $style = ImageStyle::load($name);
+    if ($style) {
+      foreach ($style->getEffects() as $effect) {
+        $style->deleteImageEffect($effect);
+      }
+      foreach ($configuration['effects'] as $effect) {
+        $style->addImageEffect($effect);
+      }
+      $style->save();
+      $style->flush();
+    }
+  }
 }

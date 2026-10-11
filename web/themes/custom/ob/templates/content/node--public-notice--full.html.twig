@@ -10,7 +10,9 @@
     </div>
     <div class="content-page__lead">{{ content.field_notice_summary }}</div>
   </header>
+  {{ content.field_featured_image }}
   <div class="content-page__body">{{ content.body }}</div>
+  {{ content.field_documents }}
   {% if notice_link %}
     <div class="content-page__action"><a href="{{ notice_link.url }}">{{ notice_link.title }}</a></div>
   {% endif %}

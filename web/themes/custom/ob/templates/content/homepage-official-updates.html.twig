@@ -10,7 +10,7 @@
       <div class="official-board__features">
         {% for item in items %}
           <article class="official-board__feature{{ item.image ? '' : ' official-board__feature--text' }}" id="official-update-{{ item.id }}" data-board-panel>
-            {% if item.image %}<div class="official-board__media">{{ item.image }}</div>{% endif %}
+            {% if item.image %}<div class="official-board__media{{ item.notice ? ' official-board__media--notice' : '' }}">{{ item.image }}</div>{% endif %}
             <div class="official-board__content">
               <div class="official-board__meta">
                 {% if item.urgent %}<span class="official-board__urgent">{{ 'Urgent'|t }}</span>{% endif %}
@@ -19,6 +19,7 @@
               </div>
               <h3>{{ item.title }}</h3>
               {% if item.summary %}<p class="official-board__summary">{{ item.summary }}</p>{% endif %}
+              {% if item.documents %}<div class="official-board__documents">{{ item.documents }}</div>{% endif %}
               {% if item.url %}<a class="official-board__read" href="{{ item.url }}">{{ item.link_label }}<span class="visually-hidden">: {{ item.title }}</span><span aria-hidden="true"> →</span></a>{% endif %}
             </div>
           </article>

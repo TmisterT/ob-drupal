@@ -30,7 +30,9 @@ Existing articles and their English URLs are preserved.
 
 - Article pages show **Read in: English / Kiribati** for published versions.
 - Archive rows and update cards show the available published language links.
-- Kiribati article URLs use `/gil/`; English retains its existing paths.
+- Kiribati press release URLs use `/gil/`; English retains its existing paths.
+  Home, shared pages, news and archive navigation retain the default-language
+  URLs, including when browsing a Kiribati press release.
 - Press release archive rows use the requested published translation, falling
   back to another published language when needed. Each release appears once.
 - Archive searches match either published title; drafts are not searchable.

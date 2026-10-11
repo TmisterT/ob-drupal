@@ -1,0 +1,9 @@
+#!/usr/bin/env bash
+## Description: Run OB Site functional tests in the separate ob_site_tests database.
+## Usage: test-ob-site
+## Example: "ddev test-ob-site"
+set -euo pipefail
+cd /var/www/html
+mysql --host=db --user=root --password=root --execute="CREATE DATABASE IF NOT EXISTS ob_site_tests; GRANT ALL PRIVILEGES ON ob_site_tests.* TO 'db'@'%';"
+mkdir -p web/sites/simpletest/browser_output
+exec vendor/bin/phpunit -c phpunit.ob-site.xml "$@"

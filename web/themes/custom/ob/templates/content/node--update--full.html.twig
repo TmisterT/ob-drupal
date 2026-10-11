@@ -1,4 +1,6 @@
 {# Full article shared by Press releases, News, and future update types. #}
+{% set has_image = not node.field_featured_image.isEmpty %}
+{% set has_details = update_details.topics or update_details.content_owner or update_details.last_reviewed %}
 <article{{ attributes.addClass('update-article') }}>
   {{ title_prefix }}
   {{ title_suffix }}
@@ -19,45 +21,49 @@
     {% endif %}
   </header>
 
-  {% if not node.field_featured_image.isEmpty %}
-    <figure class="update-article__media">{{ content.field_featured_image }}</figure>
-  {% endif %}
+  <div class="update-article__layout{{ has_image or has_details ? '' : ' update-article__layout--single' }}">
+    <div class="update-article__main">
+      <div class="update-article__body">{{ content.body }}</div>
+      {% if node.hasField('field_release_documents') and not node.field_release_documents.isEmpty %}
+        <section class="update-article__documents" aria-labelledby="release-documents-heading">
+          <h2 id="release-documents-heading">{{ 'Release documents'|t }}</h2>
+          {{ content.field_release_documents }}
+        </section>
+      {% endif %}
+    </div>
 
-  <div class="update-article__layout">
-    <div class="update-article__body">{{ content.body }}</div>
-
-    {% if update_details.topics or update_details.content_owner or update_details.last_reviewed %}
-      <aside class="update-article__details" aria-label="{{ 'Article information'|t }}">
-        {% if update_details.topics %}
-          <div class="update-article__detail">
-            <h2>{{ 'Topics'|t }}</h2>
-            <ul>
-              {% for topic in update_details.topics %}<li>{{ topic }}</li>{% endfor %}
-            </ul>
-          </div>
+    {% if has_image or has_details %}
+      <aside class="update-article__sidebar" aria-label="{{ 'Article information'|t }}">
+        {% if has_image %}
+          <figure class="update-article__media">{{ content.field_featured_image }}</figure>
         {% endif %}
-        {% if update_details.content_owner %}
-          <div class="update-article__detail">
-            <h2>{{ 'Content owner'|t }}</h2>
-            <p>{{ update_details.content_owner }}</p>
-          </div>
-        {% endif %}
-        {% if update_details.last_reviewed %}
-          <div class="update-article__detail">
-            <h2>{{ 'Last reviewed'|t }}</h2>
-            <p>{{ update_details.last_reviewed }}</p>
+        {% if has_details %}
+          <div class="update-article__details">
+            {% if update_details.topics %}
+              <div class="update-article__detail">
+                <h2>{{ 'Topics'|t }}</h2>
+                <ul>
+                  {% for topic in update_details.topics %}<li>{{ topic }}</li>{% endfor %}
+                </ul>
+              </div>
+            {% endif %}
+            {% if update_details.content_owner %}
+              <div class="update-article__detail">
+                <h2>{{ 'Content owner'|t }}</h2>
+                <p>{{ update_details.content_owner }}</p>
+              </div>
+            {% endif %}
+            {% if update_details.last_reviewed %}
+              <div class="update-article__detail">
+                <h2>{{ 'Last reviewed'|t }}</h2>
+                <p>{{ update_details.last_reviewed }}</p>
+              </div>
+            {% endif %}
           </div>
         {% endif %}
       </aside>
     {% endif %}
   </div>
-
-  {% if node.hasField('field_release_documents') and not node.field_release_documents.isEmpty %}
-    <section class="update-article__documents" aria-labelledby="release-documents-heading">
-      <h2 id="release-documents-heading">{{ 'Release documents'|t }}</h2>
-      {{ content.field_release_documents }}
-    </section>
-  {% endif %}
 
   {{ content|without('field_summary', 'field_featured_image', 'field_update_type', 'field_update_date', 'field_topics', 'field_content_owner', 'field_last_reviewed', 'field_featured', 'field_release_documents', 'body', 'links') }}
   {% if update_archive_links %}

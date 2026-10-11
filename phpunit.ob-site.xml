@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="web/core/tests/bootstrap.php" colors="true" cacheResult="false" failOnWarning="true" failOnRisky="true">
+  <php>
+    <ini name="memory_limit" value="-1"/>
+    <env name="SIMPLETEST_BASE_URL" value="http://localhost" force="true"/>
+    <env name="SIMPLETEST_DB" value="mysql://db:db@db/ob_site_tests" force="true"/>
+    <env name="BROWSERTEST_OUTPUT_DIRECTORY" value="/var/www/html/web/sites/simpletest/browser_output" force="true"/>
+  </php>
+  <testsuites>
+    <testsuite name="OB Site functional">
+      <directory>web/modules/custom/ob_site/tests/src/Functional</directory>
+    </testsuite>
+  </testsuites>
+</phpunit>

@@ -4,6 +4,8 @@ status: true
 dependencies:
   config:
     - field.field.node.public_notice.body
+    - field.field.node.public_notice.field_documents
+    - field.field.node.public_notice.field_featured_image
     - field.field.node.public_notice.field_notice_category
     - field.field.node.public_notice.field_notice_date
     - field.field.node.public_notice.field_notice_expiry
@@ -14,6 +16,7 @@ dependencies:
   module:
     - datetime
     - link
+    - media_library
     - path
     - text
 id: node.public_notice.default
@@ -35,6 +38,20 @@ content:
     weight: 10
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_documents:
+    type: media_library_widget
+    weight: 8
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_featured_image:
+    type: media_library_widget
+    weight: 7
+    region: content
+    settings:
+      media_types: {  }
     third_party_settings: {  }
   field_notice_category:
     type: options_select

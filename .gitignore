@@ -1,0 +1,12 @@
+# Drupal runtime caches. Keep uploaded images/documents and theme builds tracked.
+/web/sites/default/files/php/twig/
+/web/sites/default/files/css/
+/web/sites/default/files/js/
+
+# Isolated Drupal functional-test sites and browser output.
+/web/sites/simpletest/
+/.phpunit.cache/
+
+# Composer-installed packages (including development test tools).
+# Existing tracked package files are unaffected by this ignore rule.
+/vendor/

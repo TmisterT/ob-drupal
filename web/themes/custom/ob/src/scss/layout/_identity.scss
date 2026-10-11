@@ -55,6 +55,7 @@ $identity-muted: #526977;
 @media (min-width: 1200px) and (max-width: 1399.98px) {
   .ob-site .identity-bar__inner {
     min-height: 92px;
+    column-gap: 1.5rem;
   }
 
   .ob-site .site-identity {
@@ -74,6 +75,12 @@ $identity-muted: #526977;
   .ob-site .site-identity__government,
   .ob-site .site-identity__slogan {
     font-size: 0.62rem;
+  }
+}
+
+@media (min-width: 1400px) {
+  .ob-site .identity-bar__inner {
+    column-gap: 3rem;
   }
 }
 

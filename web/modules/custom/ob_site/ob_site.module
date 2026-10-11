@@ -62,8 +62,23 @@ function ob_site_official_updates(): array {
     }
   }
   $items = [];
+  $seen = [];
   foreach ($nodes as $node) {
+    if (isset($seen[$node->id()])) {
+      continue;
+    }
+    $seen[$node->id()] = TRUE;
     $node = \Drupal::service('entity.repository')->getTranslationFromContext($node);
+    if ($node->bundle() === 'update' && (!$node->isPublished() || !$node->access('view'))) {
+      // Prefer the page language, then an available published translation.
+      foreach ($node->getUntranslated()->getTranslationLanguages() as $language) {
+        $translation = $node->getTranslation($language->getId());
+        if ($translation->isPublished() && $translation->access('view')) {
+          $node = $translation;
+          break;
+        }
+      }
+    }
     $access = $node->access('view', NULL, TRUE);
     $cache->addCacheableDependency($node)->addCacheableDependency($access);
     if (!$node->isPublished() || !$access->isAllowed()) {
@@ -86,7 +101,7 @@ function ob_site_official_updates(): array {
       $url = $node->get('field_notice_link')->first()->getUrl();
     }
     $image = NULL;
-    if (!$notice && !$node->get('field_featured_image')->isEmpty()) {
+    if ($node->hasField('field_featured_image') && !$node->get('field_featured_image')->isEmpty()) {
       $media = $node->get('field_featured_image')->entity;
       if ($media) {
         $media_access = $media->access('view', NULL, TRUE);
@@ -97,6 +112,16 @@ function ob_site_official_updates(): array {
       }
     }
     $date = $node->get($notice ? 'field_notice_date' : 'field_update_date')->value;
+    $documents = [];
+    if ($notice && $node->hasField('field_documents')) {
+      foreach ($node->get('field_documents')->referencedEntities() as $media) {
+        $media_access = $media->access('view', NULL, TRUE);
+        $cache->addCacheableDependency($media)->addCacheableDependency($media_access);
+        if ($media_access->isAllowed()) {
+          $documents[] = \Drupal::entityTypeManager()->getViewBuilder('media')->view($media);
+        }
+      }
+    }
     $items[] = [
       'id' => $node->id(), 'title' => $node->label(),
       'summary' => $node->get($notice ? 'field_notice_summary' : 'field_summary')->value,
@@ -104,7 +129,7 @@ function ob_site_official_updates(): array {
       'datetime' => $date,
       'date' => $date ? \Drupal::service('date.formatter')->format(strtotime($date), 'custom', 'j F Y') : NULL,
       'urgent' => $notice && (bool) $node->get('field_notice_urgent')->value,
-      'image' => $image, 'url' => $url,
+      'image' => $image, 'documents' => $documents, 'url' => $url, 'notice' => $notice,
       'link_label' => $notice && !$detail ? t('View related information') : t('Read more'),
     ];
   }

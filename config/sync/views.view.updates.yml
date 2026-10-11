@@ -143,7 +143,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            reduce: false
           is_grouped: false
           group_info:
             label: ''
@@ -360,7 +359,6 @@ display:
             multiple: false
             remember_roles:
               authenticated: authenticated
-            reduce: false
           is_grouped: false
           group_info:
             label: ''

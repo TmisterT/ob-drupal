@@ -12,4 +12,11 @@
  *   displayed after the main title tag that appears in the template.
  */
 #}
-{% include "radix:page-title" %}
+{% if holiday_title_image %}
+  <div class="public-holiday-title">
+    <div class="public-holiday-title__image">{{ holiday_title_image }}</div>
+    {% include 'radix:page-title' %}
+  </div>
+{% else %}
+  {% include 'radix:page-title' %}
+{% endif %}

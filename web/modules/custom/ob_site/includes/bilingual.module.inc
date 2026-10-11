@@ -32,10 +32,16 @@ function ob_site_form_node_update_form_alter(array &$form, \Drupal\Core\Form\For
  * remains discoverable when only its non-original translation is published.
  */
 function ob_site_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query): void {
-  if ($view->id() !== 'updates' || !$query instanceof \Drupal\views\Plugin\views\query\Sql) {
+  if (!in_array($view->id(), ['updates', 'homepage_featured_updates'], TRUE) || !$query instanceof \Drupal\views\Plugin\views\query\Sql) {
     return;
   }
   $alias = $query->ensureTable('node_field_data');
+  if ($view->id() === 'homepage_featured_updates') {
+    // Select one source row per node before Views applies the three-item limit.
+    // Publication is checked across translations below, including nodes whose
+    // original translation is still a draft.
+    $query->addWhere(0, $alias . '.default_langcode', 1);
+  }
   foreach ($query->where as &$group) {
     foreach ($group['conditions'] as &$condition) {
       if ($condition['field'] === $alias . '.status' && (string) $condition['value'] === '1') {

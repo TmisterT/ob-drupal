@@ -1,6 +1,24 @@
 <?php
 
 /**
+ * Places the optional holiday image beside the existing page heading.
+ */
+function ob_preprocess_page_title(array &$variables): void {
+  $node = \Drupal::routeMatch()->getParameter('node');
+  if ($node instanceof \Drupal\node\NodeInterface
+    && $node->bundle() === 'public_notice'
+    && _ob_notice_has_category($node, ['public holiday', 'public holidays'])
+    && $node->hasField('field_featured_image')
+    && !$node->get('field_featured_image')->isEmpty()) {
+    $variables['holiday_title_image'] = $node->get('field_featured_image')->view([
+      'label' => 'hidden',
+      'type' => 'entity_reference_entity_view',
+      'settings' => ['view_mode' => 'default', 'link' => FALSE],
+    ]);
+  }
+}
+
+/**
  * @file
  * Theme and preprocess functions for nodes and menu-driven sections.
  */

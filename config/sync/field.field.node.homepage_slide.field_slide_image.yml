@@ -11,7 +11,7 @@ field_name: field_slide_image
 entity_type: node
 bundle: homepage_slide
 label: 'Slide image'
-description: 'Use a 1600 × 720 landscape image with meaningful alternative text.'
+description: 'Recommended: 2500 × 800 pixels (25:8 landscape banner). Keep faces and important details near the centre with space above heads. Smaller screens crop the sides. Include meaningful alternative text.'
 required: false
 translatable: true
 default_value: {  }

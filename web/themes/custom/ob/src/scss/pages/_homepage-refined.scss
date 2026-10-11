@@ -1081,6 +1081,41 @@ $ob-surface: #f3f7f8;
   max-width: 68rem;
 }
 
+.public-holiday-title {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.75rem, 2vw, 1.25rem);
+
+  .page-title {
+    min-width: 0;
+    margin: 0;
+  }
+}
+
+.public-holiday-title__image {
+  width: clamp(4rem, 8vw, 5rem);
+  height: clamp(3rem, 6vw, 3.75rem);
+  flex-shrink: 0;
+
+  article,
+  .field,
+  .field__items,
+  .field__item,
+  picture {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    object-position: center;
+  }
+}
+
 .public-holiday__header {
   padding-bottom: 1.5rem;
   border-bottom: 1px solid $ob-border;
@@ -1162,6 +1197,27 @@ $ob-surface: #f3f7f8;
   border-top: 1px solid $ob-border;
 }
 
+.public-notice-page > .field--name-field-featured-image {
+  margin: 0 0 1.5rem;
+
+  article,
+  .field,
+  .field__item,
+  picture {
+    width: 100%;
+    height: auto;
+    margin: 0;
+  }
+
+  img {
+    display: block;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    margin-inline: auto;
+  }
+}
+
 .public-notice-page__header {
   max-width: 52rem;
   margin-bottom: 2rem;
@@ -1236,7 +1292,8 @@ $ob-surface: #f3f7f8;
     inset: auto;
     width: 100%;
     height: auto;
-    aspect-ratio: 16 / 7;
+    // Wide banner proportions matching the MICT homepage's 2500 x 800 slides.
+    aspect-ratio: 25 / 8;
     margin: 0;
     border: 0;
     border-radius: 0;
@@ -1246,13 +1303,34 @@ $ob-surface: #f3f7f8;
     opacity: 1;
 
     img {
+      display: block;
+      width: 100%;
+      height: 100%;
+      max-width: 100%;
       object-fit: cover;
-      object-position: center 10%;
+      object-position: center;
     }
+
+    article,
+    .field,
+    .field__items,
+    .field__item,
+    picture {
+      width: 100%;
+      height: 100%;
+      margin: 0;
+    }
+
+    picture { display: block; }
 
     &:after {
       display: none;
     }
+  }
+
+  // Keep the President's head visible while the first photo fills the banner.
+  .homepage-slider__slide:first-child .homepage-hero__visual img {
+    object-position: center top;
   }
 
   .homepage-hero__inner {
@@ -1362,6 +1440,8 @@ $ob-surface: #f3f7f8;
 
 @media (max-width: 767.98px) {
   .ob-site--front {
+    .homepage-hero__visual { aspect-ratio: 16 / 9; }
+
     .homepage-hero__content {
       width: 100%;
       padding: 1.25rem 0 5.25rem;

@@ -16,9 +16,10 @@
       <div class="content-page__lead public-announcement__summary">{{ content.field_notice_summary }}</div>
     {% endif %}
   </header>
+  {{ content.field_featured_image }}
 
   <div class="content-page__body public-announcement__body">{{ content.body }}</div>
-  {{ content|without('field_notice_category', 'field_notice_date', 'field_notice_summary', 'field_notice_urgent', 'field_notice_link', 'body', 'links') }}
+  {{ content|without('field_featured_image', 'field_notice_category', 'field_notice_date', 'field_notice_summary', 'field_notice_urgent', 'field_notice_link', 'body', 'links') }}
 
   {% if notice_link %}
     <div class="public-announcement__related">

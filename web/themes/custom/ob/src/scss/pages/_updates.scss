@@ -236,24 +236,29 @@
 }
 
 .update-article__header {
-  max-width: 52rem;
+  max-width: 64rem;
   margin-bottom: 2rem;
   padding-bottom: 1.5rem;
   border-bottom: 4px solid $government-gold;
 }
 
 .update-article__summary {
+  max-width: 52rem;
   margin: 0;
   color: $government-ink;
   font-family: Georgia, "Times New Roman", serif;
-  font-size: 1.25rem;
+  font-size: clamp(1rem, 1.5vw, 1.15rem);
   line-height: 1.65;
+  overflow-wrap: anywhere;
 }
 
 .update-article__media {
-  max-width: 64rem;
-  margin: 0 0 2.5rem;
+  width: 100%;
+  max-width: 20rem;
+  margin: 0;
   overflow: hidden;
+  border: 1px solid $government-border;
+  border-radius: 0.35rem;
   background: $government-surface;
 
   .field { margin: 0; }
@@ -262,6 +267,8 @@
     display: block;
     width: 100%;
     height: auto;
+    max-width: 100%;
+    object-fit: contain;
   }
 }
 
@@ -269,8 +276,18 @@
   display: grid;
   max-width: 64rem;
   align-items: start;
-  gap: 3rem;
-  grid-template-columns: minmax(0, 1fr) minmax(13rem, 16rem);
+  gap: clamp(1.5rem, 3vw, 2.5rem);
+  grid-template-columns: minmax(0, 1fr) minmax(14rem, 19rem);
+}
+
+.update-article__layout--single { grid-template-columns: minmax(0, 1fr); }
+
+.update-article__main { min-width: 0; }
+
+.update-article__sidebar {
+  display: grid;
+  min-width: 0;
+  gap: 1.25rem;
 }
 
 .update-article__body {
@@ -284,7 +301,14 @@
     color: $government-navy;
   }
 
-  img { max-width: 100%; }
+  img {
+    max-width: 100%;
+    height: auto;
+  }
+
+  .field { margin: 0; }
+
+  p:last-child { margin-bottom: 0; }
 }
 
 .update-article__details {

@@ -2,6 +2,12 @@
 
 The `ob_site` module owns Drupal site structure. The `ob` Radix subtheme owns presentation.
 
+## Functional regression checks
+
+Run `ddev test-ob-site` to check featured content, notice expiry and urgency,
+admin heading editing, and article links in a separate test database.
+See [tests/README.md](tests/README.md) for setup, isolation, and single-test commands.
+
 ## Login flood protection
 
 Drupal core enforces failed-login limits; no extra module is required. The OB
