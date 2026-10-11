@@ -1,6 +1,18 @@
 <?php
 
 /**
+ * Recognizes the presidency directory after its editorial heading is renamed.
+ */
+function _ob_is_presidency_history_page(\Drupal\node\NodeInterface $node): bool {
+  return in_array($node->bundle(), ['basic_page', 'landing_page'], TRUE)
+    && in_array(strtolower(trim($node->label())), [
+      'history of presidents',
+      'history of presidency',
+      'history of the presidency',
+    ], TRUE);
+}
+
+/**
  * Places the optional holiday image beside the existing page heading.
  */
 function ob_preprocess_page_title(array &$variables): void {
@@ -48,7 +60,7 @@ function ob_theme_suggestions_node_alter(array &$suggestions, array $variables):
     if (_ob_menu_section_navigation()['is_section']) {
       $suggestions[] = 'node__menu_section_page';
     }
-    if ($node->label() === 'History of Presidents') {
+    if (_ob_is_presidency_history_page($node)) {
       $suggestions[] = 'node__history_of_presidents';
     }
     if ($node->bundle() === 'landing_page' && $node->label() === 'Contact Us') {
@@ -375,7 +387,7 @@ function ob_preprocess_node(array &$variables): void {
     }
   }
 
-  if ($node->bundle() === 'basic_page' && $node->label() === 'History of Presidents') {
+  if (_ob_is_presidency_history_page($node)) {
     $view = \Drupal\views\Views::getView('presidents_history');
     if ($view) {
       $view->setDisplay('block_1');
