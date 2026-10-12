@@ -3614,3 +3614,36 @@ function ob_site_update_11035(): void {
     }
   }
 }
+
+/**
+ * Repair obsolete homepage destinations without changing link labels.
+ */
+function ob_site_update_11036(): void {
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  foreach (['homepage' => 'field_quick_links', 'homepage_slide' => 'field_slide_link'] as $bundle => $field_name) {
+    foreach ($storage->loadByProperties(['type' => $bundle]) as $node) {
+      $changed = FALSE;
+      foreach ($node->getTranslationLanguages() as $language) {
+        $translation = $node->getTranslation($language->getId());
+        if (!$translation->hasField($field_name)) {
+          continue;
+        }
+        foreach ($translation->get($field_name) as $item) {
+          if ($bundle === 'homepage' && $item->uri === 'internal:/resources/library') {
+            $item->uri = 'internal:/resources/information-library';
+            $changed = TRUE;
+          }
+          elseif ($bundle === 'homepage_slide' && $item->uri === 'http://localhost:3002/news-media') {
+            $item->uri = 'internal:/news-media';
+            $changed = TRUE;
+          }
+        }
+      }
+      if ($changed) {
+        $node->setNewRevision(TRUE);
+        $node->setRevisionLogMessage('Repair obsolete library and localhost homepage links.');
+        $node->save();
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{# Dedicated staff login shell; Drupal retains control of authentication. #}
+<div class="ob-site ob-login">
+  <header class="ob-login__header">
+    {{ page.branding }}
+    <a class="ob-login__home" href="{{ path('<front>') }}">{{ 'Back to website'|t }} <span aria-hidden="true">↗</span></a>
+  </header>
+
+  <main id="main-content" class="ob-login__main">
+    <section class="ob-login__card" aria-labelledby="ob-login-title">
+      <div class="ob-login__heading">
+        <span class="ob-login__eyebrow">{{ 'Website administration'|t }}</span>
+        <h1 id="ob-login-title">{{ 'Staff sign in'|t }}</h1>
+        <p>{{ 'Sign in to manage website content.'|t }}</p>
+      </div>
+
+      {{ page.highlighted }}
+      {{ page.content|without('ob_breadcrumbs', 'ob_page_title') }}
+
+      <div class="ob-login__help">
+        <a href="{{ path('user.pass') }}">{{ 'Forgot your password?'|t }}</a>
+      </div>
+    </section>
+    <p class="ob-login__footer">{{ 'Office of Te Beretitenti · Government of Kiribati'|t }}</p>
+  </main>
+  {{ page.page_bottom }}
+</div>

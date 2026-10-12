@@ -1,0 +1,142 @@
+.ob-login {
+  min-height: 100vh;
+  background: linear-gradient(160deg, #f3f7f8 55%, #e5eef3);
+  color: $ob-ink;
+
+  &__header {
+    display: flex;
+    max-width: 76rem;
+    margin-inline: auto;
+    padding: 1.75rem 1.5rem;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+  }
+
+  &__home {
+    display: inline-flex;
+    min-height: 44px;
+    align-items: center;
+    gap: 0.5rem;
+    color: $ob-blue;
+    font-size: 0.875rem;
+    font-weight: 600;
+  }
+
+  &__main {
+    width: 100%;
+    max-width: 31rem;
+    margin-inline: auto;
+    padding: clamp(1.5rem, 6vh, 4rem) 1.25rem 3rem;
+  }
+
+  &__card {
+    padding: clamp(1.5rem, 4vw, 2.5rem);
+    border: 1px solid $ob-border;
+    border-top: 4px solid $ob-navy;
+    border-radius: 0.75rem;
+    background: #fff;
+    box-shadow: 0 12px 40px rgba($ob-navy, 0.08);
+  }
+
+  &__heading {
+    margin-bottom: 1.75rem;
+
+    h1 {
+      margin: 0.5rem 0 0.75rem;
+      color: $ob-navy;
+      font-size: clamp(1.75rem, 4vw, 2.1rem);
+    }
+
+    p {
+      margin: 0;
+      color: $ob-muted;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+  }
+
+  &__eyebrow {
+    color: $ob-blue;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  .block-page-title-block,
+  .block-system-breadcrumb-block,
+  .block-local-tasks-block { display: none; }
+
+  .user-login-form {
+    .form-group { margin-bottom: 1.25rem; }
+
+    .form-label {
+      margin-bottom: 0.5rem;
+      color: $ob-navy;
+      font-size: 0.9rem;
+      font-weight: 600;
+    }
+
+    .form-control:not([type="hidden"]) {
+      width: 100%;
+      min-height: 48px;
+      border: 1px solid #b8c9d3;
+      border-radius: 0.35rem;
+      background: #fff;
+    }
+
+    .form-actions { margin: 1.75rem 0 0; }
+
+    .form-submit {
+      width: 100%;
+      min-height: 48px;
+      border-color: $ob-navy;
+      border-radius: 0.35rem;
+      background: $ob-navy;
+      color: #fff;
+      font-weight: 700;
+
+      &:hover { background: $ob-blue; }
+    }
+  }
+
+  &__help {
+    margin-top: 1.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid $ob-border;
+    text-align: center;
+
+    a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      color: $ob-blue;
+      font-size: 0.9rem;
+    }
+  }
+
+  &__footer {
+    margin: 1.5rem 0 0;
+    color: $ob-muted;
+    font-size: 0.75rem;
+    line-height: 1.6;
+    text-align: center;
+  }
+
+  a:focus-visible,
+  input:focus-visible {
+    outline: 3px solid $ob-gold;
+    outline-offset: 3px;
+  }
+
+  @media (max-width: 575.98px) {
+    &__header {
+      padding: 1.25rem;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+    }
+
+    &__main { padding-top: 1rem; }
+  }
+}

@@ -369,7 +369,8 @@
 }
 
 .news-media-archive__intro {
-  max-width: 54rem;
+  width: 100%;
+  max-width: none;
   margin-bottom: clamp(1.75rem, 4vw, 3rem);
   padding-bottom: 1.5rem;
   border-bottom: 4px solid $government-gold;

@@ -1,0 +1,136 @@
+.ob-maintenance {
+  min-height: 100vh;
+  padding: 2rem 1.25rem;
+  background: linear-gradient(155deg, #f3f7f8 45%, #e4eef4);
+  color: $ob-ink;
+
+  &__identity {
+    display: flex;
+    width: 100%;
+    max-width: 72rem;
+    margin: 0 auto;
+    align-items: center;
+    gap: 1rem;
+
+    img {
+      width: 56px;
+      height: 56px;
+      object-fit: contain;
+    }
+  }
+
+  &__office {
+    display: block;
+    color: $ob-navy;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(1rem, 3vw, 1.4rem);
+    font-weight: 700;
+  }
+
+  &__government {
+    display: block;
+    margin-top: 0.25rem;
+    color: $ob-muted;
+    font-size: 0.65rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  &__main {
+    width: 100%;
+    max-width: 38rem;
+    margin: clamp(2rem, 9vh, 6rem) auto 0;
+  }
+
+  &__card {
+    padding: clamp(1.75rem, 5vw, 3.5rem);
+    border: 1px solid $ob-border;
+    border-top: 4px solid $ob-navy;
+    border-radius: 0.75rem;
+    background: #fff;
+    box-shadow: 0 12px 40px rgba($ob-navy, 0.08);
+    text-align: center;
+
+    h1 {
+      margin: 1rem 0;
+      color: $ob-navy;
+      font-size: clamp(1.85rem, 5vw, 2.5rem);
+      line-height: 1.2;
+    }
+  }
+
+  &__icon {
+    display: grid;
+    width: 72px;
+    height: 72px;
+    margin: 0 auto 1.5rem;
+    border-radius: 50%;
+    background: #edf4f8;
+    color: $ob-blue;
+    place-items: center;
+
+    svg {
+      width: 36px;
+      height: 36px;
+    }
+  }
+
+  &__status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: $ob-muted;
+    font-size: 0.8rem;
+    font-weight: 600;
+
+    span {
+      width: 8px;
+      height: 8px;
+      border-radius: 50%;
+      background: $ob-gold;
+    }
+  }
+
+  &__message {
+    color: $ob-muted;
+    font-size: 1rem;
+    line-height: 1.75;
+    overflow-wrap: anywhere;
+
+    p:last-child { margin-bottom: 0; }
+  }
+
+  &__retry {
+    display: inline-flex;
+    min-height: 48px;
+    margin-top: 1.75rem;
+    padding: 0.75rem 1.5rem;
+    align-items: center;
+    justify-content: center;
+    gap: 0.75rem;
+    border-radius: 0.35rem;
+    background: $ob-navy;
+    color: #fff;
+    font-weight: 600;
+    text-decoration: none;
+
+    &:hover {
+      background: $ob-blue;
+      color: #fff;
+    }
+
+    &:focus-visible {
+      outline: 3px solid $ob-gold;
+      outline-offset: 3px;
+    }
+  }
+
+  &__footer {
+    margin: 1.5rem 0 0;
+    color: $ob-muted;
+    font-size: 0.75rem;
+    line-height: 1.6;
+    text-align: center;
+  }
+}
