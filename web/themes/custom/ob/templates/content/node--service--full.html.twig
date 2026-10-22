@@ -15,13 +15,10 @@
 
     <div class="menu-section-page__content service-page__content">
       {% if service_details.body %}
-        <details class="service-disclosure service-page__overview">
-          <summary>
-            <span>{{ 'About this service'|t }}</span>
-            <span class="service-disclosure__icon" aria-hidden="true"></span>
-          </summary>
+        <section class="service-page__overview">
+          <h2>{{ 'About this service'|t }}</h2>
           <div class="service-disclosure__content menu-section-page__body">{{ service_details.body }}</div>
-        </details>
+        </section>
       {% endif %}
 
       {% if service_details.eligibility %}
@@ -40,11 +37,7 @@
 
       {% if service_details.steps %}
         <details class="service-disclosure service-page__section service-process">
-          <summary>
-            <span>{{ 'How to apply'|t }}</span>
-            <span class="service-disclosure__count">{{ service_details.steps|length }} {{ 'steps'|t }}</span>
-            <span class="service-disclosure__icon" aria-hidden="true"></span>
-          </summary>
+          <summary><span>{{ 'How to apply'|t }}</span><span class="service-disclosure__count">{{ service_details.steps|length }} {{ 'steps'|t }}</span><span class="service-disclosure__icon" aria-hidden="true"></span></summary>
           <div class="service-disclosure__content">
             <ol>
               {% for step in service_details.steps %}

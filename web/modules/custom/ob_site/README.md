@@ -140,3 +140,30 @@ After changing theme SCSS or JavaScript, run:
 npm run build
 ddev drush cr
 ```
+
+## Media Editor
+
+The `media_editor` role can create and edit colleagues' News and Update,
+Public Notice, and selected Publication records, and publish them directly. It
+can upload Image and Document media and edit its own media. It cannot delete
+content or administer site configuration. Assign this role alone, in addition
+to Drupal's implicit Authenticated role.
+
+`manage news and selected resources` activates the scope checks. Publications
+must belong to the existing `Gazettes & Instruments` or `Information Library`
+terms in Resource section, in every translation. Missing or renamed section
+terms fail closed. Other sections (including Forms and Commission Reports) are
+not editable. Changing those term names requires updating the scope resolver
+and its tests. Entity access, validation, and presave enforcement protect both
+edit routes and submitted changes; public reading remains available.
+
+The exported role is deployed through configuration or updates 11037–11038. User
+accounts and login credentials are deliberately not exported. The local publishing account is `media`. Its existing account details are
+preserved. The redundant `news.resources` account is blocked and has no
+editorial role; it is retained to preserve any content ownership references.
+
+Verify scope enforcement in the isolated test database:
+
+```sh
+ddev test-ob-site web/modules/custom/ob_site/tests/src/Kernel/NewsResourcesAccessTest.php
+```

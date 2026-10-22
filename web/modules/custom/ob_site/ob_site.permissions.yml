@@ -1,0 +1,7 @@
+manage news and selected resources:
+  title: 'Manage news and selected resources'
+  description: 'Limit editorial access to updates, public notices, Gazettes and Information Library publications.'
+view website activity:
+  title: 'View website activity'
+  description: 'View user activity, authentication events, content changes and website health.'
+  restrict access: true

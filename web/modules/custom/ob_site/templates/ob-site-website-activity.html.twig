@@ -1,0 +1,85 @@
+<div class="ob-activity">
+  <header class="ob-activity__intro">
+    <p class="ob-activity__eyebrow">{{ 'Administrator monitoring'|t }}</p>
+    <h2>{{ 'A clear view of website activity'|t }}</h2>
+    <p>{{ 'Review sign-ins, content changes and account activity. Refresh this page to see the latest records.'|t }}</p>
+  </header>
+
+  <form class="ob-activity__filters" action="{{ path('ob_site.website_activity') }}" method="get">
+    <div><label for="activity-period">{{ 'Time period'|t }}</label>
+      <select id="activity-period" name="period">
+        {% for value, label in {'24h': 'Last 24 hours'|t, '7d': 'Last 7 days'|t, '30d': 'Last 30 days'|t, 'all': 'All retained history'|t} %}
+          <option value="{{ value }}"{{ filters.period == value ? ' selected' : '' }}>{{ label }}</option>
+        {% endfor %}
+      </select>
+    </div>
+    <div><label for="activity-user">{{ 'Acting user'|t }}</label>
+      <select id="activity-user" name="uid">
+        <option value="">{{ 'All users'|t }}</option>
+        <option value="0"{{ filters.uid is same as('0') ? ' selected' : '' }}>{{ 'Anonymous / system'|t }}</option>
+        {% for uid, name in users %}<option value="{{ uid }}"{{ filters.uid == uid and filters.uid != '' ? ' selected' : '' }}>{{ name }}</option>{% endfor %}
+      </select>
+    </div>
+    <div><label for="activity-kind">{{ 'Activity type'|t }}</label>
+      <select id="activity-kind" name="kind">
+        {% for value, label in types %}<option value="{{ value }}"{{ filters.kind == value ? ' selected' : '' }}>{{ label }}</option>{% endfor %}
+      </select>
+    </div>
+    <button type="submit">{{ 'Apply filters'|t }}</button>
+    <a class="ob-activity__reset" href="{{ path('ob_site.website_activity') }}">{{ 'Reset'|t }}</a>
+  </form>
+  <p class="ob-activity__hint">{{ 'Failed sign-ins usually have no signed-in user. Select All users to include attempts targeting staff accounts.'|t }}</p>
+
+  {% if not logging_available %}
+    <p class="ob-activity__notice" role="status">{{ 'Activity history is unavailable because Database Logging is not enabled. Recently active users and health information remain available.'|t }}</p>
+  {% else %}
+    <section aria-label="{{ 'Recorded events for the selected period and user'|t }}">
+      <p class="ob-activity__hint">{{ 'Recorded events for the selected time period and acting user. Select a total to view its records.'|t }}</p>
+      <div class="ob-activity__summary">
+        {% for card in summary %}
+          <a href="{{ card.url }}"><strong>{{ card.count }}</strong><span>{{ card.label }}</span></a>
+        {% endfor %}
+      </div>
+    </section>
+    <section class="ob-activity__panel" aria-labelledby="activity-events-heading">
+      <h2 id="activity-events-heading">{{ 'Recent activity'|t }}</h2>
+      <div class="ob-activity__table-scroll" role="region" aria-labelledby="activity-events-heading" tabindex="0">
+        <table>
+          <caption class="visually-hidden">{{ 'Activity matching the selected filters, newest first'|t }}</caption>
+          <thead><tr><th scope="col">{{ 'Time'|t }}</th><th scope="col">{{ 'Acting user'|t }}</th><th scope="col">{{ 'Activity'|t }}</th><th scope="col">{{ 'What happened'|t }}</th><th scope="col">{{ 'Links'|t }}</th></tr></thead>
+          <tbody>
+            {% for event in events %}
+              <tr>
+                <td>{{ event.time }}</td><td>{{ event.actor }}</td>
+                <td><span class="ob-activity__tag">{{ event.type }}</span></td><td>{{ event.message }}</td>
+                <td class="ob-activity__links">{% if event.target %}<a href="{{ event.target }}">{{ 'Open item'|t }}</a>{% endif %}{% if event.details %}<a href="{{ event.details }}">{{ 'Log details'|t }}</a>{% endif %}</td>
+              </tr>
+            {% else %}<tr><td colspan="5">{{ 'No retained activity matches these filters.'|t }}</td></tr>{% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {{ pager }}
+    </section>
+  {% endif %}
+
+  <div class="ob-activity__columns">
+    <section class="ob-activity__panel" aria-labelledby="activity-users-heading">
+      <h2 id="activity-users-heading">{{ 'Recently active users'|t }}</h2>
+      <p class="ob-activity__hint">{{ 'Site-wide activity within the last 15 minutes. This does not confirm that someone is still online. Up to 20 accounts are shown.'|t }}</p>
+      <ul class="ob-activity__users">
+        {% for user in active_users %}<li><strong>{{ user.name }}</strong><span>{{ user.roles }}</span><time>{{ user.access }}</time></li>
+        {% else %}<li>{{ 'No recent signed-in activity recorded.'|t }}</li>{% endfor %}
+      </ul>
+    </section>
+    <section class="ob-activity__panel" aria-labelledby="activity-health-heading">
+      <h2 id="activity-health-heading">{{ 'Website health'|t }}</h2>
+      <dl class="ob-activity__health">
+        {% for item in health %}<div{% if item.attention %} class="ob-activity__attention"{% endif %}><dt>{{ item.label }}</dt><dd>{{ item.value }}{% if item.attention %}<span>{{ 'Check recommended'|t }}</span>{% endif %}</dd></div>{% endfor %}
+      </dl>
+    </section>
+  </div>
+  <footer class="ob-activity__footnote">
+    {% if started %}<p>{{ 'Content and account-change recording started @date. Earlier changes cannot be reconstructed here.'|t({'@date': started}) }}</p>{% endif %}
+    {% if logging_available %}<p>{% if retention %}{{ 'History uses Drupal’s retained database logs, currently limited to approximately @limit entries across the whole website. Older records can be removed during maintenance.'|t({'@limit': retention}) }}{% else %}{{ 'Database log retention currently has no entry limit. Administrators should review storage and retention regularly.'|t }}{% endif %}</p>{% endif %}
+  </footer>
+</div>

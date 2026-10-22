@@ -1,5 +1,5 @@
 {# Stable container for both populated and empty inline search responses. #}
-<div data-ob-search-results>
+<div data-ob-search-results data-search-empty="{{ items ? 'false' : 'true' }}">
   {% if items %}
     <{{ list_type }}{{ attributes.addClass('ob-search-results') }}>
       {% for item in items %}
@@ -8,5 +8,6 @@
     </{{ list_type }}>
   {% else %}
     {{ empty }}
+    <p>{{ 'Try fewer words, check the spelling, or select All information to broaden your search.'|t }}</p>
   {% endif %}
 </div>

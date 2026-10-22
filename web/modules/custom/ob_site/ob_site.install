@@ -30,6 +30,7 @@ require_once __DIR__ . '/includes/service.install.inc';
  * Implements hook_install().
  */
 function ob_site_install(): void {
+  ob_site_update_11039();
   ob_site_configure_login_flood_protection();
   if (!NodeType::load('homepage')) {
     NodeType::create([
@@ -3645,5 +3646,47 @@ function ob_site_update_11036(): void {
         $node->save();
       }
     }
+  }
+}
+
+/**
+ * Add the scoped news/resources publishing role; accounts are created separately.
+ */
+function ob_site_update_11037(): void {
+  $data = \Symfony\Component\Yaml\Yaml::parseFile(DRUPAL_ROOT . '/../config/sync/user.role.media_editor.yml');
+  $role = Role::load($data['id']);
+  if (!$role) {
+    Role::create($data)->save();
+  }
+}
+
+/**
+ * Rename the scoped publishing role to Media Editor, retaining assignments.
+ */
+function ob_site_update_11038(): void {
+  $old = Role::load('news_resources_editor');
+  $role = Role::load('media_editor');
+  if (!$role) {
+    $data = $old ? $old->toArray() : \Symfony\Component\Yaml\Yaml::parseFile(DRUPAL_ROOT . '/../config/sync/user.role.media_editor.yml');
+    unset($data['uuid']);
+    $data['id'] = 'media_editor';
+    $data['label'] = 'Media Editor';
+    Role::create($data)->save();
+  }
+  if ($old) {
+    $users = \Drupal::entityTypeManager()->getStorage('user')->loadByProperties(['roles' => 'news_resources_editor']);
+    foreach ($users as $user) {
+      $user->addRole('media_editor')->removeRole('news_resources_editor')->save();
+    }
+    $old->delete();
+  }
+}
+
+/**
+ * Mark the start of content/account activity recording for the admin report.
+ */
+function ob_site_update_11039(): void {
+  if (!\Drupal::state()->get('ob_site.activity_started')) {
+    \Drupal::state()->set('ob_site.activity_started', \Drupal::time()->getRequestTime());
   }
 }

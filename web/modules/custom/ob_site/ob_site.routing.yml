@@ -1,0 +1,9 @@
+ob_site.website_activity:
+  path: '/admin/reports/website-activity'
+  defaults:
+    _controller: '\Drupal\ob_site\Controller\WebsiteActivityController::build'
+    _title: 'Website Activity'
+  requirements:
+    _permission: 'view website activity'
+  options:
+    _admin_route: TRUE

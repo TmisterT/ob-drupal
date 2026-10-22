@@ -27,8 +27,11 @@
         const fallback = results.querySelector('[data-homepage-search-fallback]');
         const heading = results.querySelector('h2');
         let controller;
+        let activeUrl;
 
         const search = async (url) => {
+          activeUrl = new URL(url);
+          const query = url.searchParams.get('keys') || '';
           controller?.abort();
           const request = new AbortController();
           controller = request;
@@ -43,13 +46,22 @@
             if (!response.ok) throw new Error('Search unavailable');
             const html = await response.text();
             if (request.signal.aborted || controller !== request) return;
-            const document = new DOMParser().parseFromString(html, 'text/html');
-            const matches = document.querySelector('[data-ob-search-results]');
+            const responseDocument = new DOMParser().parseFromString(html, 'text/html');
+            const matches = responseDocument.querySelector('[data-ob-search-results]');
             if (!matches) throw new Error('Search response unavailable');
             content.append(matches);
-            const pager = document.querySelector('#main-content .pagination-wrapper');
+            const pager = responseDocument.querySelector('#main-content .pagination-wrapper');
             if (pager) content.append(pager);
-            status.textContent = Drupal.t('Results for “@query”', { '@query': input.value.trim() });
+            status.textContent = matches.dataset.searchEmpty === 'true'
+              ? Drupal.t('No results for “@query”.', { '@query': query })
+              : Drupal.t('Results for “@query”', { '@query': query });
+            Drupal.attachBehaviors(content);
+            const pageUrl = new URL(window.location.href);
+            [...pageUrl.searchParams.keys()].forEach((key) => {
+              if (key === 'keys' || key === 'page' || /^f\[.*\]$/.test(key)) pageUrl.searchParams.delete(key);
+            });
+            url.searchParams.forEach((value, key) => pageUrl.searchParams.append(key, value));
+            window.history.replaceState(window.history.state, '', pageUrl.href);
             heading.focus({ preventScroll: true });
           }
           catch (error) {
@@ -64,7 +76,12 @@
 
         const submit = () => {
           const url = new URL(form.action, window.location.href);
-          url.searchParams.set('keys', input.value.trim());
+          input.value = input.value.trim();
+          if (!input.value) {
+            input.focus();
+            return;
+          }
+          url.searchParams.set('keys', input.value);
           if (filter.value) url.searchParams.append('f[]', filter.value);
           search(url);
         };
@@ -75,6 +92,7 @@
         form.addEventListener('reset', () => {
           controller?.abort();
           controller = undefined;
+          activeUrl = undefined;
           input.value = '';
           filter.value = '';
           document.querySelectorAll('[data-ob-header-search] [name="keys"]').forEach((field) => {
@@ -99,6 +117,15 @@
           if (!link || event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
           const url = new URL(link.href, window.location.href);
           if (url.origin !== window.location.origin) return;
+          if (activeUrl) {
+            url.searchParams.set('keys', activeUrl.searchParams.get('keys'));
+            [...url.searchParams.keys()].forEach((key) => {
+              if (/^f\[.*\]$/.test(key)) url.searchParams.delete(key);
+            });
+            activeUrl.searchParams.forEach((value, key) => {
+              if (/^f\[.*\]$/.test(key)) url.searchParams.append(key, value);
+            });
+          }
           event.preventDefault();
           search(url);
         });
@@ -112,7 +139,11 @@
           input.value = params.get('keys');
           const type = params.get('f[]') || params.get('f[0]');
           if ([...filter.options].some((option) => option.value === type)) filter.value = type;
-          submit();
+          const url = new URL(form.action, window.location.href);
+          url.searchParams.set('keys', input.value.trim());
+          if (filter.value) url.searchParams.append('f[]', filter.value);
+          if (/^\d+$/.test(params.get('page') || '')) url.searchParams.set('page', params.get('page'));
+          search(url);
         }
       });
     },

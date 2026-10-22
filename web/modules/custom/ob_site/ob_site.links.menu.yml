@@ -1,0 +1,6 @@
+ob_site.website_activity:
+  title: 'Website Activity'
+  description: 'Monitor recent users, sign-ins, content changes and website health.'
+  route_name: ob_site.website_activity
+  parent: system.admin_reports
+  weight: -65

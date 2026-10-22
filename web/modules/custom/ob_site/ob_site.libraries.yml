@@ -1,0 +1,4 @@
+website_activity:
+  css:
+    theme:
+      css/website-activity.css: {}

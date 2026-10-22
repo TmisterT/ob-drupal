@@ -1,0 +1,47 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - media.type.document
+    - media.type.image
+    - node.type.public_notice
+    - node.type.publication
+    - node.type.update
+    - workflows.workflow.updates_editorial
+  module:
+    - content_moderation
+    - media
+    - navigation
+    - node
+    - ob_site
+    - system
+id: media_editor
+label: 'Media Editor'
+weight: 3
+is_admin: false
+permissions:
+  - 'access administration pages'
+  - 'access content overview'
+  - 'access media overview'
+  - 'access navigation'
+  - 'administer node published status'
+  - 'create document media'
+  - 'create image media'
+  - 'create public_notice content'
+  - 'create publication content'
+  - 'create update content'
+  - 'edit any public_notice content'
+  - 'edit any publication content'
+  - 'edit any update content'
+  - 'edit own document media'
+  - 'edit own image media'
+  - 'manage news and selected resources'
+  - 'use updates_editorial transition archive'
+  - 'use updates_editorial transition create_new_draft'
+  - 'use updates_editorial transition publish'
+  - 'use updates_editorial transition submit_for_review'
+  - 'view media'
+  - 'view own unpublished content'
+  - 'view own unpublished media'
+  - 'view latest version'
+  - 'view the administration theme'

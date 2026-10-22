@@ -161,3 +161,29 @@ function ob_site_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $
   $form['field_notices_heading']['#group'] = 'official_updates_settings';
   $form['field_notices_heading']['#weight'] = 0;
 }
+
+require_once __DIR__ . '/includes/news-resources.module.inc';
+
+/**
+ * Implements hook_user_login().
+ */
+function ob_site_user_login(\Drupal\user\UserInterface $account): void {
+  \Drupal::messenger()->addStatus(t('Welcome, @name. You are signed in.', ['@name' => $account->getDisplayName()]));
+}
+
+require_once __DIR__ . '/includes/activity.module.inc';
+
+/**
+ * Implements hook_theme().
+ */
+function ob_site_theme(): array {
+  return [
+    'ob_site_website_activity' => [
+      'variables' => [
+        'filters' => [], 'users' => [], 'types' => [], 'summary' => [],
+        'events' => [], 'active_users' => [], 'health' => [], 'pager' => [],
+        'started' => NULL, 'retention' => NULL, 'logging_available' => FALSE,
+      ],
+    ],
+  ];
+}
