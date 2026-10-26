@@ -1,0 +1,9 @@
+{# Shared by inline homepage search and the full search results page. #}
+{{ search_result_metadata }}
+<article class="ob-search-result">
+  {% if result_type %}<span class="ob-search-result__type">{{ result_type }}</span>{% endif %}
+  {{ title_prefix }}
+  <h3{{ title_attributes.addClass('ob-search-result__title') }}><a href="{{ url }}">{{ title }}</a></h3>
+  {{ title_suffix }}
+  {% if snippet %}<div{{ content_attributes.addClass('ob-search-result__summary') }}>{{ snippet }}</div>{% endif %}
+</article>

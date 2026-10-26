@@ -10,7 +10,11 @@
 {% set start_year = node.hasField('field_term_start_year') ? node.field_term_start_year.value : null %}
 {% set end_year = node.hasField('field_term_end_year') ? node.field_term_end_year.value : null %}
 {% set has_related_links = node.hasField('field_related_links') and not node.field_related_links.isEmpty %}
-<article{{ attributes.addClass('content-page', 'profile-page', in_menu_section ? 'section-profile' : '') }}>
+{% set is_current_president = is_president and node.field_is_current.value %}
+{% if is_current_president %}
+  {{ attach_library('ob/president-profile') }}
+{% endif %}
+<article{{ attributes.addClass('content-page', 'profile-page', in_menu_section ? 'section-profile' : '', is_current_president ? 'president-profile' : '') }}>
   {{ title_prefix }}
   {{ title_suffix }}
 

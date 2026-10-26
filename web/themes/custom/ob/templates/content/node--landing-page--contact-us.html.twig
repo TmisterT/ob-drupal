@@ -4,6 +4,8 @@
  * Full display for the Contact Us landing page.
  */
 #}
+{{ attach_library('ob/contact-map') }}
+{% set map_query = 'Office of Te Beretitenti, Bairiki, South Tarawa, Kiribati'|url_encode %}
 <article{{ attributes.addClass('content-page', 'landing-page', 'contact-page') }}>
   {{ title_prefix }}
   {{ title_suffix }}
@@ -28,6 +30,28 @@
       </section>
     {% endif %}
   </div>
+
+  <section class="contact-location" aria-labelledby="contact-location-heading">
+    <div class="contact-location__details">
+      <h2 id="contact-location-heading">{{ 'Our location'|t }}</h2>
+      <h3>{{ 'Visit our office'|t }}</h3>
+      <p><strong>{{ 'Office of Te Beretitenti'|t }}</strong><br>{{ 'Bairiki, South Tarawa, Kiribati'|t }}</p>
+      <p>{{ 'For enquiries about a particular division, contact the Office before visiting so we can direct you to the appropriate team.'|t }}</p>
+      <div class="contact-location__links">
+        <a href="https://www.google.com/maps/search/?api=1&amp;query={{ map_query }}" target="_blank" rel="noopener noreferrer">{{ 'Open in Google Maps'|t }} <span class="visually-hidden">{{ '(opens in a new tab)'|t }}</span></a>
+        <a href="https://www.google.com/maps/dir/?api=1&amp;destination={{ map_query }}" target="_blank" rel="noopener noreferrer">{{ 'Get directions'|t }} <span class="visually-hidden">{{ '(opens in a new tab)'|t }}</span></a>
+      </div>
+    </div>
+    <div class="contact-location__map" data-contact-map data-map-src="https://www.google.com/maps?q={{ map_query }}&amp;output=embed">
+      <div class="contact-location__placeholder">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="M19 10c0 5-7 11-7 11S5 15 5 10a7 7 0 1 1 14 0Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        <p><strong>{{ 'Find us in Bairiki'|t }}</strong></p>
+        <p>{{ 'Load the interactive Google Map to explore the office location.'|t }}</p>
+        <button type="button" data-load-contact-map hidden>{{ 'Load Google Map'|t }}</button>
+        <noscript><p>{{ 'Use the Google Maps links to view the location or get directions.'|t }}</p></noscript>
+      </div>
+    </div>
+  </section>
 
   {% if not node.field_featured_links.isEmpty %}
     <section class="content-page__section content-page__section--links" aria-labelledby="featured-links-heading">

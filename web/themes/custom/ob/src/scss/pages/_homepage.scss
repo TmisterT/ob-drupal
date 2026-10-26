@@ -311,21 +311,6 @@ $ob-border: #d7e2e8;
     color: $ob-navy;
     font-size: 1.5rem;
   }
-
-  .ob-search-results {
-    padding: 0;
-    list-style: none;
-
-    li {
-      margin-bottom: 1rem;
-      padding: 1.25rem;
-      border: 1px solid $ob-border;
-      background: #fff;
-    }
-
-    h3 { font-size: 1.15rem; }
-    p:last-child { margin-bottom: 0; }
-  }
 }
 
 .homepage .homepage-search__form button.homepage-search__clear {

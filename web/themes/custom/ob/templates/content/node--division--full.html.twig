@@ -4,6 +4,7 @@
  * Full display for an Office of Te Beretitenti division.
  */
 #}
+{{ attach_library('ob/division-tabs') }}
 {% set in_menu_section = section_navigation.is_section ?? false %}
 {% set has_image = node.hasField('field_featured_image') and not node.field_featured_image.isEmpty %}
 {% set has_summary = node.hasField('field_summary') and not node.field_summary.isEmpty %}

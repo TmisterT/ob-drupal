@@ -1,0 +1,76 @@
+.president-profile .menu-section-page__content {
+  min-width: 0;
+}
+
+.president-profile .profile-page__header {
+  max-width: 100%;
+  margin-bottom: 2.5rem;
+  padding: clamp(1.25rem, 3vw, 2rem);
+  gap: clamp(1.25rem, 3vw, 2rem);
+  border-top: 3px solid #d3a52c;
+  border-radius: .25rem;
+  background: #f3f7f9;
+}
+
+.president-profile .profile-page__header > div {
+  min-width: 0;
+}
+
+.president-profile .profile-page__portrait {
+  width: 100%;
+  max-width: 12rem;
+  background: #fff;
+}
+
+.president-profile .profile-page__portrait .field {
+  margin: 0;
+}
+
+.president-profile .profile-page__portrait img {
+  width: 100%;
+  height: auto;
+}
+
+.president-profile .profile-page__position {
+  margin-bottom: .875rem;
+  line-height: 1.6;
+  letter-spacing: .055em;
+}
+
+.president-profile .content-page__lead {
+  max-width: 34ch;
+  color: #243f53;
+  font-size: clamp(1.2rem, 1.8vw, 1.5rem);
+  line-height: 1.6;
+}
+
+.president-profile .content-page__body {
+  max-width: 68ch;
+  color: #243746;
+  font-size: 1.0625rem;
+  line-height: 1.9;
+  overflow-wrap: break-word;
+}
+
+.president-profile .content-page__body p {
+  margin: 0 0 1.75rem;
+}
+
+.president-profile .content-page__metadata {
+  max-width: 72ch;
+  margin-top: 2.5rem;
+}
+
+@media (min-width: 768px) {
+  .president-profile .profile-page__header {
+    grid-template-columns: minmax(9rem, 12rem) minmax(0, 1fr);
+  }
+}
+
+@media (max-width: 767.98px) {
+  .president-profile .profile-page__header {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .president-profile .profile-page__portrait { max-width: 10rem; }
+  .president-profile .content-page__body { font-size: 1rem; line-height: 1.8; }
+}

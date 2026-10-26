@@ -1,0 +1,97 @@
+<?php
+
+/**
+ * @file
+ * Public search results use editorial summaries and readable content labels.
+ */
+
+use Drupal\Component\Utility\Html;
+use Drupal\Component\Utility\Unicode;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\node\NodeInterface;
+
+/**
+ * Implements hook_preprocess_search_result().
+ */
+function ob_preprocess_search_result(array &$variables): void {
+  $node = $variables['result']['node'] ?? NULL;
+  if (!$node instanceof NodeInterface) {
+    return;
+  }
+  $cache = CacheableMetadata::createFromObject($node);
+  $cache->addCacheContexts(['url.query_args:keys', 'languages:language_interface']);
+  $labels = [
+    'service' => t('Service'), 'publication' => t('Publication'),
+    'update' => t('News / update'), 'public_notice' => t('Public notice'),
+    'basic_page' => t('Information'), 'landing_page' => t('Section overview'),
+  ];
+  $variables['result_type'] = $labels[$node->bundle()] ?? $variables['result']['type'] ?? t('Information');
+  $category_field = match ($node->bundle()) {
+    'publication' => 'field_publication_type',
+    'update' => 'field_update_type',
+    default => NULL,
+  };
+  if ($category_field && $node->hasField($category_field)) {
+    $field = $node->get($category_field);
+    $access = $field->access('view', NULL, TRUE);
+    $cache->addCacheableDependency($access);
+    if ($access->isAllowed()) {
+      foreach ($field->referencedEntities() as $term) {
+        $access = $term->access('view', NULL, TRUE);
+        $cache->addCacheableDependency($term)->addCacheableDependency($access);
+        if ($access->isAllowed()) {
+          $term = \Drupal::service('entity.repository')->getTranslationFromContext($term);
+          $variables['result_type'] = $term->label();
+          break;
+        }
+      }
+    }
+  }
+
+  $summary = _ob_search_summary($node, $cache);
+  $variables['snippet'] = [];
+  if ($summary !== '') {
+    $keys = \Drupal::request()->query->get('keys', '');
+    // Core handles safe keyword highlighting and escaping. Pass plain text as
+    // escaped HTML so literal angle brackets in editorial text remain safe.
+    $variables['snippet'] = search_excerpt(is_string($keys) ? $keys : '', Html::escape(Unicode::truncate($summary, 240, TRUE, TRUE)), $node->language()->getId());
+  }
+  $variables['search_result_metadata'] = ['#markup' => ''];
+  $cache->applyTo($variables['search_result_metadata']);
+}
+
+/**
+ * Gets one readable summary without rendering page layouts or field labels.
+ */
+function _ob_search_summary(NodeInterface $node, CacheableMetadata $cache): string {
+  foreach (['field_summary', 'field_notice_summary', 'field_hero_summary', 'body'] as $name) {
+    if (!$node->hasField($name)) {
+      continue;
+    }
+    $field = $node->get($name);
+    $access = $field->access('view', NULL, TRUE);
+    $cache->addCacheableDependency($access);
+    if (!$access->isAllowed() || $field->isEmpty()) {
+      continue;
+    }
+    $item = $field->first();
+    $type = $field->getFieldDefinition()->getType();
+    if (in_array($type, ['text', 'text_long', 'text_with_summary'], TRUE)) {
+      $property = $type === 'text_with_summary' && trim($item->summary ?? '') !== '' ? 'summary_processed' : 'processed';
+      $processed = $item->get($property);
+      $source = (string) $processed->getValue();
+      $cache->addCacheableDependency($processed);
+      // Do not include executable/style content in a plain-text description.
+      $source = preg_replace('~<(script|style)\b[^>]*>.*?</\1>~is', ' ', $source);
+      $source = Html::decodeEntities(strip_tags(str_replace(['<', '>'], [' <', '> '], $source)));
+    }
+    else {
+      $source = (string) $item->value;
+    }
+    $plain = trim(preg_replace('/[\s\x{00A0}]+/u', ' ', $source));
+    if ($plain !== '') {
+      return $plain;
+    }
+  }
+  return '';
+}

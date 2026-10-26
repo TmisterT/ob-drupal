@@ -9,6 +9,31 @@ style:
     - core/once
     - ob/flexslider
 
+president-profile:
+  css:
+    theme:
+      css/president-profile.css: {}
+
+contact-map:
+  css:
+    theme:
+      css/contact-map.css: {}
+  js:
+    js/contact-map.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
+division-tabs:
+  css:
+    theme:
+      css/division-tabs.css: {}
+  js:
+    js/division-tabs.js: {}
+  dependencies:
+    - core/drupal
+    - core/once
+
 flexslider:
   version: 2.7.2
   js:
