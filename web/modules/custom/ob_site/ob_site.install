@@ -30,6 +30,8 @@ require_once __DIR__ . '/includes/service.install.inc';
  * Implements hook_install().
  */
 function ob_site_install(): void {
+  require_once __DIR__ . '/includes/awards.install.inc';
+  ob_site_ensure_awards_nomination_form();
   ob_site_update_11039();
   ob_site_configure_login_flood_protection();
   if (!NodeType::load('homepage')) {
@@ -3688,5 +3690,63 @@ function ob_site_update_11038(): void {
 function ob_site_update_11039(): void {
   if (!\Drupal::state()->get('ob_site.activity_started')) {
     \Drupal::state()->set('ob_site.activity_started', \Drupal::time()->getRequestTime());
+  }
+}
+
+/**
+ * Add the formal online Honours and Awards nomination form.
+ */
+function ob_site_update_11040(): void {
+  require_once __DIR__ . '/includes/awards.install.inc';
+  ob_site_ensure_awards_nomination_form();
+}
+
+/**
+ * Limit Awards nomination attachments to 5 MB per file.
+ */
+function ob_site_update_11041(): void {
+  $webform = \Drupal\webform\Entity\Webform::load('honours_awards_nomination');
+  if (!$webform) {
+    return;
+  }
+  foreach (['endorsement', 'committee_evidence', 'additional_documents'] as $key) {
+    $element = $webform->getElement($key);
+    if (!$element) {
+      continue;
+    }
+    $element['#max_filesize'] = '5';
+    if (isset($element['#description'])) {
+      $element['#description'] = str_replace('10 MB', '5 MB', $element['#description']);
+    }
+    $webform->setElementProperties($key, $element);
+  }
+  $webform->save();
+}
+
+/**
+ * Remove the repeated government identity from the nomination introduction.
+ */
+function ob_site_update_11042(): void {
+  $webform = \Drupal\webform\Entity\Webform::load('honours_awards_nomination');
+  if (!$webform) {
+    return;
+  }
+  $element = $webform->getElement('introduction');
+  if ($element && isset($element['#markup'])) {
+    $element['#markup'] = str_replace('<p class="awards-form-kicker">Office of Te Beretitenti · Republic of Kiribati</p>', '', $element['#markup']);
+    $webform->setElementProperties('introduction', $element);
+    $webform->save();
+  }
+}
+
+/**
+ * Close the nomination form while retaining the published Awards information.
+ */
+function ob_site_update_11043(): void {
+  $webform = \Drupal\webform\Entity\Webform::load('honours_awards_nomination');
+  if ($webform) {
+    $webform->setStatus('closed');
+    $webform->setSetting('form_close_message', '<p>Online nominations are currently closed. Please visit the <a href="/service/awards">Honours and Awards service page</a> for criteria and nomination guidance.</p>');
+    $webform->save();
   }
 }

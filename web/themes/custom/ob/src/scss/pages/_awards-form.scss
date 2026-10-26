@@ -1,0 +1,95 @@
+// Formal, accessible presentation scoped to the Awards nomination form.
+.awards-nomination-form {
+  max-width: 56rem;
+  margin-inline: auto;
+  color: #142b3b;
+
+  .awards-form-intro {
+    margin-bottom: 2.5rem;
+    padding: clamp(1.25rem, 4vw, 2rem);
+    border-top: 4px solid #b52f36;
+    background: #f3f7f8;
+
+    &:before {
+      display: block;
+      width: 3.5rem;
+      height: 3.5rem;
+      margin-bottom: 1.25rem;
+      background: #947015;
+      content: "";
+      mask: url("/themes/custom/ob/assets/icons/bootstrap-icons/award.svg") center / contain no-repeat;
+    }
+
+    h2 {
+      color: #062b49;
+      font-family: Georgia, "Times New Roman", serif;
+      font-size: clamp(1.7rem, 4vw, 2.4rem);
+    }
+  }
+
+  .awards-form-kicker {
+    color: #526977;
+    font-size: 0.8rem;
+    font-weight: 700;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+  }
+
+  fieldset {
+    min-width: 0;
+    margin: 0 0 2rem;
+    padding: clamp(1rem, 3vw, 1.75rem);
+    border: 1px solid #d6e0e5;
+    border-top: 3px solid #062b49;
+    background: #fff;
+  }
+
+  legend {
+    float: none;
+    width: auto;
+    padding-inline: 0.5rem;
+    color: #062b49;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 1.35rem;
+    font-weight: 700;
+  }
+
+  .form-item { margin-bottom: 1.35rem; }
+
+  label { font-weight: 600; }
+
+  .description,
+  .form-text {
+    margin-top: 0.4rem;
+    color: #526977;
+    font-size: 0.9rem;
+    line-height: 1.6;
+  }
+
+  input:not([type="checkbox"]):not([type="hidden"]):not([type="submit"]),
+  select,
+  textarea {
+    max-width: 100%;
+    padding: 0.75rem;
+    border: 1px solid #8298a5;
+    border-radius: 2px;
+    color: #142b3b;
+    background: #fff;
+  }
+
+  textarea { width: 100%; }
+
+  .form-submit {
+    min-height: 48px;
+    padding: 0.75rem 1.5rem;
+    border: 1px solid #062b49;
+    border-radius: 2px;
+    color: #fff;
+    background: #062b49;
+    font-weight: 700;
+
+    &:hover { background: #075f94; }
+  }
+
+  a { color: #075f94; }
+}

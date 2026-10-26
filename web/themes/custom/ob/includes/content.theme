@@ -368,6 +368,30 @@ function ob_preprocess_node(array &$variables): void {
       'content_owner' => $plain_value($field('field_content_owner')),
       'last_reviewed' => $format_date($field('field_last_reviewed')),
     ];
+    if ($node->bundle() === 'honours_awards') {
+      $webform = \Drupal\webform\Entity\Webform::load('honours_awards_nomination');
+      $cache = \Drupal\Core\Cache\CacheableMetadata::createFromRenderArray($variables['elements']);
+      $cache->addCacheTags(['config:webform.webform.honours_awards_nomination']);
+      $open = $webform && $webform->isOpen();
+      $variables['service_details']['status_key'] = $open ? 'open' : 'closed';
+      $variables['service_details']['status'] = $open ? t('Nominations open') : t('Nominations closed');
+      // Dates on the information page do not control Webform availability.
+      $variables['service_details']['opening_date'] = '';
+      $variables['service_details']['closing_date'] = '';
+      if ($webform) {
+        $cache->addCacheableDependency($webform);
+        if ($webform->isScheduled()) {
+          $cache->setCacheMaxAge(0);
+        }
+      }
+      if (!$open) {
+        $variables['service_details']['action'] = NULL;
+        $variables['service_details']['form_message'] = t('Online nominations are currently closed. Award criteria and nomination guidance remain available on this page.');
+      }
+      $cache->applyTo($variables['elements']);
+      $variables['awards_form_cache'] = ['#markup' => ''];
+      $cache->applyTo($variables['awards_form_cache']);
+    }
   }
   if ($node->bundle() === 'landing_page' && $node->hasField('field_vision_period') && !$node->get('field_vision_period')->isEmpty()) {
     $variables['kv20_documents'] = [];

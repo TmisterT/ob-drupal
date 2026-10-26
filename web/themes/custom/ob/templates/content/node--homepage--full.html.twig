@@ -51,10 +51,12 @@
     <section class="homepage-hero" aria-labelledby="homepage-hero-title">
       <div class="container homepage-hero__inner">
         <div class="homepage-hero__content">
+          <div class="homepage-hero__heading">
           {% if node.field_hero_label.value %}
             <div class="homepage-hero__eyebrow">{{ node.field_hero_label.value }}</div>
           {% endif %}
           <h1 id="homepage-hero-title" class="homepage-hero__title">{{ node.field_hero_title.value }}</h1>
+          </div>
           {% if not node.field_hero_summary.isEmpty %}
             <div class="homepage-hero__summary">{{ content.field_hero_summary }}</div>
           {% endif %}

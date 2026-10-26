@@ -5,6 +5,17 @@
  */
 #}
 {% set slide_link = node.field_slide_link.0 %}
+{# Give legacy generic labels a destination-specific action; retain custom copy. #}
+{% set action_labels = {
+  'internal:/about-us': 'About the Office'|t,
+  'internal:/te-beretitenti': 'Explore the Presidency'|t,
+  'internal:/news-media': 'Read government updates'|t,
+  'internal:/services': 'Find government services'|t,
+} %}
+{% set action_label = slide_link.title %}
+{% if slide_link and (action_label is empty or action_label|lower == 'click more') %}
+  {% set action_label = action_labels[slide_link.uri]|default('Explore this feature'|t) %}
+{% endif %}
 
 <section{{ attributes.addClass('homepage-hero', 'homepage-slide') }} aria-labelledby="homepage-slide-title-{{ node.id }}">
   {{ title_prefix }}
@@ -33,7 +44,7 @@
       {% endif %}
       {% if slide_link %}
         <a class="homepage-hero__action" href="{{ slide_link.url }}">
-          <span>{{ slide_link.title }}</span>
+          <span>{{ action_label }}</span>
           <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </a>
       {% endif %}

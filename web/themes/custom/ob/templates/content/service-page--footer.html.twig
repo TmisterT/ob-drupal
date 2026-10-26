@@ -21,6 +21,10 @@
   </div>
 {% endif %}
 
+{% if service_details.form_message %}
+  <p class="service-page__section">{{ service_details.form_message }}</p>
+{% endif %}
+
 {% if service_details.contact_email %}
   <section class="service-page__contact" aria-labelledby="service-contact-heading">
     <h2 id="service-contact-heading">{{ 'Contact'|t }}</h2>

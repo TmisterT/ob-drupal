@@ -21,4 +21,7 @@ dependencies:
   - drupal:taxonomy
   - drupal:text
   - drupal:views
+  - webform:webform
+  - webform:webform_ui
+  - captcha:captcha
 
