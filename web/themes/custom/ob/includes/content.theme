@@ -887,19 +887,19 @@ function ob_preprocess_views_view(array &$variables): void {
       'eyebrow' => t('Official records'),
       'heading' => t('Official gazettes and legal instruments'),
       'summary' => t('Browse government gazettes, official notices, regulations, and legal instruments.'),
-      'detail' => t('Search by title or reference and use the available filters to narrow your results. Open a record for publication details, or view and download its attached documents.'),
+      'detail' => t('Search by title or reference number and narrow your results by year. Open a record for publication details, or view and download its attached documents.'),
       'results_heading' => t('Published records'),
-      'title_label' => t('Gazette or instrument'),
-      'document_label' => t('Official file'),
+      'title_label' => t('Title'),
+      'document_label' => t('File'),
     ],
     'page_library' => [
       'key' => 'library',
       'eyebrow' => t('Government publications'),
       'heading' => t('Official publications and reference material'),
       'summary' => t('Explore government policies, strategies, reports, guidelines, and public information documents.'),
-      'detail' => t('Use the search and filters to find a publication by title, type, year, or organisation. Open its record for more information, or view and download the available files.'),
+      'detail' => t('Search by title or reference number and narrow your results by year. Open its record for more information, or view and download the available files.'),
       'results_heading' => t('Library documents'),
-      'title_label' => t('Publication'),
+      'title_label' => t('Title'),
       'document_label' => t('File'),
     ],
     'page_forms' => [
@@ -907,10 +907,10 @@ function ob_preprocess_views_view(array &$variables): void {
       'eyebrow' => t('Public services'),
       'heading' => t('Government forms and permit applications'),
       'summary' => t('Find current application forms, permit documents, agreements, and supporting guidance for government services.'),
-      'detail' => t('Open the publication record for requirements and supporting information, then view or download the official form.'),
+      'detail' => t('Search by title or reference number and narrow your results by year. Open a record for requirements and supporting information, or view and download the official form.'),
       'results_heading' => t('Available forms'),
-      'title_label' => t('Form or application'),
-      'document_label' => t('Form file'),
+      'title_label' => t('Title'),
+      'document_label' => t('File'),
     ],
   ];
   $variables['resource_page'] = $display_content[$view->current_display] ?? $display_content['page_library'];
@@ -1046,41 +1046,20 @@ function _ob_table_result_range(\Drupal\views\ViewExecutable $view, int $row_cou
   ];
 }
 /**
- * Keeps each Resources search form focused on relevant document types.
+ * Gives the public resource tables consistent search labels and placeholders.
  */
 function ob_form_views_exposed_form_alter(array &$form, FormStateInterface $form_state, string $form_id): void {
   $view = $form_state->get('view');
   if (!$view || $view->id() !== 'resource_library') {
     return;
   }
-
-  $settings = [
-    'page_gazettes' => [
-      'label' => t('Search gazettes'),
-      'types' => [5, 6, 7],
-    ],
-    'page_library' => [
-      'label' => t('Search the library'),
-      'types' => [8, 9, 10, 11, 45],
-    ],
-    'page_forms' => [
-      'label' => t('Search forms'),
-      'types' => [43, 44, 45, 52],
-    ],
+  $placeholders = [
+    'page_gazettes' => t('Search Gazettes here...'),
+    'page_library' => t('Search Information Library here...'),
+    'page_forms' => t('Search Forms and Applications here...'),
   ];
-  $display = $settings[$view->current_display] ?? NULL;
-  if (!$display) {
-    return;
-  }
-
-  if (isset($form['search'])) {
-    $form['search']['#title'] = $display['label'];
-  }
-  if (isset($form['type']['#options'])) {
-    $form['type']['#options'] = array_filter(
-      $form['type']['#options'],
-      static fn($key): bool => $key === 'All' || in_array((int) $key, $display['types'], TRUE),
-      ARRAY_FILTER_USE_KEY,
-    );
+  if (isset($placeholders[$view->current_display], $form['search'])) {
+    $form['search']['#title'] = t('Search');
+    $form['search']['#attributes']['placeholder'] = $placeholders[$view->current_display];
   }
 }

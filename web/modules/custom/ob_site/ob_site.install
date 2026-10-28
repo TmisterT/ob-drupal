@@ -3750,3 +3750,31 @@ function ob_site_update_11043(): void {
     $webform->save();
   }
 }
+
+/**
+ * Simplify Gazette filters to search and year without changing other archives.
+ */
+function ob_site_update_11044(): void {
+  $config = \Drupal::configFactory()->getEditable('views.view.resource_library');
+  $filters = $config->get('display.page_gazettes.display_options.filters');
+  if (is_array($filters)) {
+    unset($filters['field_publication_type_target_id'], $filters['field_organisation_target_id']);
+    $config->set('display.page_gazettes.display_options.filters', $filters)->save();
+  }
+}
+
+/**
+ * Use only search and year on all public resource table displays.
+ */
+function ob_site_update_11045(): void {
+  $config = \Drupal::configFactory()->getEditable('views.view.resource_library');
+  foreach (['page_gazettes', 'page_library', 'page_forms'] as $display) {
+    $key = "display.$display.display_options.filters";
+    $filters = $config->get($key);
+    if (is_array($filters)) {
+      unset($filters['field_publication_type_target_id'], $filters['field_organisation_target_id']);
+      $config->set($key, $filters);
+    }
+  }
+  $config->save();
+}

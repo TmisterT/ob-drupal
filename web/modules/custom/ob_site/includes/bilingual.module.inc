@@ -32,6 +32,24 @@ function ob_site_form_node_update_form_alter(array &$form, \Drupal\Core\Form\For
  * remains discoverable when only its non-original translation is published.
  */
 function ob_site_views_query_alter(\Drupal\views\ViewExecutable $view, \Drupal\views\Plugin\views\query\QueryPluginBase $query): void {
+  if ($view->id() === 'resource_library' && in_array($view->current_display, ['page_gazettes', 'page_library', 'page_forms'], TRUE) && $query instanceof \Drupal\views\Plugin\views\query\Sql) {
+    $alias = $query->ensureTable('node_field_data');
+    foreach ($query->where as &$group) {
+      foreach ($group['conditions'] as &$condition) {
+        if ($condition['field'] === $alias . '.title' && strtoupper($condition['operator']) === 'LIKE') {
+          // EXISTS also avoids duplicating records when fields have many values.
+          $condition = [
+            'field' => "($alias.title LIKE :ob_gazette_title OR EXISTS (SELECT 1 FROM {node__field_reference_number} ob_reference WHERE ob_reference.entity_id = $alias.nid AND ob_reference.deleted = 0 AND ob_reference.field_reference_number_value LIKE :ob_gazette_reference))",
+            'value' => [':ob_gazette_title' => $condition['value'], ':ob_gazette_reference' => $condition['value']],
+            'operator' => 'formula',
+          ];
+        }
+      }
+      unset($condition);
+    }
+    unset($group);
+    return;
+  }
   if (!in_array($view->id(), ['updates', 'homepage_featured_updates'], TRUE) || !$query instanceof \Drupal\views\Plugin\views\query\Sql) {
     return;
   }

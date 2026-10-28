@@ -42,26 +42,24 @@
             <caption class="visually-hidden">{{ 'Resource search results'|t }}</caption>
             <thead>
               <tr>
-                <th scope="col">{{ resource_page.title_label }}</th>
-                <th scope="col">{{ 'Type'|t }}</th>
+                <th scope="col">{{ 'Title'|t }}</th>
+                <th scope="col">{{ 'Types'|t }}</th>
                 <th scope="col">{{ 'Year'|t }}</th>
-                <th scope="col">{{ 'Organisation'|t }}</th>
-                <th scope="col">{{ resource_page.document_label }}</th>
+                <th scope="col">{{ 'File'|t }}</th>
               </tr>
             </thead>
             <tbody>
               {% for item in resource_rows %}
                 <tr>
-                  <td data-label="{{ resource_page.title_label }}">
+                  <td data-label="{{ 'Title'|t }}">
                     <a class="resource-table__title" href="{{ item.url }}">{{ item.title }}</a>
                     {% if item.reference %}<span class="resource-table__reference">{{ 'Reference'|t }}: {{ item.reference }}</span>{% endif %}
                     {% if item.summary %}<p>{{ item.summary }}</p>{% endif %}
                     {% if item.published %}<span class="resource-table__published">{{ 'Published'|t }}: {{ item.published }}</span>{% endif %}
                   </td>
-                  <td data-label="{{ 'Type'|t }}">{{ item.types|join(', ') }}</td>
+                  <td data-label="{{ 'Types'|t }}">{{ item.types|join(', ') ?: '—' }}</td>
                   <td data-label="{{ 'Year'|t }}">{{ item.year }}</td>
-                  <td data-label="{{ 'Organisation'|t }}">{{ item.organisations|join(', ') }}</td>
-                  <td data-label="{{ resource_page.document_label }}">
+                  <td data-label="{{ 'File'|t }}">
                     {% for document in item.documents %}
                       <div class="resource-document">
                         <span class="resource-document__meta">{{ document.type }} · {{ document.size }}</span>

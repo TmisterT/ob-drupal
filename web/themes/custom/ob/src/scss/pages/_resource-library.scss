@@ -79,7 +79,7 @@
     display: grid;
     align-items: end;
     gap: 1rem;
-    grid-template-columns: minmax(12rem, 2fr) repeat(3, minmax(8rem, 1fr)) auto;
+    grid-template-columns: minmax(0, 1fr) minmax(7rem, 10rem) auto;
   }
 
   .form-group,
@@ -142,11 +142,10 @@
     text-transform: uppercase;
   }
 
-  th:first-child { width: 36%; }
-  th:nth-child(2) { width: 13%; }
-  th:nth-child(3) { width: 8%; }
-  th:nth-child(4) { width: 18%; }
-  th:last-child { width: 25%; }
+  th:first-child { width: 42%; }
+  th:nth-child(2) { width: 18%; }
+  th:nth-child(3) { width: 10%; }
+  th:last-child { width: 30%; }
 
   td {
     padding: 1rem 0.75rem;
@@ -162,6 +161,7 @@
 }
 
 .resource-table__title {
+  overflow-wrap: anywhere;
   display: inline-block;
   color: $government-navy;
   font-size: 1rem;
