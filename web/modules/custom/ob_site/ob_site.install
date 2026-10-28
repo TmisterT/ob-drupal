@@ -3778,3 +3778,17 @@ function ob_site_update_11045(): void {
   }
   $config->save();
 }
+
+/**
+ * Keep public resource tables to ten records per page.
+ */
+function ob_site_update_11046(): void {
+  $config = \Drupal::configFactory()->getEditable('views.view.resource_library');
+  $config->set('display.default.display_options.pager.type', 'full')
+    ->set('display.default.display_options.pager.options.items_per_page', 10)
+    ->set('display.default.display_options.pager.options.quantity', 5);
+  foreach (['page_gazettes', 'page_library', 'page_forms'] as $display) {
+    $config->set("display.$display.display_options.defaults.pager", TRUE);
+  }
+  $config->save();
+}
