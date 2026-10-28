@@ -2,3 +2,13 @@ website_activity:
   css:
     theme:
       css/website-activity.css: {}
+
+public_holidays:
+  css:
+    theme:
+      css/public-holidays.css: {}
+  js:
+    js/public-holidays.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

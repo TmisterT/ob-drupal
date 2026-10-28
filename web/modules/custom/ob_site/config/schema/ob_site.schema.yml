@@ -1,0 +1,14 @@
+field.storage_settings.ob_holiday_entry:
+  type: mapping
+  label: 'Holiday entry storage settings'
+  mapping: {  }
+
+field.field_settings.ob_holiday_entry:
+  type: mapping
+  label: 'Holiday entry field settings'
+  mapping: {  }
+
+field.widget.settings.ob_holiday_entry:
+  type: mapping
+  label: 'Holiday row widget settings'
+  mapping: {  }

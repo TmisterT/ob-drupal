@@ -4,6 +4,7 @@ dependencies:
   config:
     - media.type.document
     - media.type.image
+    - node.type.annual_holidays
     - node.type.public_notice
     - node.type.publication
     - node.type.update
@@ -25,11 +26,13 @@ permissions:
   - 'access media overview'
   - 'access navigation'
   - 'administer node published status'
+  - 'create annual_holidays content'
   - 'create document media'
   - 'create image media'
   - 'create public_notice content'
   - 'create publication content'
   - 'create update content'
+  - 'edit any annual_holidays content'
   - 'edit any public_notice content'
   - 'edit any publication content'
   - 'edit any update content'
@@ -40,8 +43,8 @@ permissions:
   - 'use updates_editorial transition create_new_draft'
   - 'use updates_editorial transition publish'
   - 'use updates_editorial transition submit_for_review'
+  - 'view latest version'
   - 'view media'
   - 'view own unpublished content'
   - 'view own unpublished media'
-  - 'view latest version'
   - 'view the administration theme'

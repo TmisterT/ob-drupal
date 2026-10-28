@@ -1,0 +1,20 @@
+uuid: a3f5441b-21b8-452c-8b4b-17e71e09730e
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_holiday_year
+field_name: field_holiday_year
+entity_type: node
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

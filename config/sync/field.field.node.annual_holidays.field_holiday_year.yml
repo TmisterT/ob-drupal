@@ -1,0 +1,23 @@
+uuid: 39a0b480-bc90-4969-a24e-fdaa8d6d7942
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_holiday_year
+    - node.type.annual_holidays
+id: node.annual_holidays.field_holiday_year
+field_name: field_holiday_year
+entity_type: node
+bundle: annual_holidays
+label: Year
+description: 'Use one schedule per year, for example 2026 or 2027.'
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  min: 1900
+  max: 2200
+  prefix: ''
+  suffix: ''
+field_type: integer

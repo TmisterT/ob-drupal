@@ -258,6 +258,8 @@ function ob_site_install(): void {
   ob_site_ensure_homepage_slider();
   ob_site_ensure_homepage_public_features();
   ob_site_ensure_service_content_types();
+  require_once __DIR__ . '/includes/holidays.install.inc';
+  ob_site_ensure_holiday_structure();
 }
 
 /**
@@ -3814,4 +3816,51 @@ function ob_site_update_11047(array &$sandbox): void {
     $sandbox['processed']++;
   }
   $sandbox['#finished'] = !$ids || !$sandbox['total'] ? 1 : min(1, $sandbox['processed'] / $sandbox['total']);
+}
+
+/**
+ * Add annual holiday schedules with structured entries and official documents.
+ */
+function ob_site_update_11048(): void {
+  require_once __DIR__ . '/includes/holidays.install.inc';
+  ob_site_ensure_holiday_structure();
+}
+
+/**
+ * Add an optional end date while preserving existing holiday rows and revisions.
+ */
+function ob_site_update_11049(): void {
+  $manager = \Drupal::entityDefinitionUpdateManager();
+  $definition = \Drupal\field\Entity\FieldStorageConfig::loadByName('node', 'field_holiday_entries');
+  if (!$definition) {
+    return;
+  }
+  $mapping = \Drupal::entityTypeManager()->getStorage('node')->getTableMapping();
+  $schema = \Drupal::database()->schema();
+  foreach ([$mapping->getDedicatedDataTableName($definition), $mapping->getDedicatedRevisionTableName($definition)] as $table) {
+    if ($schema->tableExists($table) && !$schema->fieldExists($table, 'field_holiday_entries_end_date')) {
+      $schema->addField($table, 'field_holiday_entries_end_date', ['type' => 'varchar', 'length' => 10, 'not null' => FALSE]);
+    }
+  }
+  // Tell Drupal the additive column migration has already preserved field data.
+  $clean = clone $definition;
+  $definition->setSetting('column_changes_handled', TRUE);
+  $manager->updateFieldStorageDefinition($definition);
+  $manager->updateFieldStorageDefinition($clean);
+}
+
+/**
+ * Allow annual holidays on the homepage and retire replaced holiday notices.
+ */
+function ob_site_update_11050(): void {
+  require_once __DIR__ . '/includes/holidays.install.inc';
+  require_once __DIR__ . '/includes/holidays.module.inc';
+  ob_site_ensure_holiday_structure();
+  $year = (int) \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime(), 'custom', 'Y');
+  foreach (\Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'annual_holidays', 'status' => 1]) as $schedule) {
+    if ((int) $schedule->get('field_holiday_year')->value === $year) {
+      $schedule->set('field_featured', 1)->save();
+    }
+    ob_site_retire_replaced_holiday_notices($schedule);
+  }
 }

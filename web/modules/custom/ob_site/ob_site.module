@@ -37,7 +37,7 @@ function ob_site_preprocess_node(array &$variables): void {
  */
 function ob_site_official_updates(): array {
   $cache = (new \Drupal\Core\Cache\CacheableMetadata())
-    ->addCacheTags(['node_list:public_notice', 'node_list:update', 'config:views.view.homepage_featured_updates'])
+    ->addCacheTags(['node_list:public_notice', 'node_list:update', 'node_list:annual_holidays', 'config:views.view.homepage_featured_updates'])
     ->addCacheContexts(['user.permissions', 'user.node_grants:view', 'languages:language_content', 'languages:language_interface', 'timezone'])
     ->setCacheMaxAge(3600);
   $storage = \Drupal::entityTypeManager()->getStorage('node');
@@ -61,6 +61,13 @@ function ob_site_official_updates(): array {
       }
     }
   }
+  if (\Drupal\field\Entity\FieldConfig::loadByName('node', 'annual_holidays', 'field_featured')) {
+    $holiday_ids = $storage->getQuery()->accessCheck(TRUE)->condition('type', 'annual_holidays')
+      ->condition('status', 1)->condition('field_featured', 1)
+      ->condition('field_holiday_year', (int) substr($today, 0, 4), '>=')
+      ->sort('field_holiday_year', 'ASC')->range(0, 3)->execute();
+    $nodes = array_merge($nodes, array_values($storage->loadMultiple($holiday_ids)));
+  }
   $items = [];
   $seen = [];
   foreach ($nodes as $node) {
@@ -82,6 +89,18 @@ function ob_site_official_updates(): array {
     $access = $node->access('view', NULL, TRUE);
     $cache->addCacheableDependency($node)->addCacheableDependency($access);
     if (!$node->isPublished() || !$access->isAllowed()) {
+      continue;
+    }
+    if ($node->bundle() === 'annual_holidays') {
+      $year = $node->get('field_holiday_year')->value;
+      $items[] = [
+        'id' => $node->id(), 'title' => $node->label(),
+        'summary' => t('View national public holiday dates for @year and download the official PDF.', ['@year' => $year]),
+        'category' => t('Public holidays'), 'datetime' => gmdate('Y-m-d', $node->getChangedTime()),
+        'date' => \Drupal::service('date.formatter')->format($node->getChangedTime(), 'custom', 'j F Y'),
+        'urgent' => FALSE, 'image' => NULL, 'documents' => [], 'url' => $node->toUrl(),
+        'notice' => TRUE, 'link_label' => t('View holidays'),
+      ];
       continue;
     }
     $notice = $node->bundle() === 'public_notice';
@@ -178,6 +197,9 @@ require_once __DIR__ . '/includes/activity.module.inc';
  */
 function ob_site_theme(): array {
   return [
+    'ob_holiday_archive' => [
+      'variables' => ['year' => NULL, 'years' => [], 'search' => '', 'rows' => [], 'documents' => [], 'has_schedule' => FALSE],
+    ],
     'ob_site_website_activity' => [
       'variables' => [
         'filters' => [], 'users' => [], 'types' => [], 'summary' => [],
@@ -189,3 +211,5 @@ function ob_site_theme(): array {
 }
 
 require_once __DIR__ . '/includes/aliases.module.inc';
+
+require_once __DIR__ . '/includes/holidays.module.inc';

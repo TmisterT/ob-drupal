@@ -1,0 +1,61 @@
+<div class="holiday-archive">
+  <p class="holiday-archive__intro">{{ 'Find national public holidays by year and download the official annual notice.'|t }}</p>
+  <form class="holiday-archive__filters" method="get" action="{{ path('<current>') }}" role="search" aria-label="{{ 'Search public holidays'|t }}">
+    <div>
+      <label for="holiday-search">{{ 'Search holidays'|t }}</label>
+      <input id="holiday-search" type="search" name="search" value="{{ search }}" maxlength="200" placeholder="{{ 'Search holidays here...'|t }}">
+    </div>
+    <div>
+      <label for="holiday-year">{{ 'Year'|t }}</label>
+      <select id="holiday-year" name="year">
+        {% for option in years %}<option value="{{ option }}"{{ option == year ? ' selected' }}>{{ option }}</option>{% endfor %}
+      </select>
+    </div>
+    <div class="holiday-archive__actions">
+      <button type="submit">{{ 'Search'|t }}</button>
+      <a href="{{ path('<current>', {}, {query: {year: year}}) }}">{{ 'Clear search'|t }}</a>
+    </div>
+  </form>
+
+  <section class="holiday-archive__documents" aria-labelledby="holiday-documents-heading">
+    <h2 id="holiday-documents-heading">{{ 'Official PDF — @year'|t({'@year': year}) }}</h2>
+    {% for document in documents %}
+      <div class="holiday-archive__document">
+        <div><strong>{{ document.title }}</strong><span>{{ document.filename }} · {{ document.type }} · {{ document.size }}</span></div>
+        <div class="holiday-archive__actions">
+          <a href="{{ document.url }}" target="_blank" rel="noopener">{{ 'Open in new tab'|t }}<span class="visually-hidden"> {{ document.title }}</span></a>
+          <a href="{{ document.url }}" download>{{ 'Download'|t }}<span class="visually-hidden"> {{ document.title }}</span></a>
+        </div>
+      </div>
+      <details class="holiday-archive__pdf">
+        <summary>{{ 'View official PDF'|t }}<span class="visually-hidden"> {{ document.title }}</span></summary>
+        <p>{{ 'If the PDF does not display on your device, use Open in new tab or Download above.'|t }}</p>
+        <iframe data-pdf-src="{{ document.url }}" title="{{ 'Official public holiday PDF: @title'|t({'@title': document.title}) }}" loading="lazy"></iframe>
+      </details>
+    {% else %}
+      <p>{{ 'An official PDF has not been attached for @year.'|t({'@year': year}) }}</p>
+    {% endfor %}
+  </section>
+
+  <div class="holiday-archive__results">
+    <h2>{{ 'National Public Holidays — @year'|t({'@year': year}) }}</h2>
+    {% if has_schedule %}<p role="status">{{ '@count holidays shown'|t({'@count': rows|length}) }}</p>{% endif %}
+  </div>
+    <div class="holiday-archive__table-wrap">
+      <table class="holiday-archive__table">
+        <caption class="visually-hidden">{{ 'National public holidays for @year'|t({'@year': year}) }}</caption>
+        <thead><tr><th scope="col">{{ 'Date'|t }}</th><th scope="col">{{ 'Title'|t }}</th><th scope="col">{{ 'Description'|t }}</th></tr></thead>
+        <tbody>
+          {% for row in rows %}
+            <tr>
+              <td data-label="{{ 'Date'|t }}"><time datetime="{{ row.date }}">{{ row.date_label }}</time></td>
+              <td data-label="{{ 'Title'|t }}">{{ row.title }}</td>
+              <td data-label="{{ 'Description'|t }}">{{ row.description ?: '—' }}</td>
+            </tr>
+          {% else %}
+            <tr><td class="holiday-archive__empty" colspan="3" role="status">{{ has_schedule ? 'No holidays match your search. Try another title or clear the search.'|t : 'No holiday entries have been published for @year.'|t({'@year': year}) }}</td></tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+</div>

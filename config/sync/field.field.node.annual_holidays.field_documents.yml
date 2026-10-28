@@ -1,0 +1,24 @@
+uuid: 40ae14f2-cdcd-4cd6-a27d-1f455539cd41
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_documents
+    - media.type.document
+    - node.type.annual_holidays
+id: node.annual_holidays.field_documents
+field_name: field_documents
+entity_type: node
+bundle: annual_holidays
+label: 'Official annual documents'
+description: 'Attach the approved annual notice from the Document Media Library. A published document and holiday entries are required before publication.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      document: document
+field_type: entity_reference

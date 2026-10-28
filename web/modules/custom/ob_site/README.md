@@ -188,3 +188,30 @@ configuration import is required. The original `/node/ID` routes remain valid.
 ```sh
 ddev test-ob-site web/modules/custom/ob_site/tests/src/Kernel/EditorialAliasesTest.php
 ```
+
+
+## Annual national public holidays
+
+Editors use **Content → Add content → Annual Public Holidays**. Create one
+record per year, attach the approved Document media item, then add repeatable
+holiday rows (date, title, optional description). Save incomplete schedules as
+unpublished drafts. Publication requires a published document with a permanent
+file and at least one complete holiday row. Dates must fall within the selected
+year, and a second record for the same year is rejected. Edit the existing
+schedule to correct that year. Media Editors can create and edit these records.
+
+The public directory is `/news-media/public-holidays`. Existing Public Holiday
+notices also display the directory. Original notice bodies and images remain
+saved in Drupal but are no longer displayed on the holiday page. No dates are
+inferred from legacy notice images.
+Search matches holiday titles without regard to case; Year defaults to the
+current year. All holidays for the selected year appear in chronological order
+on one page. Official document links remain visible while searching. Draft
+schedules and unpublished documents are excluded from public output.
+
+Update 11048 provisions the annual content structure. The date/title/description
+field is supplied by ob_site, without an additional contributed module.
+
+```sh
+ddev test-ob-site web/modules/custom/ob_site/tests/src/Kernel/HolidayScheduleTest.php
+```

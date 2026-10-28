@@ -7,3 +7,11 @@ ob_site.website_activity:
     _permission: 'view website activity'
   options:
     _admin_route: TRUE
+
+ob_site.public_holidays:
+  path: '/news-media/public-holidays'
+  defaults:
+    _controller: '\Drupal\ob_site\Controller\PublicHolidaysController::build'
+    _title: 'National Public Holidays'
+  requirements:
+    _permission: 'access content'

@@ -1,0 +1,21 @@
+uuid: ec21c008-69bc-4841-8266-c70c48622678
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_holiday_entries
+    - node.type.annual_holidays
+  module:
+    - ob_site
+id: node.annual_holidays.field_holiday_entries
+field_name: field_holiday_entries
+entity_type: node
+bundle: annual_holidays
+label: Holidays
+description: 'Add each holiday using its official date and title. Description is optional. Rows appear in date order.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: ob_holiday_entry

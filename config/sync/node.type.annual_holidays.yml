@@ -1,0 +1,11 @@
+uuid: 585715d2-7cdd-4148-a051-d02172ab3463
+langcode: en
+status: true
+dependencies: {  }
+name: 'Annual Public Holidays'
+type: annual_holidays
+description: 'One annual national holiday schedule with its official document and dated holiday entries.'
+help: null
+new_revision: true
+preview_mode: 1
+display_submitted: true

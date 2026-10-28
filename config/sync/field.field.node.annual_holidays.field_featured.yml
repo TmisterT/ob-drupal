@@ -1,0 +1,21 @@
+uuid: 4a9fc873-6dd7-4aef-8e86-86aa71516baf
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_featured
+    - node.type.annual_holidays
+id: node.annual_holidays.field_featured
+field_name: field_featured
+entity_type: node
+bundle: annual_holidays
+label: 'Feature on homepage'
+description: 'Show this published annual schedule in Homepage News and Official Updates. Past years are excluded.'
+required: false
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings:
+  on_label: Featured
+  off_label: 'Not featured'
+field_type: boolean

@@ -31,7 +31,7 @@ function ob_site_editor_resource_sections(): array {
  * Checks every translation so editing cannot change an out-of-scope record.
  */
 function ob_site_editor_node_in_scope(NodeInterface $node): bool {
-  if (in_array($node->bundle(), ['update', 'public_notice'], TRUE)) {
+  if (in_array($node->bundle(), ['update', 'public_notice', 'annual_holidays'], TRUE)) {
     return TRUE;
   }
   if ($node->bundle() !== 'publication' || !$node->hasField('field_resource_section')) {
@@ -79,6 +79,7 @@ function ob_site_node_access(NodeInterface $node, $operation, AccountInterface $
 function ob_site_entity_type_alter(array &$entity_types): void {
   if (isset($entity_types['node'])) {
     $entity_types['node']->addConstraint('ObEditorialScope');
+    $entity_types['node']->addConstraint('ObHolidaySchedule');
   }
 }
 
@@ -87,7 +88,7 @@ function ob_site_entity_type_alter(array &$entity_types): void {
  */
 function ob_site_node_presave(NodeInterface $node): void {
   if (ob_site_is_resources_editor(\Drupal::currentUser()) && !ob_site_editor_node_in_scope($node)) {
-    throw new \Drupal\Core\Entity\EntityStorageException('This account can save only news, public notices, Gazettes and Information Library publications.');
+    throw new \Drupal\Core\Entity\EntityStorageException('This account can save only news, public notices, annual public holidays, Gazettes and Information Library publications.');
   }
 }
 
@@ -96,8 +97,10 @@ function ob_site_node_presave(NodeInterface $node): void {
  */
 function ob_site_form_node_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state): void {
   $node = $form_state->getFormObject()->getEntity();
-  if (in_array($node->bundle(), ['publication', 'update'], TRUE) && isset($form['path']['widget'][0]['alias'])) {
-    $form['path']['widget'][0]['alias']['#description'] = t('Leave blank to generate a readable URL from the title when you save. Existing URLs stay unchanged when you edit the title.');
+  if (in_array($node->bundle(), ['publication', 'update', 'annual_holidays'], TRUE) && isset($form['path']['widget'][0]['alias'])) {
+    $form['path']['widget'][0]['alias']['#description'] = $node->bundle() === 'annual_holidays'
+      ? t('Leave blank to generate the URL from the schedule year. Existing URLs stay unchanged.')
+      : t('Leave blank to generate a readable URL from the title when you save. Existing URLs stay unchanged when you edit the title.');
   }
   if (!ob_site_is_resources_editor(\Drupal::currentUser())) {
     return;

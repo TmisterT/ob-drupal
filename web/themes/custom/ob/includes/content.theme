@@ -17,17 +17,11 @@ function _ob_is_presidency_history_page(\Drupal\node\NodeInterface $node): bool 
  */
 function ob_preprocess_page_title(array &$variables): void {
   $node = \Drupal::routeMatch()->getParameter('node');
-  if ($node instanceof \Drupal\node\NodeInterface
-    && $node->bundle() === 'public_notice'
-    && _ob_notice_has_category($node, ['public holiday', 'public holidays'])
-    && $node->hasField('field_featured_image')
-    && !$node->get('field_featured_image')->isEmpty()) {
-    $variables['holiday_title_image'] = $node->get('field_featured_image')->view([
-      'label' => 'hidden',
-      'type' => 'entity_reference_entity_view',
-      'settings' => ['view_mode' => 'default', 'link' => FALSE],
-    ]);
+  if ($node instanceof \Drupal\node\NodeInterface && $node->bundle() === 'public_notice'
+    && _ob_notice_has_category($node, ['public holiday', 'public holidays'])) {
+    $variables['title'] = t('National Public Holidays');
   }
+
 }
 
 /**
@@ -103,6 +97,11 @@ function ob_preprocess_node(array &$variables): void {
   }
 
   _ob_preprocess_projects($variables);
+
+  if (($variables['view_mode'] ?? NULL) === 'full'
+    && ($node->bundle() === 'annual_holidays' || ($node->bundle() === 'public_notice' && _ob_notice_has_category($node, ['public holiday', 'public holidays'])))) {
+    $variables['holiday_archive'] = \Drupal\ob_site\HolidayArchive::build($node->bundle() === 'annual_holidays' ? (int) $node->get('field_holiday_year')->value : NULL);
+  }
 
   if ($node->bundle() === 'public_notice') {
     $variables['notice_has_detail_page'] = _ob_notice_has_category($node, [

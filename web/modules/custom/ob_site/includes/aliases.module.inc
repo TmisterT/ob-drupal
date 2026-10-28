@@ -10,6 +10,7 @@
  */
 function ob_site_node_insert(\Drupal\node\NodeInterface $node): void {
   ob_site_ensure_editorial_aliases($node);
+  ob_site_retire_replaced_holiday_notices($node);
 }
 
 /**
@@ -17,13 +18,14 @@ function ob_site_node_insert(\Drupal\node\NodeInterface $node): void {
  */
 function ob_site_node_update(\Drupal\node\NodeInterface $node): void {
   ob_site_ensure_editorial_aliases($node);
+  ob_site_retire_replaced_holiday_notices($node);
 }
 
 /**
  * Adds missing aliases, retaining existing URLs and manual editorial choices.
  */
 function ob_site_ensure_editorial_aliases(\Drupal\node\NodeInterface $node): void {
-  if (!in_array($node->bundle(), ['publication', 'update'], TRUE)
+  if (!in_array($node->bundle(), ['publication', 'update', 'annual_holidays'], TRUE)
     || !$node->isDefaultRevision() || !\Drupal::moduleHandler()->moduleExists('path_alias')) {
     return;
   }
@@ -60,8 +62,14 @@ function ob_site_ensure_editorial_aliases(\Drupal\node\NodeInterface $node): voi
         }
       }
     }
+    if ($node->bundle() === 'annual_holidays') {
+      $prefix = '/news-media/public-holidays';
+    }
     $title = \Drupal::transliteration()->transliterate($translation->label(), $langcode, '-');
     $slug = trim(preg_replace('/[^a-z0-9]+/', '-', strtolower($title)), '-');
+    if ($node->bundle() === 'annual_holidays') {
+      $slug = (string) $translation->get('field_holiday_year')->value;
+    }
     $base = $prefix . '/' . (substr($slug, 0, 180) ?: 'document-' . $node->id());
     $alias = $base;
     $suffix = 2;

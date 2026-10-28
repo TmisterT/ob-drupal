@@ -1,0 +1,100 @@
+uuid: bc816e80-59e9-4bbe-8314-dfc369e6c142
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.annual_holidays.field_documents
+    - field.field.node.annual_holidays.field_featured
+    - field.field.node.annual_holidays.field_holiday_entries
+    - field.field.node.annual_holidays.field_holiday_year
+    - node.type.annual_holidays
+  module:
+    - content_moderation
+    - media_library
+    - ob_site
+    - path
+id: node.annual_holidays.default
+targetEntityType: node
+bundle: annual_holidays
+mode: default
+content:
+  created:
+    type: datetime_timestamp
+    weight: 10
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_documents:
+    type: media_library_widget
+    weight: -8
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
+  field_featured:
+    type: boolean_checkbox
+    weight: -6
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  field_holiday_entries:
+    type: ob_holiday_entry
+    weight: -7
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_holiday_year:
+    type: number
+    weight: -9
+    region: content
+    settings:
+      placeholder: ''
+    third_party_settings: {  }
+  langcode:
+    type: language_select
+    weight: 2
+    region: content
+    settings:
+      include_locked: true
+    third_party_settings: {  }
+  moderation_state:
+    type: moderation_state_default
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  path:
+    type: path
+    weight: 30
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  status:
+    type: boolean_checkbox
+    weight: 10
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
+  title:
+    type: string_textfield
+    weight: -10
+    region: content
+    settings:
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+  uid:
+    type: entity_reference_autocomplete
+    weight: 5
+    region: content
+    settings:
+      match_operator: CONTAINS
+      match_limit: 10
+      size: 60
+      placeholder: ''
+    third_party_settings: {  }
+hidden:
+  promote: true
+  sticky: true

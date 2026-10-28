@@ -51,6 +51,10 @@ final class OfficialUpdatesTest extends BrowserTestBase {
     // Installation helpers also reuse field storage supplied by site config.
     foreach (glob($directory . 'field.storage.node.*.yml') as $file) {
       $storage = Yaml::parseFile($file);
+      // Custom holiday fields are created by ob_site after its plugins load.
+      if (($storage['module'] ?? NULL) === 'ob_site') {
+        continue;
+      }
       if (!FieldStorageConfig::loadByName('node', $storage['field_name'])) {
         if (!empty($storage['settings']['allowed_values'])) {
           // Entity creation expects the runtime map, not exported YAML rows.
