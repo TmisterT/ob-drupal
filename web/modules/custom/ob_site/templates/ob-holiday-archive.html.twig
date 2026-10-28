@@ -44,13 +44,13 @@
     <div class="holiday-archive__table-wrap">
       <table class="holiday-archive__table">
         <caption class="visually-hidden">{{ 'National public holidays for @year'|t({'@year': year}) }}</caption>
-        <thead><tr><th scope="col">{{ 'Date'|t }}</th><th scope="col">{{ 'Title'|t }}</th><th scope="col">{{ 'Description'|t }}</th></tr></thead>
+        <thead><tr><th scope="col">{{ 'Date'|t }}</th><th scope="col">{{ 'Title'|t }}</th><th scope="col">{{ 'Status'|t }}</th></tr></thead>
         <tbody>
           {% for row in rows %}
             <tr>
               <td data-label="{{ 'Date'|t }}"><time datetime="{{ row.date }}">{{ row.date_label }}</time></td>
               <td data-label="{{ 'Title'|t }}">{{ row.title }}</td>
-              <td data-label="{{ 'Description'|t }}">{{ row.description ?: '—' }}</td>
+              <td data-label="{{ 'Status'|t }}"><span class="holiday-archive__status holiday-archive__status--{{ row.status }}">{{ {upcoming: 'Upcoming'|t, today: 'Today'|t, ongoing: 'Ongoing'|t, past: 'Past'|t}[row.status] }}</span></td>
             </tr>
           {% else %}
             <tr><td class="holiday-archive__empty" colspan="3" role="status">{{ has_schedule ? 'No holidays match your search. Try another title or clear the search.'|t : 'No holiday entries have been published for @year.'|t({'@year': year}) }}</td></tr>

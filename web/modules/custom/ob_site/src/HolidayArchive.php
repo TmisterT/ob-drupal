@@ -12,13 +12,15 @@ final class HolidayArchive {
 
   public static function build(?int $default_year = NULL): array {
     $args = \Drupal::request()->query->all();
+    $holiday_now = (new \DateTimeImmutable('@' . \Drupal::time()->getRequestTime()))->setTimezone(new \DateTimeZone('Pacific/Tarawa'));
+    $today = $holiday_now->format('Y-m-d');
     $current_year = (int) \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime(), 'custom', 'Y');
     $year_input = $args['year'] ?? $default_year ?? $current_year;
     $year = is_scalar($year_input) && preg_match('/^\d{4}$/', (string) $year_input) && (int) $year_input >= 1900 && (int) $year_input <= 2200 ? (int) $year_input : $current_year;
     $search = isset($args['search']) && is_string($args['search']) ? mb_substr(trim($args['search']), 0, 200) : '';
     $cache = (new CacheableMetadata())->addCacheTags(['node_list:annual_holidays'])
       ->addCacheContexts(['url.query_args:year', 'url.query_args:search', 'url.path', 'user.permissions', 'user.node_grants:view', 'languages:language_content', 'timezone'])
-      ->setCacheMaxAge(3600);
+      ->setCacheMaxAge(min(3600, $holiday_now->modify('tomorrow')->setTime(0, 0)->getTimestamp() - $holiday_now->getTimestamp()));
     $years = [$current_year => $current_year, $year => $year];
     $rows = [];
     $documents = [];
@@ -60,11 +62,13 @@ final class HolidayArchive {
         $date_label = $has_range
           ? $formatter->format($date->getTimestamp(), 'custom', $date->format('Y-m') === $end->format('Y-m') ? 'j' : 'j F', 'UTC') . '–' . $formatter->format($end->getTimestamp(), 'custom', 'j F Y', 'UTC')
           : $formatter->format($date->getTimestamp(), 'custom', 'l, j F Y', 'UTC');
+        $last_day = $has_range ? $item->end_date : $item->date;
+        $status = $today < $item->date ? 'upcoming' : ($today > $last_day ? 'past' : ($has_range ? 'ongoing' : 'today'));
         $rows[] = [
           'date' => $item->date,
           'date_label' => $date_label,
           'end_date' => $has_range ? $item->end_date : NULL,
-          'title' => $item->title, 'description' => $item->description,
+          'title' => $item->title, 'status' => $status,
         ];
       }
       usort($rows, static fn(array $a, array $b): int => [$a['date'], $a['title']] <=> [$b['date'], $b['title']]);
