@@ -41,6 +41,35 @@ import './_cabinet';
         let focused = false;
         let hovered = false;
         let slider;
+        const controls = element.querySelector('.homepage-slider__controls');
+        // Follow each slide's actual action size, including wrapped translations.
+        const alignControls = () => {
+          const active = slides.find((slide) => slide.classList.contains('active'));
+          const action = active?.querySelector('.homepage-hero__action');
+          if (!controls) return;
+          if (!action) {
+            controls.style.removeProperty('left');
+            controls.style.removeProperty('right');
+            controls.style.removeProperty('bottom');
+            return;
+          }
+          const bounds = element.getBoundingClientRect();
+          const button = action.getBoundingClientRect();
+          controls.style.left = `${button.right - bounds.left + 8}px`;
+          controls.style.right = 'auto';
+          controls.style.bottom = `${bounds.bottom - button.bottom + (button.height - controls.offsetHeight) / 2}px`;
+        };
+        const scheduleAlignment = () => window.requestAnimationFrame(alignControls);
+        if (window.ResizeObserver) {
+          const observer = new ResizeObserver(scheduleAlignment);
+          observer.observe(element);
+          slides.forEach((slide) => {
+            const content = slide.querySelector('.homepage-hero__content');
+            if (content) observer.observe(content);
+          });
+        }
+        window.addEventListener('resize', scheduleAlignment);
+        document.fonts?.ready.then(scheduleAlignment);
 
         const updateSlides = (instance) => {
           slides.forEach((slide, index) => {
@@ -49,6 +78,7 @@ import './_cabinet';
             slide.setAttribute('aria-hidden', active ? 'false' : 'true');
             slide.inert = !active;
           });
+          scheduleAlignment();
           indicators.forEach((button, index) => {
             const active = index === instance.currentSlide;
             button.classList.toggle('active', active);

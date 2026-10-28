@@ -1,0 +1,42 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="384" height="288" viewBox="0 0 384 288">
+  <defs>
+    <pattern id="weave" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path fill="#b69556" fill-opacity=".045" d="M0 0h24v24H0zM24 24h24v24H24z"/>
+      <path fill="#b69556" fill-opacity=".02" d="M24 0h24v24H24zM0 24h24v24H0z"/>
+      <g fill="none" stroke="#ad8b4c" stroke-opacity=".045">
+        <path d="M0 4h24M0 10h24M0 16h24M0 22h24M24 28h24M24 34h24M24 40h24M24 46h24"/>
+        <path d="M28 0v24M34 0v24M40 0v24M46 0v24M4 24v24M10 24v24M16 24v24M22 24v24"/>
+      </g>
+    </pattern>
+  </defs>
+  <path fill="url(#weave)" d="M0 0h384v288H0z"/>
+  <!-- Decorative symbols for infrastructure, wealth, peace and governance. -->
+  <g fill="none" stroke="#798f93" stroke-opacity=".09" stroke-width="1.2">
+    <path d="M-96 96Q-48 76 0 96T96 96T192 96T288 96T384 96T480 96"/>
+    <path d="M-96 104Q-48 84 0 104T96 104T192 104T288 104T384 104T480 104"/>
+    <path d="M-96 240Q-48 220 0 240T96 240T192 240T288 240T384 240T480 240"/>
+    <path d="M-96 248Q-48 228 0 248T96 248T192 248T288 248T384 248T480 248"/>
+  </g>
+  <g fill="none" stroke="#ad8b4c" stroke-opacity=".19" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Infrastructure: a bridge connecting shores. -->
+    <g transform="translate(45 27)">
+      <path d="M0 35h56M8 35V5m40 30V5M8 10Q28 40 48 10M0 20l8-10m40 0 8 10M18 23v12m10-8v8m10-12v12M8 0v5m40-5v5M0 43h56"/>
+    </g>
+    <!-- Wealth: marine resources and a coconut palm. -->
+    <g transform="translate(242 23)">
+      <path d="M30 45q6-14 5-29M35 16Q21 5 14 17q12-3 21-1ZM35 16Q33 0 44 0q-4 7-9 16ZM35 16Q48 3 58 13q-13-1-23 3ZM35 16q15-3 20 9-12-7-20-9ZM5 45q10-13 23 0-13 13-23 0Zm0 0-5-6v12Z"/>
+      <path d="M22 43h.1M28 48h30"/>
+      <circle cx="34" cy="19" r="2"/>
+      <circle cx="39" cy="19" r="2"/>
+    </g>
+    <!-- Peace: a dove carrying an olive sprig. -->
+    <g transform="translate(142 164)">
+      <path d="M8 34q12 1 18-10L17 6q17 1 24 16 9-6 14 0l5 3-6 2q-1 15-18 18-15 4-28-11ZM26 24q7 1 15-2M8 34 0 27l3 14 12 1M60 25l7-6m-5 4v-7m2 5 7 1"/>
+      <circle cx="49" cy="23" r=".7"/>
+    </g>
+    <!-- Governance: an open meeting house inspired by a maneaba. -->
+    <g transform="translate(325 166)">
+      <path d="m0 21 27-20 27 20H0Zm6 0v25m42-25v25M17 21v25m20-25v25M0 46h54M6 16h42M13 11h28M20 6h14"/>
+    </g>
+  </g>
+</svg>

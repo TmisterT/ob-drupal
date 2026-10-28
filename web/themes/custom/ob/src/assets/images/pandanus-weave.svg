@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="48" height="48" viewBox="0 0 48 48">
+  <!-- Alternating strips suggest an over-and-under pandanus mat weave. -->
+  <path fill="#b69556" fill-opacity=".055" d="M0 0h24v24H0zM24 24h24v24H24z"/>
+  <path fill="#b69556" fill-opacity=".025" d="M24 0h24v24H24zM0 24h24v24H0z"/>
+  <g fill="none" stroke="#ad8b4c" stroke-opacity=".07">
+    <path d="M0 2h24M0 7h24M0 12h24M0 17h24M0 22h24M24 26h24M24 31h24M24 36h24M24 41h24M24 46h24"/>
+    <path d="M26 0v24M31 0v24M36 0v24M41 0v24M46 0v24M2 24v24M7 24v24M12 24v24M17 24v24M22 24v24"/>
+  </g>
+  <path fill="none" stroke="#ad8b4c" stroke-opacity=".08" d="M0 24h48M24 0v48"/>
+</svg>

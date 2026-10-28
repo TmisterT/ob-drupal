@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="384" height="288" viewBox="0 0 384 288">
+  <defs>
+    <pattern id="weave" width="48" height="48" patternUnits="userSpaceOnUse">
+      <path fill="#b69556" fill-opacity=".045" d="M0 0h24v24H0zM24 24h24v24H24z"/>
+      <path fill="#b69556" fill-opacity=".02" d="M24 0h24v24H24zM0 24h24v24H0z"/>
+      <g fill="none" stroke="#ad8b4c" stroke-opacity=".045">
+        <path d="M0 4h24M0 10h24M0 16h24M0 22h24M24 28h24M24 34h24M24 40h24M24 46h24"/>
+        <path d="M28 0v24M34 0v24M40 0v24M46 0v24M4 24v24M10 24v24M16 24v24M22 24v24"/>
+      </g>
+    </pattern>
+  </defs>
+  <path fill="url(#weave)" d="M0 0h384v288H0z"/>
+  <!-- Subtle ocean lines over a pandanus-inspired woven ground. -->
+  <g fill="none" stroke="#798f93" stroke-opacity=".09" stroke-width="1.2">
+    <path d="M-96 96Q-48 76 0 96T96 96T192 96T288 96T384 96T480 96"/>
+    <path d="M-96 104Q-48 84 0 104T96 104T192 104T288 104T384 104T480 104"/>
+    <path d="M-96 240Q-48 220 0 240T96 240T192 240T288 240T384 240T480 240"/>
+    <path d="M-96 248Q-48 228 0 248T96 248T192 248T288 248T384 248T480 248"/>
+  </g>
+</svg>
