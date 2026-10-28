@@ -32,7 +32,7 @@ function ob_site_ensure_holiday_structure(): void {
         'label' => $label, 'required' => $required, 'settings' => $settings,
         'description' => match ($name) {
           'field_featured' => 'Show this published annual schedule in Homepage News and Official Updates. Past years are excluded.',
-          'field_holiday_entries' => 'Add each holiday using its official date and title. Description is optional. Rows appear in date order.',
+          'field_holiday_entries' => 'Add each holiday using its official date and title. Status is calculated automatically from the dates. Rows appear in date order.',
           'field_documents' => 'Attach the approved annual notice from the Document Media Library. A published document and holiday entries are required before publication.',
           default => 'Use one schedule per year, for example 2026 or 2027.',
         },

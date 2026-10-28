@@ -24,7 +24,9 @@ final class HolidayEntryWidget extends WidgetBase {
     $element['date'] = ['#type' => 'date', '#title' => $this->t('Start date'), '#default_value' => $items[$delta]->date ?? ''];
     $element['end_date'] = ['#type' => 'date', '#title' => $this->t('End date (optional)'), '#description' => $this->t('Leave blank for a single-day holiday.'), '#default_value' => $items[$delta]->end_date ?? ''];
     $element['title'] = ['#type' => 'textfield', '#title' => $this->t('Title'), '#maxlength' => 255, '#default_value' => $items[$delta]->title ?? ''];
-    $element['description'] = ['#type' => 'textarea', '#title' => $this->t('Description (optional)'), '#rows' => 2, '#maxlength' => 2000, '#default_value' => $items[$delta]->description ?? ''];
+    // Preserve previously saved text without displaying an editable input.
+    $element['description'] = ['#type' => 'value', '#value' => $items[$delta]->description ?? ''];
+    $element['#description'] = $this->t('Status is calculated automatically from the holiday dates.');
     return $element;
   }
 

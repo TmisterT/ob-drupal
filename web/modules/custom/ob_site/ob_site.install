@@ -3864,3 +3864,13 @@ function ob_site_update_11050(): void {
     ob_site_retire_replaced_holiday_notices($schedule);
   }
 }
+
+/**
+ * Update holiday editing guidance for automatically calculated status.
+ */
+function ob_site_update_11051(): void {
+  $field = \Drupal\field\Entity\FieldConfig::loadByName('node', 'annual_holidays', 'field_holiday_entries');
+  if ($field) {
+    $field->setDescription('Add each holiday using its official date and title. Status is calculated automatically from the dates. Rows appear in date order.')->save();
+  }
+}

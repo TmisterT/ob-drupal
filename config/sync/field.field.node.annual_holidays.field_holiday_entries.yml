@@ -12,7 +12,7 @@ field_name: field_holiday_entries
 entity_type: node
 bundle: annual_holidays
 label: Holidays
-description: 'Add each holiday using its official date and title. Description is optional. Rows appear in date order.'
+description: 'Add each holiday using its official date and title. Status is calculated automatically from the dates. Rows appear in date order.'
 required: false
 translatable: true
 default_value: {  }
