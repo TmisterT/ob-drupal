@@ -3792,3 +3792,26 @@ function ob_site_update_11046(): void {
   }
   $config->save();
 }
+
+/**
+ * Assign title-based URLs to existing publications and news missing aliases.
+ */
+function ob_site_update_11047(array &$sandbox): void {
+  require_once __DIR__ . '/includes/aliases.module.inc';
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  if (!isset($sandbox['last'])) {
+    $sandbox['last'] = 0;
+    $sandbox['processed'] = 0;
+    $sandbox['total'] = (int) $storage->getQuery()->accessCheck(FALSE)
+      ->condition('type', ['publication', 'update'], 'IN')->count()->execute();
+  }
+  $ids = $storage->getQuery()->accessCheck(FALSE)
+    ->condition('type', ['publication', 'update'], 'IN')
+    ->condition('nid', $sandbox['last'], '>')->sort('nid')->range(0, 50)->execute();
+  foreach ($storage->loadMultiple($ids) as $node) {
+    ob_site_ensure_editorial_aliases($node);
+    $sandbox['last'] = (int) $node->id();
+    $sandbox['processed']++;
+  }
+  $sandbox['#finished'] = !$ids || !$sandbox['total'] ? 1 : min(1, $sandbox['processed'] / $sandbox['total']);
+}

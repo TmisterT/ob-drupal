@@ -167,3 +167,24 @@ Verify scope enforcement in the isolated test database:
 ```sh
 ddev test-ob-site web/modules/custom/ob_site/tests/src/Kernel/NewsResourcesAccessTest.php
 ```
+
+
+## Automatic editorial URLs
+
+Publications and News/Press release updates receive title-based aliases on save
+when an alias is missing. Editors can leave URL alias blank. Gazette, library,
+forms, news and press release records use their corresponding archive prefix;
+unclassified publications use `/resources/publications`. Duplicate titles receive
+`-2`, `-3`, etc. Existing aliases are retained when titles or classifications
+change, including manually entered aliases. Each translation can have its own
+alias. Draft revisions do not change URLs for the default revision.
+
+Update 11047 fills missing aliases on existing records in batches without
+resaving content or replacing existing aliases. Deploy the module code, run
+`vendor/bin/drush updatedb -y` after reviewing pending updates and backing up the
+database, then `vendor/bin/drush cr`. No additional module installation or
+configuration import is required. The original `/node/ID` routes remain valid.
+
+```sh
+ddev test-ob-site web/modules/custom/ob_site/tests/src/Kernel/EditorialAliasesTest.php
+```

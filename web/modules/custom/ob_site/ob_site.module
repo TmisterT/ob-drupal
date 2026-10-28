@@ -187,3 +187,5 @@ function ob_site_theme(): array {
     ],
   ];
 }
+
+require_once __DIR__ . '/includes/aliases.module.inc';

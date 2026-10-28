@@ -95,6 +95,10 @@ function ob_site_node_presave(NodeInterface $node): void {
  * Implements hook_form_node_form_alter().
  */
 function ob_site_form_node_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $form_state): void {
+  $node = $form_state->getFormObject()->getEntity();
+  if (in_array($node->bundle(), ['publication', 'update'], TRUE) && isset($form['path']['widget'][0]['alias'])) {
+    $form['path']['widget'][0]['alias']['#description'] = t('Leave blank to generate a readable URL from the title when you save. Existing URLs stay unchanged when you edit the title.');
+  }
   if (!ob_site_is_resources_editor(\Drupal::currentUser())) {
     return;
   }
