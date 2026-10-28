@@ -3874,3 +3874,20 @@ function ob_site_update_11051(): void {
     $field->setDescription('Add each holiday using its official date and title. Status is calculated automatically from the dates. Rows appear in date order.')->save();
   }
 }
+
+/**
+ * Place Public Holidays beneath News & Media > Public Notices.
+ */
+function ob_site_update_11052(): void {
+  require_once __DIR__ . '/includes/holidays.install.inc';
+  ob_site_ensure_holiday_menu();
+}
+
+/**
+ * List annual holidays as Public Holiday notices rather than a submenu item.
+ */
+function ob_site_update_11053(): void {
+  require_once __DIR__ . '/includes/holidays.install.inc';
+  ob_site_ensure_holiday_menu();
+  ob_site_include_holidays_in_notices();
+}

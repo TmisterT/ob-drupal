@@ -1,0 +1,14 @@
+<article{{ attributes.addClass('public-notice-row', 'public-notice-row--archive') }}>
+  {{ title_prefix }}{{ title_suffix }}
+  <a class="public-notice-row__link" href="{{ url }}">
+    <div class="public-notice-row__meta">
+      <span class="public-notice-row__category">{{ 'Public Holiday'|t }}</span>
+      <span>{{ node.field_holiday_year.value }}</span>
+    </div>
+    <div class="public-notice-row__copy">
+      <h2>{{ label }}</h2>
+      <div class="public-notice-row__summary">{{ 'View holiday dates and the official annual PDF.'|t }}</div>
+    </div>
+    <svg class="public-notice-row__arrow" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+  </a>
+</article>

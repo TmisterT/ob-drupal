@@ -6,6 +6,7 @@
 #}
 {% if breadcrumb %}
   <nav class="site-breadcrumb" aria-label="{{ 'Breadcrumb'|t }}">
+    <p class="site-breadcrumb__label">{{ 'You are here:'|t }}</p>
     <ol class="site-breadcrumb__list">
       {% for item in breadcrumb %}
         <li class="site-breadcrumb__item{% if loop.last %} is-current{% endif %}">

@@ -33,3 +33,19 @@ function ob_site_retire_replaced_holiday_notices(\Drupal\node\NodeInterface $sch
     }
   }
 }
+
+/**
+ * Classifies annual schedules as Public Holiday in the Public Notices archive.
+ */
+function ob_site_assign_holiday_category(\Drupal\node\NodeInterface $node): void {
+  if ($node->bundle() !== 'annual_holidays' || !$node->hasField('field_notice_category')) {
+    return;
+  }
+  $terms = \Drupal::entityTypeManager()->getStorage('taxonomy_term')->loadByProperties(['vid' => 'notice_category']);
+  foreach ($terms as $term) {
+    if (in_array(strtolower(trim($term->label())), ['public holiday', 'public holidays'], TRUE)) {
+      $node->set('field_notice_category', $term->id());
+      break;
+    }
+  }
+}

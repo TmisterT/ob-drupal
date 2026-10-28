@@ -754,6 +754,44 @@ function ob_preprocess_breadcrumb(array &$variables): void {
     'url' => \Drupal\Core\Url::fromRoute('<front>'),
   ]];
 
+  $route_match = \Drupal::routeMatch();
+  $node = $route_match->getParameter('node');
+  $is_holiday = $route_match->getRouteName() === 'ob_site.public_holidays'
+    || ($node instanceof \Drupal\node\NodeInterface && ($node->bundle() === 'annual_holidays'
+      || ($node->bundle() === 'public_notice' && _ob_notice_has_category($node, ['public holiday', 'public holidays']))));
+  if ($is_holiday) {
+    $roots = \Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['menu_name' => 'main', 'title' => 'News & Media']);
+    if ($root = reset($roots)) {
+      $variables['breadcrumb'][] = ['text' => $root->label(), 'url' => $root->getUrlObject()];
+    }
+    $variables['breadcrumb'][] = ['text' => t('Public Notices'), 'url' => \Drupal\Core\Url::fromRoute('view.public_notices.page_1')];
+    if ($node instanceof \Drupal\node\NodeInterface && $node->bundle() === 'annual_holidays') {
+      $variables['breadcrumb'][] = ['text' => t('Public Holidays'), 'url' => \Drupal\Core\Url::fromRoute('ob_site.public_holidays')];
+      $variables['breadcrumb'][] = ['text' => $node->get('field_holiday_year')->value, 'url' => NULL];
+    }
+    else {
+      $variables['breadcrumb'][] = ['text' => t('Public Holidays'), 'url' => NULL];
+    }
+    return;
+  }
+
+  // Always include the current page after its linked menu ancestors.
+  $finish = static function () use (&$variables, $route_match, $node): void {
+    $current_url = \Drupal\Core\Url::fromRoute('<current>')->toString();
+    $last = array_key_last($variables['breadcrumb']);
+    if ($last !== NULL && $variables['breadcrumb'][$last]['url'] && $variables['breadcrumb'][$last]['url']->toString() === $current_url) {
+      $variables['breadcrumb'][$last]['url'] = NULL;
+      return;
+    }
+    $title = $node instanceof \Drupal\node\NodeInterface ? $node->label() : NULL;
+    if (!$title && $route_match->getRouteObject()) {
+      $title = \Drupal::service('title_resolver')->getTitle(\Drupal::request(), $route_match->getRouteObject());
+    }
+    if ($title && !is_array($title)) {
+      $variables['breadcrumb'][] = ['text' => $title, 'url' => NULL];
+    }
+  };
+
   $active_trail = \Drupal::service('menu.active_trail');
   $menu_link_manager = \Drupal::service('plugin.manager.menu.link');
   $plugin_ids = array_reverse(array_keys($active_trail->getActiveTrailIds('main')));
@@ -782,6 +820,7 @@ function ob_preprocess_breadcrumb(array &$variables): void {
   }
 
   if (count($variables['breadcrumb']) > 1) {
+    $finish();
     return;
   }
 
@@ -791,17 +830,11 @@ function ob_preprocess_breadcrumb(array &$variables): void {
       'text' => $navigation['title'],
       'url' => $navigation['root_url'],
     ];
+    $finish();
     return;
   }
 
-  $route_match = \Drupal::routeMatch();
-  $node = $route_match->getParameter('node');
-  if ($node instanceof \Drupal\node\NodeInterface) {
-    $variables['breadcrumb'][] = [
-      'text' => $node->label(),
-      'url' => $node->toUrl(),
-    ];
-  }
+  $finish();
 }
 
 /**

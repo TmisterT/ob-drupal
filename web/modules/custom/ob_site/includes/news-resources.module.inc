@@ -87,6 +87,7 @@ function ob_site_entity_type_alter(array &$entity_types): void {
  * Implements hook_node_presave().
  */
 function ob_site_node_presave(NodeInterface $node): void {
+  ob_site_assign_holiday_category($node);
   if (ob_site_is_resources_editor(\Drupal::currentUser()) && !ob_site_editor_node_in_scope($node)) {
     throw new \Drupal\Core\Entity\EntityStorageException('This account can save only news, public notices, annual public holidays, Gazettes and Information Library publications.');
   }

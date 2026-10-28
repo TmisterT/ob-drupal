@@ -55,4 +55,37 @@ function ob_site_ensure_holiday_structure(): void {
   if ($role = \Drupal\user\Entity\Role::load('media_editor')) {
     $role->grantPermission('create annual_holidays content')->grantPermission('edit any annual_holidays content')->save();
   }
+  ob_site_ensure_holiday_menu();
+  ob_site_include_holidays_in_notices();
+}
+
+/**
+ * Places the holiday directory below Public Notices in the main menu.
+ */
+function ob_site_ensure_holiday_menu(): void {
+  // Holidays belong in the Public Notices listing, not in a submenu.
+  $storage = \Drupal::entityTypeManager()->getStorage('menu_link_content');
+  $links = $storage->loadByProperties(['menu_name' => 'main', 'link.uri' => 'internal:/news-media/public-holidays']);
+  $storage->delete($links);
+}
+
+/**
+ * Includes annual schedules in the searchable Public Notices listing.
+ */
+function ob_site_include_holidays_in_notices(): void {
+  if (!\Drupal\field\Entity\FieldConfig::loadByName('node', 'annual_holidays', 'field_notice_category')) {
+    \Drupal\field\Entity\FieldConfig::create([
+      'entity_type' => 'node', 'bundle' => 'annual_holidays', 'field_name' => 'field_notice_category',
+      'label' => 'Category', 'settings' => ['handler' => 'default:taxonomy_term', 'handler_settings' => ['target_bundles' => ['notice_category' => 'notice_category']]],
+    ])->save();
+  }
+  if ($view = \Drupal\views\Entity\View::load('public_notices')) {
+    $displays = $view->get('display');
+    $displays['default']['display_options']['filters']['type']['value']['annual_holidays'] = 'annual_holidays';
+    $view->set('display', $displays)->save();
+  }
+  foreach (\Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'annual_holidays']) as $node) {
+    ob_site_assign_holiday_category($node);
+    $node->save();
+  }
 }

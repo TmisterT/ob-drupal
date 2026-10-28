@@ -53,3 +53,5 @@
 .holiday-archive__status { display: inline-block; padding: .3rem .65rem; border-radius: 3px; background: #edf4fa; color: #075080; font-size: .85rem; font-weight: 700; }
 .holiday-archive__status--today, .holiday-archive__status--ongoing { background: #e5f3ea; color: #205c37; }
 .holiday-archive__status--past { background: #edf0f2; color: #52616b; }
+
+.site-breadcrumb__label { margin: 0 0 .35rem; color: #526977; font-size: .8rem; }

@@ -4,6 +4,7 @@ status: true
 dependencies:
   config:
     - core.entity_view_mode.node.teaser
+    - node.type.annual_holidays
     - node.type.public_notice
     - taxonomy.vocabulary.notice_category
   module:
@@ -111,6 +112,7 @@ display:
           operator: in
           value:
             public_notice: public_notice
+            annual_holidays: annual_holidays
           group: 1
           exposed: false
         title:
