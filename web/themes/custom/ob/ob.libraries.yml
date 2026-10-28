@@ -40,3 +40,13 @@ flexslider:
     build/assets/vendor/flexslider/jquery.flexslider.js: {}
   dependencies:
     - core/jquery
+
+image-viewer:
+  css:
+    theme:
+      css/image-viewer.css: {}
+  js:
+    js/image-viewer.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

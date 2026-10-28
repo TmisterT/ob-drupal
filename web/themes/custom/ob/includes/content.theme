@@ -88,6 +88,21 @@ function _ob_notice_has_category(\Drupal\node\NodeInterface $node, array $labels
   return FALSE;
 }
 /**
+ * Gets an accessible featured image's original URL.
+ */
+function _ob_update_image_url($node, CacheableMetadata $metadata): ?string {
+  $media = $node->get('field_featured_image')->entity;
+  if (!$media) { return NULL; }
+  $access = $media->access('view', NULL, TRUE);
+  $metadata->addCacheableDependency($media)->addCacheableDependency($access);
+  if (!$access->isAllowed() || !$media->hasField('field_media_image')) { return NULL; }
+  $file = $media->get('field_media_image')->entity;
+  if (!$file) { return NULL; }
+  $metadata->addCacheableDependency($file);
+  return \Drupal::service('file_url_generator')->generateString($file->getFileUri());
+}
+
+/**
  * Supplies section and previous/next navigation to full node pages.
  */
 function ob_preprocess_node(array &$variables): void {
@@ -137,6 +152,7 @@ function ob_preprocess_node(array &$variables): void {
 
   if ($node->bundle() === 'update') {
     $translation_cache = CacheableMetadata::createFromRenderArray($variables['elements']);
+    $variables['update_image_url'] = _ob_update_image_url($node, $translation_cache);
     $variables['update_languages'] = _ob_update_language_links($node, $translation_cache);
     $translation_cache->applyTo($variables['elements']);
     $reference_labels = static function ($field): array {
@@ -888,6 +904,7 @@ function ob_preprocess_views_view(array &$variables): void {
           'title' => $node->label(),
           'url' => $node->toUrl(),
           'image' => $image,
+          'image_url' => _ob_update_image_url($node, $metadata),
           'summary' => $node->get('field_summary')->value,
           'date' => $date_value ? $date_formatter->format(strtotime($date_value), 'custom', 'j F Y') : NULL,
           'datetime' => $date_value,

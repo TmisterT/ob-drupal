@@ -1,3 +1,4 @@
+{{ attach_library('ob/image-viewer') }}
 {# Press Releases archive table. #}
 {{ press_release_cache }}
 <div{{ attributes.addClass('news-media-archive', 'updates-archive', 'press-releases-archive', dom_id ? 'js-view-dom-id-' ~ dom_id) }}>
@@ -51,9 +52,9 @@
               {% for item in press_release_rows %}
                 <tr>
                   <td data-label="{{ 'Image'|t }}">
-                    <a class="press-release-table__image" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+                    <a class="press-release-table__image" href="{{ item.image_url ?: item.url }}"{% if item.image_url %} data-image-viewer aria-label="{{ 'Enlarge image: @title'|t({'@title': item.title}) }}"{% endif %}>
                       {% if item.image %}
-                        {{ item.image }}
+                        {{ item.image }}{% if item.image_url %}<span class="news-image-hint">{{ 'Click to enlarge'|t }}</span>{% endif %}
                       {% else %}
                         <span class="press-release-table__image-placeholder">{{ 'No image'|t }}</span>
                       {% endif %}

@@ -1,3 +1,4 @@
+{{ attach_library('ob/image-viewer') }}
 {# Full article shared by Press releases, News, and future update types. #}
 {% set has_image = not node.field_featured_image.isEmpty %}
 {% set has_details = update_details.topics or update_details.content_owner or update_details.last_reviewed %}
@@ -35,7 +36,7 @@
     {% if has_image or has_details %}
       <aside class="update-article__sidebar" aria-label="{{ 'Article information'|t }}">
         {% if has_image %}
-          <figure class="update-article__media">{{ content.field_featured_image }}</figure>
+          <figure class="update-article__media">{% if update_image_url %}<a href="{{ update_image_url }}" data-image-viewer aria-label="{{ 'Enlarge image: @title'|t({'@title': node.label}) }}">{% endif %}{{ content.field_featured_image }}{% if update_image_url %}<span class="news-image-hint">{{ 'Click to enlarge'|t }}</span></a>{% endif %}</figure>
         {% endif %}
         {% if has_details %}
           <div class="update-article__details">
