@@ -7,6 +7,8 @@ dependencies:
     - field.field.node.update.field_content_owner
     - field.field.node.update.field_featured
     - field.field.node.update.field_featured_image
+    - field.field.node.update.field_homepage_image_fit
+    - field.field.node.update.field_homepage_order
     - field.field.node.update.field_last_reviewed
     - field.field.node.update.field_release_documents
     - field.field.node.update.field_summary
@@ -36,14 +38,6 @@ content:
     settings: {  }
     third_party_settings: {  }
     weight: 4
-    region: content
-  field_featured:
-    type: boolean
-    label: above
-    settings:
-      format: yes-no
-    third_party_settings: {  }
-    weight: 3
     region: content
   field_featured_image:
     type: entity_reference_entity_view
@@ -110,4 +104,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_featured: true
+  field_homepage_image_fit: true
+  field_homepage_order: true
   langcode: true

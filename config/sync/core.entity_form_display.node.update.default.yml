@@ -7,6 +7,8 @@ dependencies:
     - field.field.node.update.field_content_owner
     - field.field.node.update.field_featured
     - field.field.node.update.field_featured_image
+    - field.field.node.update.field_homepage_image_fit
+    - field.field.node.update.field_homepage_order
     - field.field.node.update.field_last_reviewed
     - field.field.node.update.field_release_documents
     - field.field.node.update.field_summary
@@ -17,6 +19,7 @@ dependencies:
   module:
     - datetime
     - media_library
+    - options
     - path
     - text
 id: node.update.default
@@ -47,7 +50,7 @@ content:
     third_party_settings: {  }
   field_featured:
     type: boolean_checkbox
-    weight: 3
+    weight: 20
     region: content
     settings:
       display_label: true
@@ -57,6 +60,19 @@ content:
     weight: 2
     region: content
     settings: {  }
+    third_party_settings: {  }
+  field_homepage_image_fit:
+    type: options_select
+    weight: 22
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_homepage_order:
+    type: number
+    weight: 21
+    region: content
+    settings:
+      placeholder: ''
     third_party_settings: {  }
   field_last_reviewed:
     type: datetime_default

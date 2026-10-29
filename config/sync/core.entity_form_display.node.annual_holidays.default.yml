@@ -5,8 +5,10 @@ dependencies:
   config:
     - field.field.node.annual_holidays.field_documents
     - field.field.node.annual_holidays.field_featured
+    - field.field.node.annual_holidays.field_featured_image
     - field.field.node.annual_holidays.field_holiday_entries
     - field.field.node.annual_holidays.field_holiday_year
+    - field.field.node.annual_holidays.field_homepage_image_fit
     - node.type.annual_holidays
   module:
     - content_moderation
@@ -38,6 +40,13 @@ content:
     settings:
       display_label: true
     third_party_settings: {  }
+  field_featured_image:
+    type: media_library_widget
+    weight: -5
+    region: content
+    settings:
+      media_types: {  }
+    third_party_settings: {  }
   field_holiday_entries:
     type: ob_holiday_entry
     weight: -7
@@ -50,6 +59,12 @@ content:
     region: content
     settings:
       placeholder: ''
+    third_party_settings: {  }
+  field_homepage_image_fit:
+    type: options_select
+    weight: -4
+    region: content
+    settings: {  }
     third_party_settings: {  }
   langcode:
     type: language_select

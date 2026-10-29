@@ -75,6 +75,8 @@
     picture { display: block; }
   }
 
+  &__media--cover img { object-fit: cover; }
+
   &__media--notice {
     aspect-ratio: auto;
 

@@ -1,0 +1,24 @@
+uuid: 922a46b4-8df1-4df2-93a8-defe9427f673
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_featured_image
+    - media.type.image
+    - node.type.annual_holidays
+id: node.annual_holidays.field_featured_image
+field_name: field_featured_image
+entity_type: node
+bundle: annual_holidays
+label: 'Homepage image'
+description: 'Optional image for the homepage notice board. Select or upload an image of the official holiday notice. Keep the approved PDF in Official annual documents.'
+required: false
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  handler: 'default:media'
+  handler_settings:
+    target_bundles:
+      image: image
+field_type: entity_reference

@@ -5,7 +5,10 @@ dependencies:
   config:
     - field.field.node.public_notice.body
     - field.field.node.public_notice.field_documents
+    - field.field.node.public_notice.field_featured
     - field.field.node.public_notice.field_featured_image
+    - field.field.node.public_notice.field_homepage_image_fit
+    - field.field.node.public_notice.field_homepage_order
     - field.field.node.public_notice.field_notice_category
     - field.field.node.public_notice.field_notice_date
     - field.field.node.public_notice.field_notice_expiry
@@ -17,6 +20,7 @@ dependencies:
     - datetime
     - link
     - media_library
+    - options
     - path
     - text
 id: node.public_notice.default
@@ -46,12 +50,32 @@ content:
     settings:
       media_types: {  }
     third_party_settings: {  }
+  field_featured:
+    type: boolean_checkbox
+    weight: 20
+    region: content
+    settings:
+      display_label: true
+    third_party_settings: {  }
   field_featured_image:
     type: media_library_widget
     weight: 7
     region: content
     settings:
       media_types: {  }
+    third_party_settings: {  }
+  field_homepage_image_fit:
+    type: options_select
+    weight: 22
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+  field_homepage_order:
+    type: number
+    weight: 21
+    region: content
+    settings:
+      placeholder: ''
     third_party_settings: {  }
   field_notice_category:
     type: options_select

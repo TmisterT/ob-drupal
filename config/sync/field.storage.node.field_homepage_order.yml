@@ -1,0 +1,20 @@
+uuid: d58d2fa6-79d5-4823-9bd9-5fb193a94435
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_homepage_order
+field_name: field_homepage_order
+entity_type: node
+type: integer
+settings:
+  unsigned: false
+  size: normal
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

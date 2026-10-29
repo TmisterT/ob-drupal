@@ -10,7 +10,7 @@
       <div class="official-board__features">
         {% for item in items %}
           <article class="official-board__feature{{ item.image ? '' : ' official-board__feature--text' }}" id="official-update-{{ item.id }}" data-board-panel>
-            {% if item.image %}<div class="official-board__media{{ item.notice ? ' official-board__media--notice' : '' }}">{{ item.image }}</div>{% endif %}
+            {% if item.image %}<div class="official-board__media{{ item.image_fit == 'cover' ? ' official-board__media--cover' : (item.notice ? ' official-board__media--notice' : '') }}">{{ item.image }}</div>{% endif %}
             <div class="official-board__content">
               <div class="official-board__meta">
                 {% if item.urgent %}<span class="official-board__urgent">{{ 'Urgent'|t }}</span>{% endif %}

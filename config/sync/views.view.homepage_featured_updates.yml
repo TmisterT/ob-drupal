@@ -53,6 +53,13 @@ display:
         options: {  }
       empty: {  }
       sorts:
+        field_homepage_order_value:
+          id: field_homepage_order_value
+          table: node__field_homepage_order
+          field: field_homepage_order_value
+          plugin_id: standard
+          order: ASC
+          exposed: false
         field_update_date_value:
           id: field_update_date_value
           table: node__field_update_date

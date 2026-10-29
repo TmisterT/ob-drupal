@@ -8,6 +8,8 @@ dependencies:
     - field.field.node.update.field_content_owner
     - field.field.node.update.field_featured
     - field.field.node.update.field_featured_image
+    - field.field.node.update.field_homepage_image_fit
+    - field.field.node.update.field_homepage_order
     - field.field.node.update.field_last_reviewed
     - field.field.node.update.field_release_documents
     - field.field.node.update.field_summary
@@ -99,5 +101,7 @@ content:
     region: content
 hidden:
   field_featured: true
+  field_homepage_image_fit: true
+  field_homepage_order: true
   langcode: true
   links: true

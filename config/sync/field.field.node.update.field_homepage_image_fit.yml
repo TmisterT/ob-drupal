@@ -1,0 +1,23 @@
+uuid: ec17ac29-0e01-4089-92ad-2be04ec0c814
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_homepage_image_fit
+    - node.type.update
+  module:
+    - options
+id: node.update.field_homepage_image_fit
+field_name: field_homepage_image_fit
+entity_type: node
+bundle: update
+label: 'Homepage image display'
+description: 'Show whole image preserves scanned notices and text. Fill frame crops photographs to fill the homepage image area. This does not change the article image.'
+required: false
+translatable: false
+default_value:
+  -
+    value: contain
+default_value_callback: ''
+settings: {  }
+field_type: list_string

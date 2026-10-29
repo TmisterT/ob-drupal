@@ -215,3 +215,35 @@ field is supplied by ob_site, without an additional contributed module.
 ```sh
 ddev test-ob-site web/modules/custom/ob_site/tests/src/Kernel/HolidayScheduleTest.php
 ```
+
+### Homepage notice board controls
+
+Edit a **News and Update** or **Public Notice** under Content. The **Homepage
+notice board** group contains:
+
+- **Feature on homepage**: selects this item for the existing homepage board.
+  Unchecking it does not unpublish the article or remove it from its archive.
+- **Homepage order**: lower numbers appear first across news and notices. Equal
+  numbers use urgent notices first, then the newest publication date.
+- **Homepage image display**: **Show whole image** preserves text and scanned
+  notices; **Fill frame** crops photographs into the board's image frame. This
+  setting affects only the large homepage image, not the source media or article.
+
+Content's existing **Featured on homepage** filter finds selected records. The
+board takes up to three published, selected Public Notices (excluding expired
+notices) and three selected News/Press releases, plus eligible featured annual
+holiday schedules. Annual holiday controls remain on their existing form.
+Public Notice expiry remains inclusive of the selected date. The homepage's
+**Official updates board** setting still controls the section heading.
+
+Update `11054` adds these controls, gives existing news/notices order `0` and
+whole-image display, and selects the three notices previously eligible for the
+board. Existing news selections are preserved. Configuration changes are also
+included in `config/sync`; run database updates before importing configuration
+so the migration can identify notices that predate the selection checkbox.
+
+Annual Public Holidays also has an optional **Homepage image** and **Homepage
+image display** inside **Homepage notice board**. These use Image Media Library
+items for the large panel and thumbnail; the official PDF and schedule are
+unchanged. Without an image the board keeps its existing text-only layout.
+Unpublished/inaccessible media are excluded. Update `11055` installs these fields.

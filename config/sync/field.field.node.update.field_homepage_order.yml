@@ -1,0 +1,25 @@
+uuid: 81cc9296-5d15-4456-b278-db0dda0de6cb
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_homepage_order
+    - node.type.update
+id: node.update.field_homepage_order
+field_name: field_homepage_order
+entity_type: node
+bundle: update
+label: 'Homepage order'
+description: 'Lower numbers appear first, including across News and Public Notices. Use 0 for normal priority. Equal numbers use urgency, then newest date.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  min: -1000
+  max: 1000
+  prefix: ''
+  suffix: ''
+field_type: integer

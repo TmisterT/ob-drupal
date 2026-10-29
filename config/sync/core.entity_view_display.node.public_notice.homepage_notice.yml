@@ -5,6 +5,9 @@ dependencies:
   config:
     - core.entity_view_mode.node.homepage_notice
     - field.field.node.public_notice.body
+    - field.field.node.public_notice.field_featured
+    - field.field.node.public_notice.field_homepage_image_fit
+    - field.field.node.public_notice.field_homepage_order
     - field.field.node.public_notice.field_notice_category
     - field.field.node.public_notice.field_notice_date
     - field.field.node.public_notice.field_notice_expiry
@@ -90,4 +93,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_featured: true
+  field_homepage_image_fit: true
+  field_homepage_order: true
   langcode: true

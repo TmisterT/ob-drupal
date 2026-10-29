@@ -562,7 +562,7 @@ display:
           expose:
             operator_id: featured_op
             label: 'Featured on homepage'
-            description: 'Filter by the saved feature selection. Homepage news highlights require a published News or Press release.'
+            description: 'Find items selected for the homepage. Only published content appears; expired notices and past holiday schedules are excluded.'
             use_operator: false
             operator: featured_op
             identifier: featured

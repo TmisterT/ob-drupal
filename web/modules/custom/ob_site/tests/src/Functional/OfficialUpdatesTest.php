@@ -88,6 +88,8 @@ final class OfficialUpdatesTest extends BrowserTestBase {
     View::create(Yaml::parseFile($directory . 'views.view.homepage_featured_updates.yml'))->save();
     \Drupal::moduleHandler()->loadInclude('ob_site', 'install');
     ob_site_update_11030();
+    require_once DRUPAL_ROOT . "/modules/custom/ob_site/includes/notice-board.install.inc";
+    ob_site_ensure_notice_board_controls();
     \Drupal::service('router.builder')->rebuild();
     \Drupal::service('entity_field.manager')->clearCachedFieldDefinitions();
     \Drupal::service('typed_data_manager')->clearCachedDefinitions();
@@ -130,7 +132,7 @@ final class OfficialUpdatesTest extends BrowserTestBase {
       'field_notice_category' => $this->announcement->id(),
       'field_notice_summary' => 'Notice summary for ' . $title,
       'field_notice_date' => '2026-10-01', 'field_notice_expiry' => $expiry,
-      'field_notice_urgent' => (int) $urgent,
+      'field_notice_urgent' => (int) $urgent, 'field_featured' => 1,
     ]);
     $node->save();
     return $node;
@@ -155,6 +157,52 @@ final class OfficialUpdatesTest extends BrowserTestBase {
     $this->drupalGet('<front>');
     $assert->elementTextNotContains('css', '[data-official-board]', 'Featured news');
     $assert->elementTextContains('css', '[data-official-board]', 'Featured release');
+  }
+
+  public function testNoticeSelectionOrderingAndAdminControls(): void {
+    $notice = $this->notice('Selected public notice', '2099-12-31', TRUE);
+    $hidden = $this->notice('Unselected public notice', '2099-12-31');
+    $hidden->set('field_featured', 0)->save();
+    $news = $this->update('Priority news');
+    $news->set('field_homepage_order', -10)->save();
+    // Priority must be applied before each type's three-item limit.
+    for ($i = 1; $i <= 3; $i++) {
+      $this->update('A normal news ' . $i);
+      $this->notice('Other urgent notice ' . $i, '2099-12-31', TRUE);
+    }
+    $this->drupalGet('<front>');
+    $assert = $this->assertSession();
+    $assert->elementTextContains('css', '[data-board-panel]:first-child', 'Priority news');
+    $assert->elementTextNotContains('css', '[data-official-board]', 'Unselected public notice');
+    $notice->set('field_homepage_order', -20)->save();
+    $this->drupalGet('<front>');
+    $assert->elementTextContains('css', '[data-board-panel]:first-child', 'Selected public notice');
+    $notice->set('field_featured', 0)->save();
+    $this->drupalGet('<front>');
+    $assert->elementTextNotContains('css', '[data-official-board]', 'Selected public notice');
+    $this->drupalGet($notice->toUrl());
+    $assert->statusCodeEquals(200);
+    $assert->elementNotExists('css', '.field--name-field-homepage-order');
+    $editor = $this->drupalCreateUser(['access content', 'edit any public_notice content', 'edit any update content']);
+    $this->drupalLogin($editor);
+    foreach ([$notice, $news] as $node) {
+      $this->drupalGet('node/' . $node->id() . '/edit');
+      $assert->pageTextContains('Homepage notice board');
+      $assert->fieldExists('Feature on homepage');
+      $assert->fieldExists('Homepage order');
+      $assert->fieldExists('Homepage image display');
+    }
+    $this->drupalGet('node/' . $notice->id() . '/edit');
+    $this->submitForm([
+      'field_featured[value]' => TRUE,
+      'field_homepage_order[0][value]' => '-30',
+      'field_homepage_image_fit' => 'cover',
+    ], 'Save');
+    $this->drupalLogout();
+    $this->drupalGet('<front>');
+    $assert->elementTextContains('css', '[data-board-panel]:first-child', 'Selected public notice');
+    $saved = Node::load($notice->id());
+    $this->assertSame('cover', $saved->get('field_homepage_image_fit')->value);
   }
 
   public function testBilingualFeaturedReleasesAppearOnce(): void {
@@ -236,6 +284,11 @@ final class OfficialUpdatesTest extends BrowserTestBase {
     $panel = '#official-update-' . $notice->id();
     $assert->elementExists('css', $panel . ' .official-board__media img[alt="Flag for the holiday notice"]');
     $assert->elementExists('css', $panel . ' a[href$="notice-document.pdf"]');
+    $assert->elementExists('css', $panel . ' .official-board__media--notice');
+    $notice->set('field_homepage_image_fit', 'cover')->save();
+    $this->drupalGet('<front>');
+    $assert->elementExists('css', $panel . ' .official-board__media--cover');
+    $assert->elementNotExists('css', $panel . ' .official-board__media--notice');
     $this->drupalGet($notice->toUrl());
     $assert->elementExists('css', '.public-notice-page img[alt="Flag for the holiday notice"]');
     $assert->elementExists('css', '.public-notice-page a[href$="notice-document.pdf"]');

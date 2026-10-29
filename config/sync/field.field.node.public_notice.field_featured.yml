@@ -1,0 +1,23 @@
+uuid: 4fa50b6c-c970-4c39-b790-230ccd863f82
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_featured
+    - node.type.public_notice
+id: node.public_notice.field_featured
+field_name: field_featured
+entity_type: node
+bundle: public_notice
+label: 'Feature on homepage'
+description: 'Include this published item in the homepage notice board. Expired public notices are excluded. Up to three selected items of each type appear.'
+required: false
+translatable: false
+default_value:
+  -
+    value: 0
+default_value_callback: ''
+settings:
+  on_label: Featured
+  off_label: 'Not featured'
+field_type: boolean

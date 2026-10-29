@@ -1,0 +1,27 @@
+uuid: 935069f3-97a1-478d-a05a-6242a3380ff4
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+    - options
+id: node.field_homepage_image_fit
+field_name: field_homepage_image_fit
+entity_type: node
+type: list_string
+settings:
+  allowed_values:
+    -
+      value: contain
+      label: 'Show whole image'
+    -
+      value: cover
+      label: 'Fill frame'
+  allowed_values_function: ''
+module: options
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

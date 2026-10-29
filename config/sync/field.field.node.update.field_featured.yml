@@ -10,7 +10,7 @@ field_name: field_featured
 entity_type: node
 bundle: update
 label: 'Feature on homepage'
-description: 'Show published News and Press release items in the homepage highlights. The three newest selected items appear, ordered by publication date.'
+description: 'Include this published item in the homepage notice board. Expired public notices are excluded. Up to three selected items of each type appear.'
 required: false
 translatable: false
 default_value:

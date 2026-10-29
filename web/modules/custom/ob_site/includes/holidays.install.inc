@@ -57,6 +57,7 @@ function ob_site_ensure_holiday_structure(): void {
   }
   ob_site_ensure_holiday_menu();
   ob_site_include_holidays_in_notices();
+  ob_site_ensure_holiday_homepage_image();
 }
 
 /**
@@ -87,5 +88,39 @@ function ob_site_include_holidays_in_notices(): void {
   foreach (\Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'annual_holidays']) as $node) {
     ob_site_assign_holiday_category($node);
     $node->save();
+  }
+}
+
+/**
+ * Adds optional board imagery without changing holiday dates or documents.
+ */
+function ob_site_ensure_holiday_homepage_image(): void {
+  if (!\Drupal\field\Entity\FieldConfig::loadByName('node', 'annual_holidays', 'field_featured_image')) {
+    \Drupal\field\Entity\FieldConfig::create([
+      'entity_type' => 'node', 'bundle' => 'annual_holidays', 'field_name' => 'field_featured_image',
+      'label' => 'Homepage image', 'required' => FALSE, 'translatable' => FALSE,
+      'description' => 'Optional image for the homepage notice board. Select or upload an image of the official holiday notice. Keep the approved PDF in Official annual documents.',
+      'settings' => ['handler' => 'default:media', 'handler_settings' => ['target_bundles' => ['image' => 'image']]],
+    ])->save();
+  }
+  if (!\Drupal\field\Entity\FieldStorageConfig::loadByName('node', 'field_homepage_image_fit')) {
+    \Drupal\field\Entity\FieldStorageConfig::create([
+      'entity_type' => 'node', 'field_name' => 'field_homepage_image_fit', 'type' => 'list_string',
+      'settings' => ['allowed_values' => ['contain' => 'Show whole image', 'cover' => 'Fill frame']],
+    ])->save();
+  }
+  if (!\Drupal\field\Entity\FieldConfig::loadByName('node', 'annual_holidays', 'field_homepage_image_fit')) {
+    \Drupal\field\Entity\FieldConfig::create([
+      'entity_type' => 'node', 'bundle' => 'annual_holidays', 'field_name' => 'field_homepage_image_fit',
+      'label' => 'Homepage image display', 'required' => FALSE, 'translatable' => FALSE,
+      'default_value' => [['value' => 'contain']],
+      'description' => 'Show whole image keeps the complete holiday notice readable. Fill frame crops photographs to fit the homepage image area.',
+    ])->save();
+  }
+  \Drupal::service('entity_display.repository')->getFormDisplay('node', 'annual_holidays')
+    ->setComponent('field_featured_image', ['type' => 'media_library_widget', 'weight' => -5])
+    ->setComponent('field_homepage_image_fit', ['type' => 'options_select', 'weight' => -4])->save();
+  foreach (\Drupal::entityTypeManager()->getStorage('entity_view_display')->loadByProperties(['targetEntityType' => 'node', 'bundle' => 'annual_holidays']) as $display) {
+    $display->removeComponent('field_featured_image')->removeComponent('field_homepage_image_fit')->save();
   }
 }

@@ -260,6 +260,8 @@ function ob_site_install(): void {
   ob_site_ensure_service_content_types();
   require_once __DIR__ . '/includes/holidays.install.inc';
   ob_site_ensure_holiday_structure();
+  require_once __DIR__ . '/includes/notice-board.install.inc';
+  ob_site_ensure_notice_board_controls();
 }
 
 /**
@@ -3157,11 +3159,9 @@ function ob_site_ensure_image_styles(): void {
       $style->addImageEffect([
         'id' => str_starts_with($id, 'ob_hero_') ? 'image_scale' : 'image_scale_and_crop',
         'weight' => 0,
-        'data' => [
-          'width' => $width,
-          'height' => str_starts_with($id, 'ob_hero_') ? NULL : $height,
-          'anchor' => 'center-center',
-        ],
+        'data' => str_starts_with($id, 'ob_hero_')
+          ? ['width' => $width, 'height' => NULL, 'upscale' => FALSE]
+          : ['width' => $width, 'height' => $height, 'anchor' => 'center-center'],
       ]);
       $style->save();
     }
@@ -3890,4 +3890,51 @@ function ob_site_update_11053(): void {
   require_once __DIR__ . '/includes/holidays.install.inc';
   ob_site_ensure_holiday_menu();
   ob_site_include_holidays_in_notices();
+}
+
+/**
+ * Add shared notice board controls and preserve the current notice selection.
+ */
+function ob_site_update_11054(array &$sandbox): void {
+  require_once __DIR__ . '/includes/notice-board.install.inc';
+  $storage = \Drupal::entityTypeManager()->getStorage('node');
+  if (!isset($sandbox['last'])) {
+    $sandbox['last'] = 0;
+    $sandbox['processed'] = 0;
+    $sandbox['migrate_notices'] = !FieldConfig::loadByName('node', 'public_notice', 'field_featured');
+    $today = \Drupal::service('date.formatter')->format(\Drupal::time()->getRequestTime(), 'custom', 'Y-m-d');
+    $query = $storage->getQuery()->accessCheck(FALSE)->condition('type', 'public_notice')->condition('status', 1);
+    $expiry = $query->orConditionGroup()->notExists('field_notice_expiry')->condition('field_notice_expiry.value', $today, '>=');
+    $sandbox['selected'] = array_values($query->condition($expiry)->sort('field_notice_urgent.value', 'DESC')->sort('field_notice_date.value', 'DESC')->sort('nid', 'DESC')->range(0, 3)->execute());
+    ob_site_ensure_notice_board_controls();
+    $sandbox['total'] = (int) $storage->getQuery()->accessCheck(FALSE)->condition('type', ['public_notice', 'update'], 'IN')->count()->execute();
+  }
+  $ids = $storage->getQuery()->accessCheck(FALSE)->condition('type', ['public_notice', 'update'], 'IN')
+    ->condition('nid', $sandbox['last'], '>')->sort('nid')->range(0, 50)->execute();
+  foreach ($storage->loadMultiple($ids) as $node) {
+    foreach ($node->getTranslationLanguages() as $language) {
+      $translation = $node->getTranslation($language->getId());
+      if ($translation->get('field_homepage_order')->isEmpty()) {
+        $translation->set('field_homepage_order', 0);
+      }
+      if ($translation->get('field_homepage_image_fit')->isEmpty()) {
+        $translation->set('field_homepage_image_fit', 'contain');
+      }
+    }
+    if ($sandbox['migrate_notices'] && $node->bundle() === 'public_notice') {
+      $node->set('field_featured', (int) in_array($node->id(), $sandbox['selected']));
+    }
+    $node->save();
+    $sandbox['last'] = (int) $node->id();
+    $sandbox['processed']++;
+  }
+  $sandbox['#finished'] = !$ids || !$sandbox['total'] ? 1 : min(1, $sandbox['processed'] / $sandbox['total']);
+}
+
+/**
+ * Add optional holiday imagery to the homepage notice board.
+ */
+function ob_site_update_11055(): void {
+  require_once __DIR__ . '/includes/holidays.install.inc';
+  ob_site_ensure_holiday_homepage_image();
 }
