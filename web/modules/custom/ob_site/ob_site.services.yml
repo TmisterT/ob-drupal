@@ -1,4 +1,8 @@
 services:
+  ob_site.president_redirect:
+    class: Drupal\ob_site\EventSubscriber\PresidentRedirectSubscriber
+    tags:
+      - { name: event_subscriber }
   ob_site.press_release_paths:
     class: Drupal\ob_site\PathProcessor\PressReleasePaths
     arguments: ['@entity_type.manager', '@language_manager']

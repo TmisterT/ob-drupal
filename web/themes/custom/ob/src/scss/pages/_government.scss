@@ -74,6 +74,23 @@ $government-surface: #f3f7f8;
 
 .menu-section-page { max-width: 76rem; }
 
+@media (min-width: 1200px) {
+  .identity-bar .primary-navigation .dropdown-menu {
+    margin-top: 0;
+
+    .dropdown-menu {
+      top: 0;
+      left: 100%;
+      margin-left: 0;
+    }
+
+    .opens-left > .dropdown-menu {
+      right: 100%;
+      left: auto;
+    }
+  }
+}
+
 .menu-section-page__intro {
   margin-bottom: clamp(2rem, 5vw, 4rem);
   padding-bottom: clamp(1.75rem, 4vw, 3rem);

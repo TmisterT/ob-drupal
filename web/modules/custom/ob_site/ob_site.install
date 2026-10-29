@@ -3938,3 +3938,143 @@ function ob_site_update_11055(): void {
   require_once __DIR__ . '/includes/holidays.install.inc';
   ob_site_ensure_holiday_homepage_image();
 }
+
+/**
+ * Match the President profile URL to the Our Government menu hierarchy.
+ */
+function ob_site_update_11056(): void {
+  $storage = Drupal::entityTypeManager()->getStorage('path_alias');
+  $profiles = $storage->loadByProperties(['alias' => '/te-beretitenti/the-president']);
+  foreach ($profiles as $profile_alias) {
+    $language = $profile_alias->language()->getId();
+    $path = $profile_alias->getPath();
+    $target = '/our-government/te-beretitenti';
+    $existing = $storage->loadByProperties(['alias' => $target, 'langcode' => $language]);
+    foreach ($existing as $alias) {
+      if ($alias->getPath() !== $path) {
+        throw new \RuntimeException('The requested President URL is already in use.');
+      }
+    }
+    if (!$existing) {
+      $storage->create(['path' => $path, 'alias' => $target, 'langcode' => $language])->save();
+    }
+    // Remove the temporary profile alias from the earlier local change.
+    foreach ($storage->loadByProperties(['alias' => '/te-beretitenti', 'path' => $path, 'langcode' => $language]) as $alias) {
+      $alias->delete();
+    }
+    // Restore the government landing page and its parent menu destination.
+    $landings = Drupal::entityTypeManager()->getStorage('node')->loadByProperties(['type' => 'landing_page', 'title' => ['Te Beretitenti', 'Our Government']]);
+    foreach ($landings as $landing) {
+      $landing_path = '/node/' . $landing->id();
+      $aliases = $storage->loadByProperties(['path' => $landing_path, 'langcode' => $language]);
+      foreach ($aliases as $alias) {
+        if (in_array($alias->getAlias(), ['/te-beretitenti', '/te-beretitenti/overview'], TRUE)) {
+          $alias->setAlias('/our-government');
+          $alias->save();
+        }
+      }
+      foreach (Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['title' => 'Our Government']) as $link) {
+        $link->get('link')->uri = 'entity:node/' . $landing->id();
+        $link->save();
+      }
+    }
+    foreach (Drupal::entityTypeManager()->getStorage('menu_link_content')->loadByProperties(['title' => 'Te Beretitenti']) as $link) {
+      $link->get('link')->uri = 'entity:node/' . basename($path);
+      $link->save();
+    }
+  }
+  Drupal::service('path_alias.manager')->cacheClear();
+}
+
+/**
+ * Align main menu page aliases with their menu hierarchy.
+ */
+function ob_site_update_11057(): void {
+  $manager = Drupal::entityTypeManager();
+  $aliases = $manager->getStorage('path_alias');
+  $alias_manager = Drupal::service('path_alias.manager');
+  $links = $manager->getStorage('menu_link_content')->loadByProperties(['menu_name' => 'main']);
+  $by_uuid = [];
+  foreach ($links as $link) {
+    $by_uuid['menu_link_content:' . $link->uuid()] = $link;
+  }
+  $targets = [];
+  $resolve = function ($link, array $visited = []) use (&$resolve, &$targets, $by_uuid, $alias_manager): string {
+    $uuid = $link->uuid();
+    if (isset($targets[$uuid])) {
+      return $targets[$uuid]['alias'];
+    }
+    if (isset($visited[$uuid])) {
+      throw new \RuntimeException('A main menu parent cycle prevents URL migration.');
+    }
+    $visited[$uuid] = TRUE;
+    $uri = $link->get('link')->uri;
+    if (str_starts_with($uri, 'entity:node/')) {
+      $path = '/node/' . substr($uri, strlen('entity:node/'));
+    }
+    elseif (str_starts_with($uri, 'internal:/') && !str_contains($uri, '?') && !str_contains($uri, '#')) {
+      $path = $alias_manager->getPathByAlias(substr($uri, strlen('internal:')), $link->language()->getId());
+    }
+    else {
+      return '';
+    }
+    $parent = $by_uuid[$link->getParentId()] ?? NULL;
+    if ($parent) {
+      $base = $resolve($parent, $visited);
+      if (!$base) {
+        return '';
+      }
+      $slug = strtolower(Drupal::transliteration()->transliterate($link->label(), 'en'));
+      $slug = trim(preg_replace('/[^a-z0-9]+/', '-', $slug), '-');
+      $alias = rtrim($base, '/') . '/' . $slug;
+    }
+    else {
+      $alias = $alias_manager->getAliasByPath($path, $link->language()->getId());
+    }
+    $targets[$uuid] = ['path' => $path, 'alias' => $alias, 'langcode' => $link->language()->getId(), 'link' => $link];
+    return $alias;
+  };
+  foreach ($links as $link) {
+    $resolve($link);
+  }
+  // Validate every destination before changing any aliases.
+  foreach ($targets as $target) {
+    foreach ($aliases->loadByProperties(['alias' => $target['alias'], 'langcode' => $target['langcode']]) as $existing) {
+      if ($existing->getPath() !== $target['path']) {
+        throw new \RuntimeException('Menu URL already belongs to another page: ' . $target['alias']);
+      }
+    }
+  }
+  $redirects = Drupal::state()->get('ob_site.menu_url_redirects', []);
+  foreach ($targets as $target) {
+    $current = $alias_manager->getAliasByPath($target['path'], $target['langcode']);
+    if ($current === $target['alias']) {
+      continue;
+    }
+    foreach ($aliases->loadByProperties(['path' => $target['path'], 'langcode' => $target['langcode']]) as $old) {
+      if ($old->getAlias() !== $target['alias']) {
+        $redirects[$old->getAlias()] = $target['alias'];
+      }
+    }
+    $existing = $aliases->loadByProperties(['path' => $target['path'], 'alias' => $target['alias'], 'langcode' => $target['langcode']]);
+    if (!$existing) {
+      $aliases->create(array_intersect_key($target, array_flip(['path', 'alias', 'langcode'])))->save();
+    }
+    if (str_starts_with($target['link']->get('link')->uri, 'internal:')) {
+      $target['link']->get('link')->uri = 'internal:' . $target['alias'];
+      $target['link']->save();
+    }
+  }
+  Drupal::state()->set('ob_site.menu_url_redirects', $redirects);
+  $alias_manager->cacheClear();
+}
+
+/**
+ * Include nested menu pages in the header dropdowns.
+ */
+function ob_site_update_11058(): void {
+  $block = Drupal::configFactory()->getEditable('block.block.ob_main_menu');
+  if (!$block->isNew()) {
+    $block->set('settings.depth', 0)->set('settings.expand_all_items', TRUE)->save();
+  }
+}

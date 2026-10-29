@@ -3,6 +3,7 @@ import './_bootstrap';
 import './_homepage-search';
 import './_official-board';
 import './_cabinet';
+import './_navigation';
 
 // * Any other global site-wide JavaScript should be placed below.
 
