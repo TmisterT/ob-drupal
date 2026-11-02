@@ -24,10 +24,29 @@ function ob_preprocess_maintenance_page(array &$variables): void {
   // Render placed blocks so their access checks and cache metadata are retained.
   $storage = \Drupal::entityTypeManager()->getStorage('block');
   $view_builder = \Drupal::entityTypeManager()->getViewBuilder('block');
-  foreach (['maintenance_contact' => 'ob_footer_contact', 'maintenance_social' => 'ob_social_menu'] as $variable => $id) {
+  foreach (['maintenance_social' => 'ob_social_menu'] as $variable => $id) {
     $block = $storage->load($id);
     if ($block && $block->status()) {
       $variables[$variable] = $view_builder->view($block);
+    }
+  }
+
+  // Show only phone and email here; retain the address in the normal footer.
+  $contact_block = $storage->load('ob_footer_contact');
+  if ($contact_block && $contact_block->status()) {
+    $plugin = $contact_block->getPlugin();
+    $contact = \Drupal::service('entity.repository')->loadEntityByUuid('block_content', $plugin->getDerivativeId());
+    if ($contact) {
+      $contact = \Drupal::service('entity.repository')->getTranslationFromContext($contact);
+      $fields = ['#access' => $contact->access('view', NULL, TRUE)];
+      $contact_view = \Drupal::entityTypeManager()->getViewBuilder('block_content');
+      foreach (['field_phone' => 'string', 'field_email' => 'email_mailto'] as $field => $formatter) {
+        $fields[$field] = $contact_view->viewField($contact->get($field), ['label' => 'hidden', 'type' => $formatter]);
+        $fields[$field]['#access'] = $contact->access('view', NULL, TRUE)->andIf($contact->get($field)->access('view', NULL, TRUE));
+      }
+      \Drupal::service('renderer')->addCacheableDependency($fields, $contact);
+      \Drupal::service('renderer')->addCacheableDependency($fields, $contact_block);
+      $variables['maintenance_contact'] = $fields;
     }
   }
 }

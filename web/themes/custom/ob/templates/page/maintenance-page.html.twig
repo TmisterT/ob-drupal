@@ -13,7 +13,8 @@
     <section class="ob-maintenance__card" aria-labelledby="maintenance-title">
       <span class="ob-maintenance__icon" aria-hidden="true">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
-          <path d="M12 3a9 9 0 1 0 9 9M12 7v5l3 2M16 3h5v5M21 3l-5 5"/>
+          <path d="m14.7 6.3 3 3 3.6-3.6a6 6 0 0 1-7.9 7.9l-6.6 6.6a2.1 2.1 0 0 1-3-3l6.6-6.6a6 6 0 0 1 7.9-7.9l-3.6 3.6Z"/>
+          <path d="m3 3 4 1 1 3-1 1-3-1-1-4ZM7.5 7.5l3 3M15 15l5.2 5.2a1.4 1.4 0 0 0 2-2L17 13"/>
         </svg>
       </span>
       <span class="ob-maintenance__status"><span aria-hidden="true"></span>{{ 'Website maintenance'|t }}</span>
@@ -25,7 +26,25 @@
       <a class="ob-maintenance__retry" href="{{ front_page }}">{{ 'Check again'|t }} <span aria-hidden="true">↻</span></a>
       {% if maintenance_contact or maintenance_social %}
         <div class="ob-maintenance__support">
-          {{ maintenance_contact }}
+          {% if maintenance_contact %}
+            <div class="ob-maintenance__contacts"{{ create_attribute({'aria-label': 'Contact'|t}) }}>
+              {% if maintenance_contact.field_phone %}
+                <div class="ob-maintenance__contact">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><path d="m7 3 3 5-3 2a14 14 0 0 0 7 7l2-3 5 3-1 4C10 22 2 14 3 4Z"/></svg>
+                  <span class="visually-hidden">{{ 'Phone'|t }}</span>
+                  {{ maintenance_contact.field_phone }}
+                </div>
+              {% endif %}
+              {% if maintenance_contact.field_email %}
+                <div class="ob-maintenance__contact">
+                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 6 9 7 9-7"/></svg>
+                  <span class="visually-hidden">{{ 'Email'|t }}</span>
+                  {{ maintenance_contact.field_email }}
+                </div>
+              {% endif %}
+              {{ maintenance_contact|without('field_phone', 'field_email') }}
+            </div>
+          {% endif %}
           {{ maintenance_social }}
         </div>
       {% endif %}

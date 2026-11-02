@@ -126,6 +126,26 @@
     }
   }
 
+  &__contacts {
+    display: grid;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+  }
+
+  &__contact {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.65rem;
+
+    svg {
+      width: 1.25rem;
+      height: 1.25rem;
+      flex-shrink: 0;
+      color: $ob-blue;
+    }
+  }
+
   &__support {
     margin-top: 2rem;
     padding-top: 1.5rem;
