@@ -23,6 +23,12 @@
         {{ page.content }}
       </div>
       <a class="ob-maintenance__retry" href="{{ front_page }}">{{ 'Check again'|t }} <span aria-hidden="true">↻</span></a>
+      {% if maintenance_contact or maintenance_social %}
+        <div class="ob-maintenance__support">
+          {{ maintenance_contact }}
+          {{ maintenance_social }}
+        </div>
+      {% endif %}
     </section>
     <p class="ob-maintenance__footer">{{ site_name }} · {{ 'Government of Kiribati'|t }}</p>
   </main>

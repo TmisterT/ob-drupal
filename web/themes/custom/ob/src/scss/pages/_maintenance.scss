@@ -126,6 +126,30 @@
     }
   }
 
+  &__support {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid $ob-border;
+    overflow-wrap: anywhere;
+
+    h2 { font-size: 1.25rem; }
+
+    a { color: $ob-blue; }
+
+    a:focus-visible {
+      outline: 3px solid $ob-gold;
+      outline-offset: 3px;
+    }
+
+    .footer-social__list {
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 1rem;
+    }
+
+    .footer-social__link { min-height: 44px; }
+  }
+
   &__footer {
     margin: 1.5rem 0 0;
     color: $ob-muted;
