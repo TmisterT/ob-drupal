@@ -1,6 +1,9 @@
 {# Branded maintenance screen using Drupal's administrator-managed message. #}
 {{ attach_library('ob/style') }}
 <div class="ob-maintenance">
+  <div class="ob-maintenance__background" aria-hidden="true">
+    <img src="{{ base_path ~ directory }}/assets/images/maintenance-office.webp" alt="" decoding="async" width="1440" height="538">
+  </div>
   <header class="ob-maintenance__identity">
     <img src="/{{ directory }}/favicon.png" alt="" width="64" height="64">
     <div>
