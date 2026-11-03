@@ -17,7 +17,7 @@
       <ul class="gazette-slider" id="homepage-gazettes" tabindex="0" aria-label="{{ 'Latest Gazettes'|t }}">
         {% for item in items %}
           <li class="gazette-card">
-            <a class="gazette-card__cover" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+            <a class="gazette-card__cover" href="{{ item.pdf }}" data-gazette-preview data-gazette-title="{{ item.title }}" aria-label="{{ 'Preview PDF: @title'|t({'@title': item.title}) }}">
               {% if item.cover %}
                 <img src="{{ item.cover }}" alt="" width="360" height="480" loading="lazy" decoding="async">
               {% else %}
