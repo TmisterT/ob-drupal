@@ -198,6 +198,18 @@ function ob_site_form_alter(array &$form, \Drupal\Core\Form\FormStateInterface $
   if (!$entity instanceof \Drupal\node\NodeInterface || $entity->bundle() !== 'homepage' || !isset($form['field_notices_heading'])) {
     return;
   }
+  $form['gazette_section_settings'] = [
+    '#type' => 'fieldset',
+    '#title' => t('Gazette section'),
+    '#description' => t('Edit the wording above the homepage Gazette slider. The latest five eligible publications and their PDF previews are managed automatically. Leave a field empty to use its default wording.'),
+    '#weight' => -7,
+  ];
+  foreach (['field_gazette_label', 'field_gazette_heading', 'field_gazette_description'] as $weight => $name) {
+    if (isset($form[$name])) {
+      $form[$name]['#group'] = 'gazette_section_settings';
+      $form[$name]['#weight'] = $weight;
+    }
+  }
   $form['official_updates_settings'] = [
     '#type' => 'fieldset',
     '#title' => t('Official updates board'),

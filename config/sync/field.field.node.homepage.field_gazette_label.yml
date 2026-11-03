@@ -1,0 +1,21 @@
+uuid: 0b6e8807-905a-429e-b81a-379ae9039644
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_gazette_label
+    - node.type.homepage
+id: node.homepage.field_gazette_label
+field_name: field_gazette_label
+entity_type: node
+bundle: homepage
+label: 'Section label'
+description: 'Plain text only. Leave empty to use the default wording.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 'Official publications'
+default_value_callback: ''
+settings: {  }
+field_type: string

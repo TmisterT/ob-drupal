@@ -1,0 +1,21 @@
+uuid: 798f84e7-ea49-4f8b-9ee7-2828c0209545
+langcode: en
+status: true
+dependencies:
+  module:
+    - node
+id: node.field_gazette_heading
+field_name: field_gazette_heading
+entity_type: node
+type: string
+settings:
+  max_length: 160
+  case_sensitive: false
+  is_ascii: false
+module: core
+locked: false
+cardinality: 1
+translatable: true
+indexes: {  }
+persist_with_no_fields: false
+custom_storage: false

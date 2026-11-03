@@ -122,7 +122,7 @@
   {% endif %}
 
   {{ homepage_gazettes_cache }}
-  {% include '@ob/templates/content/homepage-gazettes.html.twig' with {items: homepage_gazettes} only %}
+  {% include '@ob/templates/content/homepage-gazettes.html.twig' with {items: homepage_gazettes, section_label: node.field_gazette_label.value, section_heading: node.field_gazette_heading.value, section_description: node.field_gazette_description.value} only %}
 
   {{ content|without(
     'field_hero_label',
@@ -134,6 +134,9 @@
     'field_search_placeholder',
     'field_quick_links',
     'field_notices_heading',
+    'field_gazette_label',
+    'field_gazette_heading',
+    'field_gazette_description',
     'field_updates_heading',
     'field_updates_intro',
     'field_updates_link',

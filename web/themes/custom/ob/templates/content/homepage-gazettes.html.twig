@@ -3,9 +3,9 @@
   <div class="container">
     <header class="gazette-section__heading">
       <div>
-        <span class="homepage-section__eyebrow">{{ 'Official publications'|t }}</span>
-        <h2 id="homepage-explore-title">{{ 'Information for the public'|t }}</h2>
-        <p>{{ 'Latest Gazettes'|t }}</p>
+        <span class="homepage-section__eyebrow">{{ section_label|default('')|trim ?: 'Official publications'|t }}</span>
+        <h2 id="homepage-explore-title">{{ section_heading|default('')|trim ?: 'Information for the public'|t }}</h2>
+        <p>{{ section_description|default('')|trim ?: 'Latest Gazettes'|t }}</p>
       </div>
       <a href="{{ path('view.resource_library.page_gazettes') }}">{{ 'View all Gazettes'|t }} <span aria-hidden="true">→</span></a>
     </header>

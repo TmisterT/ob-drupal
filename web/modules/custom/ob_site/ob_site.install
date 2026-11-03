@@ -4078,3 +4078,46 @@ function ob_site_update_11058(): void {
     $block->set('settings.depth', 0)->set('settings.expand_all_items', TRUE)->save();
   }
 }
+
+/**
+ * Make homepage Gazette section wording editable as plain-text content fields.
+ */
+function ob_site_update_11059(): void {
+  $fields = [
+    'field_gazette_label' => ['Section label', 'Official publications', 160],
+    'field_gazette_heading' => ['Section heading', 'Information for the public', 160],
+    'field_gazette_description' => ['Section description', 'Latest Gazettes', 255],
+  ];
+  foreach ($fields as $name => [$label, $default, $length]) {
+    if (!FieldStorageConfig::loadByName('node', $name)) {
+      FieldStorageConfig::create([
+        'entity_type' => 'node', 'field_name' => $name, 'type' => 'string',
+        'cardinality' => 1, 'translatable' => TRUE,
+        'settings' => ['max_length' => $length],
+      ])->save();
+    }
+    if (!FieldConfig::loadByName('node', 'homepage', $name)) {
+      FieldConfig::create([
+        'entity_type' => 'node', 'bundle' => 'homepage', 'field_name' => $name,
+        'label' => $label, 'required' => FALSE, 'translatable' => TRUE,
+        'description' => 'Plain text only. Leave empty to use the default wording.',
+        'default_value' => [['value' => $default]],
+      ])->save();
+    }
+  }
+  $form = EntityFormDisplay::load('node.homepage.default');
+  if ($form) {
+    foreach (array_keys($fields) as $weight => $name) {
+      $form->setComponent($name, ['type' => 'string_textfield', 'weight' => 40 + $weight, 'settings' => ['size' => 60, 'placeholder' => $fields[$name][1]]]);
+    }
+    $form->save();
+  }
+  foreach (EntityViewDisplay::loadMultiple() as $display) {
+    if ($display->getTargetEntityTypeId() === 'node' && $display->getTargetBundle() === 'homepage') {
+      foreach (array_keys($fields) as $name) {
+        $display->removeComponent($name);
+      }
+      $display->save();
+    }
+  }
+}

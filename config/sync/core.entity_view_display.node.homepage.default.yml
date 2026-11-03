@@ -6,6 +6,9 @@ dependencies:
     - field.field.node.homepage.field_activities_heading
     - field.field.node.homepage.field_activities_intro
     - field.field.node.homepage.field_activities_link
+    - field.field.node.homepage.field_gazette_description
+    - field.field.node.homepage.field_gazette_heading
+    - field.field.node.homepage.field_gazette_label
     - field.field.node.homepage.field_hero_image
     - field.field.node.homepage.field_hero_label
     - field.field.node.homepage.field_hero_link
@@ -221,4 +224,7 @@ content:
     weight: 100
     region: content
 hidden:
+  field_gazette_description: true
+  field_gazette_heading: true
+  field_gazette_label: true
   langcode: true

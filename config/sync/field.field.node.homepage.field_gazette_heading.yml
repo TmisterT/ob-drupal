@@ -1,0 +1,21 @@
+uuid: 40d3bc5f-1829-415e-8675-b8a5cfe0aaba
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_gazette_heading
+    - node.type.homepage
+id: node.homepage.field_gazette_heading
+field_name: field_gazette_heading
+entity_type: node
+bundle: homepage
+label: 'Section heading'
+description: 'Plain text only. Leave empty to use the default wording.'
+required: false
+translatable: true
+default_value:
+  -
+    value: 'Information for the public'
+default_value_callback: ''
+settings: {  }
+field_type: string

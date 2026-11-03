@@ -6,6 +6,9 @@ dependencies:
     - field.field.node.homepage.field_activities_heading
     - field.field.node.homepage.field_activities_intro
     - field.field.node.homepage.field_activities_link
+    - field.field.node.homepage.field_gazette_description
+    - field.field.node.homepage.field_gazette_heading
+    - field.field.node.homepage.field_gazette_label
     - field.field.node.homepage.field_hero_image
     - field.field.node.homepage.field_hero_label
     - field.field.node.homepage.field_hero_link
@@ -62,6 +65,30 @@ content:
     settings:
       placeholder_url: ''
       placeholder_title: ''
+    third_party_settings: {  }
+  field_gazette_description:
+    type: string_textfield
+    weight: 42
+    region: content
+    settings:
+      size: 60
+      placeholder: 'Latest Gazettes'
+    third_party_settings: {  }
+  field_gazette_heading:
+    type: string_textfield
+    weight: 41
+    region: content
+    settings:
+      size: 60
+      placeholder: 'Information for the public'
+    third_party_settings: {  }
+  field_gazette_label:
+    type: string_textfield
+    weight: 40
+    region: content
+    settings:
+      size: 60
+      placeholder: 'Official publications'
     third_party_settings: {  }
   field_hero_image:
     type: media_library_widget

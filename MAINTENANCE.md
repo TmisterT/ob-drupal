@@ -14,6 +14,7 @@ an authorised editor restore earlier content.
 | --- | --- |
 | Homepage headings, search wording and Popular information links | Homepage content record |
 | Homepage slideshow | Homepage Slide content records; check publication and display order |
+| Gazette slider label, heading and description | Homepage content record → Gazette section; empty fields use the original wording |
 | Division descriptions and functions | The relevant Division content record |
 | President biography, summary and portrait | The President's Profile content record |
 | Contact phone numbers, email, postal address and working hours | Contact Us content record |
