@@ -36,7 +36,8 @@ $identity-muted: #526977;
   line-height: 1.15;
   letter-spacing: 0;
   text-transform: none;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 .ob-site .site-identity__government,
@@ -49,7 +50,8 @@ $identity-muted: #526977;
   line-height: 1.2;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  white-space: nowrap;
+  overflow-wrap: anywhere;
+  white-space: normal;
 }
 
 @media (min-width: 1200px) and (max-width: 1399.98px) {
@@ -80,7 +82,33 @@ $identity-muted: #526977;
 
 @media (min-width: 1400px) {
   .ob-site .identity-bar__inner {
-    column-gap: 3rem;
+    column-gap: 1.25rem;
+  }
+
+  .ob-site .identity-bar .primary-navigation .navbar-nav {
+    gap: 0;
+  }
+
+  .ob-site .identity-bar .primary-navigation .nav-link {
+    padding-inline: 0.35rem;
+    gap: 0.25rem;
+    font-size: 0.875rem;
+
+    &:before {
+      width: 14px;
+      height: 14px;
+      flex-basis: 14px;
+    }
+  }
+}
+
+@media (min-width: 1200px) {
+  .ob-site .site-identity-block {
+    flex-shrink: 0;
+  }
+
+  .ob-site .site-identity__name {
+    white-space: nowrap;
   }
 }
 

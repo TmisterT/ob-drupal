@@ -1,5 +1,5 @@
 {{ attach_library('ob/gazette-slider') }}
-<section class="homepage-explore gazette-section" aria-labelledby="homepage-explore-title" data-gazette-slider>
+<section class="homepage-explore gazette-section" aria-labelledby="homepage-explore-title" data-gazette-slider data-pdf-preview-group>
   <div class="container">
     <header class="gazette-section__heading">
       <div>
@@ -14,10 +14,10 @@
         <button type="button" data-gazette-prev aria-label="{{ 'Previous Gazettes'|t }}" aria-controls="homepage-gazettes">←</button>
         <button type="button" data-gazette-next aria-label="{{ 'Next Gazettes'|t }}" aria-controls="homepage-gazettes">→</button>
       </div>
-      <ul class="gazette-slider" id="homepage-gazettes" tabindex="0" aria-label="{{ 'Latest Gazettes'|t }}">
+      <ul class="gazette-slider" tabindex="0" id="homepage-gazettes" aria-label="{{ 'Latest Gazettes'|t }}">
         {% for item in items %}
           <li class="gazette-card">
-            <a class="gazette-card__cover" href="{{ item.pdf }}" data-gazette-preview data-gazette-title="{{ item.title }}" aria-label="{{ 'Preview PDF: @title'|t({'@title': item.title}) }}">
+            <a class="gazette-card__cover" href="{{ item.pdf }}" data-gazette-preview data-gazette-title="{{ item.title }}" aria-label="{{ 'View PDF: @title'|t({'@title': item.title}) }}">
               <span class="gazette-card__paper" aria-hidden="true">
                 <svg class="gazette-card__pdf-icon" viewBox="0 0 80 96" fill="none" focusable="false">
                   <path d="M18 6h29l17 17v63a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V10a4 4 0 0 1 4-4Z" fill="#fff" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
@@ -31,28 +31,15 @@
               </span>
             </a>
             <div class="gazette-card__body">
-              {% if item.reference %}<span class="gazette-card__reference">{{ item.reference }}</span>{% endif %}
               <h3><a href="{{ item.url }}">{{ item.title }}</a></h3>
-              {% if item.date %}<time datetime="{{ item.datetime }}">{{ item.date }}</time>{% endif %}
               <div class="gazette-card__actions">
-                <a href="{{ item.pdf }}" data-gazette-preview data-gazette-title="{{ item.title }}">{{ 'Preview PDF'|t }}<span class="visually-hidden">: {{ item.title }}</span></a>
-                <a href="{{ item.pdf }}" download>{{ 'Download'|t }}<span class="visually-hidden">: {{ item.title }}</span> <span aria-hidden="true">↓</span></a>
+                <a href="{{ item.pdf }}" data-gazette-preview data-gazette-title="{{ item.title }}">{{ 'View'|t }}<span class="visually-hidden">: {{ item.title }}</span></a>
               </div>
             </div>
           </li>
         {% endfor %}
       </ul>
-      <dialog class="gazette-viewer" aria-labelledby="gazette-viewer-title" data-gazette-dialog>
-        <header class="gazette-viewer__header">
-          <h2 id="gazette-viewer-title">{{ 'Gazette preview'|t }}</h2>
-          <button type="button" data-gazette-close autofocus aria-label="{{ 'Close PDF preview'|t }}">{{ 'Close'|t }} ×</button>
-        </header>
-        <div class="gazette-viewer__links">
-          <a data-gazette-open target="_blank" rel="noopener noreferrer">{{ 'Open PDF in a new tab'|t }}</a>
-          <a data-gazette-download download>{{ 'Download PDF'|t }}</a>
-        </div>
-        <div class="gazette-viewer__document" data-gazette-document data-viewer-title="{{ 'PDF document preview'|t }}"></div>
-      </dialog>
+      {% include '@ob/templates/content/pdf-preview.html.twig' with {preview_id: 'gazette-viewer-title'} only %}
     {% else %}
       <p>{{ 'Gazette publications will appear here when available.'|t }}</p>
     {% endif %}

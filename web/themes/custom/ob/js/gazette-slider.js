@@ -32,6 +32,8 @@
         else window.addEventListener('resize', updateControls);
         updateControls();
 
+      });
+      once('ob-pdf-preview', '[data-pdf-preview-group]', context).forEach((section) => {
         const dialog = section.querySelector('[data-gazette-dialog]');
         if (!dialog || typeof dialog.showModal !== 'function') return;
         const documentPanel = dialog.querySelector('[data-gazette-document]');
@@ -41,9 +43,7 @@
             if (event.ctrlKey || event.metaKey || event.shiftKey || event.altKey) return;
             event.preventDefault();
             opener = link;
-            dialog.querySelector('#gazette-viewer-title').textContent = link.dataset.gazetteTitle;
-            dialog.querySelector('[data-gazette-open]').href = link.href;
-            dialog.querySelector('[data-gazette-download]').href = link.href;
+            dialog.querySelector('[data-pdf-preview-heading]').textContent = link.dataset.gazetteTitle;
             const frame = document.createElement('iframe');
             frame.title = documentPanel.dataset.viewerTitle + ': ' + link.dataset.gazetteTitle;
             frame.src = link.href;

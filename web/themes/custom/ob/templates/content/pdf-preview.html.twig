@@ -1,0 +1,7 @@
+      <dialog class="gazette-viewer" aria-labelledby="{{ preview_id }}" data-gazette-dialog>
+        <header class="gazette-viewer__header">
+          <h2 id="{{ preview_id }}" data-pdf-preview-heading>{{ 'PDF preview'|t }}</h2>
+          <button type="button" data-gazette-close autofocus aria-label="{{ 'Close PDF preview'|t }}">{{ 'Close'|t }} ×</button>
+        </header>
+        <div class="gazette-viewer__document" data-gazette-document data-viewer-title="{{ 'PDF document preview'|t }}"></div>
+      </dialog>
