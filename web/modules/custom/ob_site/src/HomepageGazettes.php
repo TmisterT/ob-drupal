@@ -59,7 +59,6 @@ final class HomepageGazettes {
         if (!str_starts_with($file->getFileUri(), 'public://') || strtolower(pathinfo($file->getFilename(), PATHINFO_EXTENSION)) !== 'pdf') {
           continue;
         }
-        $cover = 'public://gazette-covers/' . $file->uuid() . '.webp';
         $date = $node->get('field_publication_date')->value;
         $items[] = [
           'title' => $node->label(),
@@ -68,7 +67,6 @@ final class HomepageGazettes {
           'datetime' => $date,
           'url' => $node->toUrl()->toString(),
           'pdf' => \Drupal::service('file_url_generator')->generateString($file->getFileUri()),
-          'cover' => is_file($cover) ? \Drupal::service('file_url_generator')->generateString($cover) : '',
         ];
         break;
       }
