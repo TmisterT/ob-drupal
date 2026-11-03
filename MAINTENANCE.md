@@ -44,6 +44,27 @@ change site behaviour. Keep site changes in the custom module/theme.
 
 ## Recent page features
 
+- **Homepage Gazettes:** the former four public-information cards are replaced
+  by up to five published, accessible Gazette publications with public PDF
+  attachments. `src/HomepageGazettes.php` uses the same resource-section filter
+  as the Gazette archive and sorts by publication date (creation date when
+  absent). Set the publication date and reference number in Drupal for complete
+  cards. Titles link to publication details; Preview PDF opens an on-demand
+  modal, and Download links directly to the file. The existing news board stays.
+  Small first-page WebP covers live in `public://gazette-covers/<file-uuid>.webp`;
+  include that directory when transferring uploads. New PDFs without a generated
+  cover show a document graphic and still support preview and download. Cover
+  generation is not automatic. After adding/replacing a cover, rebuild cache.
+  Standalone `css/gazette-slider.css` and `js/gazette-slider.js` supply scrolling,
+  keyboard controls and the native dialog; no PDF is embedded before a click.
+- **Opening slideshow photo:** the current Presidential activities photo has
+  640, 960 and 1920 pixel WebP copies in the theme's `assets/images/` directory.
+  `_ob_preprocess_optimized_slide()` in `includes/content.theme` uses these only
+  for `public://2026-10/Kiribati Official Portrait by the Sea.png` in slideshow
+  mode, retaining the media alt text and loading the picture immediately.
+  Replacing the upload automatically returns to the normal Drupal formatter;
+  generate new variants and update the mapping to optimise a replacement.
+  Loading priority currently follows this photo if slides are reordered.
 - **Division tabs:** `js/division-tabs.js` and `css/division-tabs.css` are attached
   by `node--division--full.html.twig`. Tabs activate only when the body contains
   both H2 IDs `climate-change` and `disaster-risk-management`, at the same level.

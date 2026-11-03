@@ -1,0 +1,55 @@
+{{ attach_library('ob/gazette-slider') }}
+<section class="homepage-explore gazette-section" aria-labelledby="homepage-explore-title" data-gazette-slider>
+  <div class="container">
+    <header class="gazette-section__heading">
+      <div>
+        <span class="homepage-section__eyebrow">{{ 'Explore the Office'|t }}</span>
+        <h2 id="homepage-explore-title">{{ 'Information for the public'|t }}</h2>
+        <p>{{ 'Latest Gazettes'|t }}</p>
+      </div>
+      <a href="{{ path('view.resource_library.page_gazettes') }}">{{ 'View all Gazettes'|t }} <span aria-hidden="true">→</span></a>
+    </header>
+    {% if items %}
+      <div class="gazette-section__controls" data-gazette-controls hidden>
+        <button type="button" data-gazette-prev aria-label="{{ 'Previous Gazettes'|t }}" aria-controls="homepage-gazettes">←</button>
+        <button type="button" data-gazette-next aria-label="{{ 'Next Gazettes'|t }}" aria-controls="homepage-gazettes">→</button>
+      </div>
+      <ul class="gazette-slider" id="homepage-gazettes" tabindex="0" aria-label="{{ 'Latest Gazettes'|t }}">
+        {% for item in items %}
+          <li class="gazette-card">
+            <a class="gazette-card__cover" href="{{ item.url }}" tabindex="-1" aria-hidden="true">
+              {% if item.cover %}
+                <img src="{{ item.cover }}" alt="" width="360" height="480" loading="lazy" decoding="async">
+              {% else %}
+                <span class="gazette-card__paper"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.3" aria-hidden="true"><path d="M5 2h9l5 5v15H5zM14 2v6h5M8 12h8M8 16h8M8 19h5"/></svg><strong>{{ 'Gazette'|t }}</strong><span>{{ item.reference ?: 'PDF' }}</span></span>
+              {% endif %}
+              <span class="gazette-card__badge">PDF</span>
+            </a>
+            <div class="gazette-card__body">
+              {% if item.reference %}<span class="gazette-card__reference">{{ item.reference }}</span>{% endif %}
+              <h3><a href="{{ item.url }}">{{ item.title }}</a></h3>
+              {% if item.date %}<time datetime="{{ item.datetime }}">{{ item.date }}</time>{% endif %}
+              <div class="gazette-card__actions">
+                <a href="{{ item.pdf }}" data-gazette-preview data-gazette-title="{{ item.title }}">{{ 'Preview PDF'|t }}<span class="visually-hidden">: {{ item.title }}</span></a>
+                <a href="{{ item.pdf }}" download>{{ 'Download'|t }}<span class="visually-hidden">: {{ item.title }}</span> <span aria-hidden="true">↓</span></a>
+              </div>
+            </div>
+          </li>
+        {% endfor %}
+      </ul>
+      <dialog class="gazette-viewer" aria-labelledby="gazette-viewer-title" data-gazette-dialog>
+        <header class="gazette-viewer__header">
+          <h2 id="gazette-viewer-title">{{ 'Gazette preview'|t }}</h2>
+          <button type="button" data-gazette-close autofocus aria-label="{{ 'Close PDF preview'|t }}">{{ 'Close'|t }} ×</button>
+        </header>
+        <div class="gazette-viewer__links">
+          <a data-gazette-open target="_blank" rel="noopener noreferrer">{{ 'Open PDF in a new tab'|t }}</a>
+          <a data-gazette-download download>{{ 'Download PDF'|t }}</a>
+        </div>
+        <div class="gazette-viewer__document" data-gazette-document data-viewer-title="{{ 'PDF document preview'|t }}"></div>
+      </dialog>
+    {% else %}
+      <p>{{ 'Gazette publications will appear here when available.'|t }}</p>
+    {% endif %}
+  </div>
+</section>

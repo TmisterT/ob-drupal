@@ -112,6 +112,7 @@ function ob_preprocess_node(array &$variables): void {
   }
 
   _ob_preprocess_projects($variables);
+  _ob_preprocess_optimized_slide($variables);
 
   if (($variables['view_mode'] ?? NULL) === 'full'
     && ($node->bundle() === 'annual_holidays' || ($node->bundle() === 'public_notice' && _ob_notice_has_category($node, ['public holiday', 'public holidays'])))) {
@@ -438,6 +439,51 @@ function ob_preprocess_node(array &$variables): void {
     ->addCacheContexts(['route', 'url.path'])
     ->addCacheTags(['config:system.menu.main', 'menu_link_content_list']);
   $metadata->applyTo($variables['elements']);
+}
+
+/**
+ * Serves lightweight variants of the current opening slide's photograph.
+ */
+function _ob_preprocess_optimized_slide(array &$variables): void {
+  $node = $variables['node'];
+  if ($node->bundle() !== 'homepage_slide' || ($variables['view_mode'] ?? '') !== 'homepage_slider') {
+    return;
+  }
+  $media = $node->get('field_slide_image')->entity;
+  if (!$media || !$media->hasField('field_media_image') || $media->get('field_media_image')->isEmpty()) {
+    return;
+  }
+  $media = \Drupal::service('entity.repository')->getTranslationFromContext($media);
+  $field = $media->get('field_media_image');
+  $file = $field->entity;
+  // A replacement upload must use its own normal Drupal rendering.
+  if (!$file || $file->getFileUri() !== 'public://2026-10/Kiribati Official Portrait by the Sea.png') {
+    return;
+  }
+  $prefix = base_path() . \Drupal::service('extension.list.theme')->getPath('ob') . '/assets/images/homepage-presidential-';
+  $access = $node->get('field_slide_image')->access('view', NULL, TRUE)
+    ->andIf($media->access('view', NULL, TRUE))
+    ->andIf($field->access('view', NULL, TRUE));
+  $image = [
+    '#theme' => 'image',
+    '#uri' => $prefix . '1920.webp',
+    '#width' => 1920,
+    '#height' => 720,
+    '#alt' => $field->alt ?? '',
+    '#attributes' => [
+      'srcset' => $prefix . '640.webp 640w, ' . $prefix . '960.webp 960w, ' . $prefix . '1920.webp 1920w',
+      'sizes' => '100vw',
+      'loading' => 'eager',
+      'fetchpriority' => 'high',
+      'decoding' => 'async',
+    ],
+    '#access' => $access,
+  ];
+  CacheableMetadata::createFromObject($media)
+    ->addCacheableDependency($file)
+    ->addCacheableDependency($access)
+    ->applyTo($image);
+  $variables['optimized_slide_image'] = $image;
 }
 
 /**

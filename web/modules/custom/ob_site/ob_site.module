@@ -19,6 +19,12 @@ function ob_site_preprocess_node(array &$variables): void {
     $variables['homepage_slider'] = $view->render();
   }
 
+  $gazettes = \Drupal\ob_site\HomepageGazettes::build();
+  $variables['homepage_gazettes'] = $gazettes['items'];
+  $variables['homepage_gazettes_cache'] = ['#markup' => ''];
+  $gazettes['cache']->applyTo($variables['homepage_gazettes_cache']);
+  $gazettes['cache']->applyTo($variables['elements']);
+
   $board = ob_site_official_updates();
   $variables['official_updates'] = $board['items'];
   $variables['official_updates_cache'] = ['#markup' => ''];

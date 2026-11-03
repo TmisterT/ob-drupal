@@ -6,41 +6,6 @@
 #}
 {% set hero_link = node.field_hero_link.0 %}
 {% set quick_links = node.field_quick_links %}
-{% set homepage_sections = [
-  {
-    id: 'updates',
-    number: '01',
-    heading: node.field_updates_heading.value,
-    intro: content.field_updates_intro,
-    has_intro: not node.field_updates_intro.isEmpty,
-    link: node.field_updates_link.0,
-  },
-  {
-    id: 'services',
-    number: '02',
-    heading: node.field_services_heading.value,
-    intro: content.field_services_intro,
-    has_intro: not node.field_services_intro.isEmpty,
-    link: node.field_services_link.0,
-  },
-  {
-    id: 'activities',
-    number: '03',
-    heading: node.field_activities_heading.value,
-    intro: content.field_activities_intro,
-    has_intro: not node.field_activities_intro.isEmpty,
-    link: node.field_activities_link.0,
-  },
-  {
-    id: 'projects',
-    number: '04',
-    heading: node.field_projects_heading.value,
-    intro: content.field_projects_intro,
-    has_intro: not node.field_projects_intro.isEmpty,
-    link: node.field_projects_link.0,
-  },
-] %}
-
 <article{{ attributes.addClass('homepage') }}>
   {{ title_prefix }}
   {{ title_suffix }}
@@ -156,46 +121,8 @@
     </section>
   {% endif %}
 
-  <section class="homepage-explore" aria-labelledby="homepage-explore-title">
-    <div class="container">
-      <div class="homepage-explore__heading">
-        <span class="homepage-section__eyebrow">{{ 'Explore the Office'|t }}</span>
-        <h2 id="homepage-explore-title">{{ 'Information for the public'|t }}</h2>
-      </div>
-      <div class="homepage-explore__grid">
-        {% for section in homepage_sections %}
-          {% if section.heading and (section.has_intro or section.link) %}
-            <article class="homepage-feature homepage-feature--{{ section.id }}">
-              <div class="homepage-feature__top">
-                <span class="homepage-feature__number" aria-hidden="true">{{ section.number }}</span>
-                <span class="homepage-feature__icon" aria-hidden="true">
-                  {% if section.id == 'updates' %}
-                    <svg viewBox="0 0 24 24"><path d="M5 4h14v16H5zM8 8h8M8 12h8M8 16h5"/></svg>
-                  {% elseif section.id == 'services' %}
-                    <svg viewBox="0 0 24 24"><path d="M4 21h16M6 18h12M7 9v9M12 9v9M17 9v9M5 9h14L12 3z"/></svg>
-                  {% elseif section.id == 'activities' %}
-                    <svg viewBox="0 0 24 24"><path d="M12 3a5 5 0 0 0-5 5v3l-2 4h14l-2-4V8a5 5 0 0 0-5-5ZM9 19h6"/></svg>
-                  {% else %}
-                    <svg viewBox="0 0 24 24"><path d="M4 19V9l8-5 8 5v10M2 19h20M8 19v-6h8v6"/></svg>
-                  {% endif %}
-                </span>
-              </div>
-              <h3>{{ section.heading }}</h3>
-              {% if section.has_intro %}
-                <div class="homepage-feature__summary">{{ section.intro }}</div>
-              {% endif %}
-              {% if section.link %}
-                <a class="homepage-feature__link" href="{{ section.link.url }}">
-                  <span>{{ section.link.title }}</span>
-                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
-                </a>
-              {% endif %}
-            </article>
-          {% endif %}
-        {% endfor %}
-      </div>
-    </div>
-  </section>
+  {{ homepage_gazettes_cache }}
+  {% include '@ob/templates/content/homepage-gazettes.html.twig' with {items: homepage_gazettes} only %}
 
   {{ content|without(
     'field_hero_label',

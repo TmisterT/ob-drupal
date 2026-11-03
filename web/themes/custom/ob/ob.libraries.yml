@@ -50,3 +50,13 @@ image-viewer:
   dependencies:
     - core/drupal
     - core/once
+
+gazette-slider:
+  css:
+    theme:
+      css/gazette-slider.css: {}
+  js:
+    js/gazette-slider.js: {}
+  dependencies:
+    - core/drupal
+    - core/once

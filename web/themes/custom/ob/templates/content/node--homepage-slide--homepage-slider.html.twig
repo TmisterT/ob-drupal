@@ -23,7 +23,11 @@
 
   <div class="homepage-hero__visual{% if node.field_slide_image.isEmpty %} homepage-hero__visual--graphic{% endif %}"{% if node.field_slide_image.isEmpty %} aria-hidden="true"{% endif %}>
     {% if not node.field_slide_image.isEmpty %}
-      {{ content.field_slide_image }}
+      {% if optimized_slide_image %}
+        {{ optimized_slide_image }}
+      {% else %}
+        {{ content.field_slide_image }}
+      {% endif %}
     {% else %}
       <div class="homepage-hero__sun"></div>
       <div class="homepage-hero__bird"></div>
