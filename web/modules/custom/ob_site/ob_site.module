@@ -241,3 +241,17 @@ function ob_site_theme(): array {
 require_once __DIR__ . '/includes/aliases.module.inc';
 
 require_once __DIR__ . '/includes/holidays.module.inc';
+
+/**
+ * Implements hook_media_insert().
+ */
+function ob_site_media_insert(\Drupal\media\MediaInterface $media): void {
+  \Drupal\ob_site\GazetteCover::forMedia($media);
+}
+
+/**
+ * Implements hook_media_update().
+ */
+function ob_site_media_update(\Drupal\media\MediaInterface $media): void {
+  \Drupal\ob_site\GazetteCover::forMedia($media);
+}

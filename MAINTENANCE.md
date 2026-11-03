@@ -52,9 +52,14 @@ change site behaviour. Keep site changes in the custom module/theme.
   cards. Titles link to publication details; Preview PDF opens an on-demand
   modal, and Download links directly to the file. The existing news board stays.
   Small first-page WebP covers live in `public://gazette-covers/<file-uuid>.webp`;
-  include that directory when transferring uploads. New PDFs without a generated
-  cover show a document graphic and still support preview and download. Cover
-  generation is not automatic. After adding/replacing a cover, rebuild cache.
+  include that directory when transferring uploads. Published Document media
+  generates a first-page WebP cover automatically on creation/update using
+  `src/GazetteCover.php`. This needs Imagick with PDF/Ghostscript support and
+  WebP output on the server. Rendering happens on editorial saves, not homepage
+  visits; existing covers are reused. If rendering is unavailable or fails, the
+  card shows a document graphic and preview/download still work. Re-save older
+  Document media to backfill missing covers. After manually replacing a cover,
+  rebuild cache.
   Standalone `css/gazette-slider.css` and `js/gazette-slider.js` supply scrolling,
   keyboard controls and the native dialog; no PDF is embedded before a click.
 - **Opening slideshow photo:** the current Presidential activities photo has
