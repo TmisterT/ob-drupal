@@ -1,5 +1,5 @@
 {{ attach_library('ob/gazette-slider') }}
-<section class="homepage-explore gazette-section" aria-labelledby="homepage-explore-title" data-gazette-slider data-pdf-preview-group>
+<section class="homepage-explore gazette-section" aria-labelledby="homepage-explore-title" data-pdf-preview-group>
   <div class="container">
     <header class="gazette-section__heading">
       <div>
@@ -10,32 +10,26 @@
       <a href="{{ path('view.resource_library.page_gazettes') }}">{{ 'View all Gazettes'|t }} <span aria-hidden="true">→</span></a>
     </header>
     {% if items %}
-      <div class="gazette-section__controls" data-gazette-controls hidden>
-        <button type="button" data-gazette-prev aria-label="{{ 'Previous Gazettes'|t }}" aria-controls="homepage-gazettes">←</button>
-        <button type="button" data-gazette-next aria-label="{{ 'Next Gazettes'|t }}" aria-controls="homepage-gazettes">→</button>
-      </div>
-      <ul class="gazette-slider" tabindex="0" id="homepage-gazettes" aria-label="{{ 'Latest Gazettes'|t }}">
-        {% for item in items %}
-          <li class="gazette-card">
-            <a class="gazette-card__cover" href="{{ item.pdf }}" data-gazette-preview data-gazette-title="{{ item.title }}" aria-label="{{ 'View PDF: @title'|t({'@title': item.title}) }}">
-              <span class="gazette-card__paper" aria-hidden="true">
-                <svg class="gazette-card__pdf-icon" viewBox="0 0 80 96" fill="none" focusable="false">
-                  <path d="M18 6h29l17 17v63a4 4 0 0 1-4 4H18a4 4 0 0 1-4-4V10a4 4 0 0 1 4-4Z" fill="#fff" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
-                  <path d="M47 6v13a4 4 0 0 0 4 4h13" fill="#fff1f2" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
-                  <path d="M25 36h28M25 44h20" stroke="currentColor" stroke-opacity=".25" stroke-width="2.5" stroke-linecap="round"/>
-                  <rect x="8" y="56" width="62" height="26" rx="5" fill="currentColor"/>
-                  <g stroke="#fff" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                    <path d="M21 75V64h4a3 3 0 0 1 0 6h-4M34 64v11h3a5.5 5.5 0 0 0 0-11h-3ZM49 75V64h7M49 69h6"/>
-                  </g>
-                </svg>
-              </span>
-            </a>
-            <div class="gazette-card__body">
+      <ul class="gazette-quicklinks" aria-label="{{ 'Latest Gazettes'|t }}">
+        {% for item in items|slice(0, 5) %}
+          <li class="gazette-quicklink">
+            <span class="gazette-quicklink__icon" aria-hidden="true">
+              <svg viewBox="0 0 40 48" width="40" height="48" fill="none" focusable="false">
+                <path d="M7 2h17l9 9v33H7z" stroke="currentColor" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M24 2v10h9" stroke="currentColor" stroke-width="2.5"/>
+                <rect x="1" y="23" width="38" height="17" rx="3" fill="currentColor"/>
+                <text x="20" y="35" fill="white" font-family="Arial, sans-serif" font-size="12" font-weight="700" text-anchor="middle">PDF</text>
+              </svg>
+            </span>
+            <div class="gazette-quicklink__copy">
+              {% if item.date %}
+                <time class="gazette-quicklink__date" datetime="{{ item.datetime }}">{{ item.date }}</time>
+              {% endif %}
               <h3><a href="{{ item.url }}">{{ item.title }}</a></h3>
-              <div class="gazette-card__actions">
-                <a href="{{ item.pdf }}" data-gazette-preview data-gazette-title="{{ item.title }}">{{ 'View'|t }}<span class="visually-hidden">: {{ item.title }}</span></a>
-              </div>
             </div>
+            <a class="gazette-quicklink__action" href="{{ item.pdf }}" target="_blank" rel="noopener noreferrer" data-gazette-preview data-gazette-title="{{ item.title }}" aria-haspopup="dialog">
+              {{ 'Preview PDF'|t }}<span class="visually-hidden">: {{ item.title }}</span> <span aria-hidden="true">↗</span>
+            </a>
           </li>
         {% endfor %}
       </ul>
